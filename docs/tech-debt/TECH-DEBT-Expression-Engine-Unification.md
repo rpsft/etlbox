@@ -295,9 +295,11 @@ flat-vs-nested gate:
   top-level dictionary in O(N).
 
 Result: HotEvaluation per-row cost on flat shapes drops from ~1.4 µs / 1.7 KB
-(Opt. 1 only) to ~500 ns / 240 B - **~2× faster than Roslyn warm runner with
-~3× fewer allocations**. Nested-shape predicates keep their previous cost,
-no behavioural regression.
+(Opt. 1 only) to ~500-700 ns / 240 B - **at parity with Roslyn warm runner
+on time (~660 ns Roslyn, ~617 ns DynamicLinq) and ~3× fewer allocations**.
+Roslyn time numbers vary 660-1140 ns between passes due to JIT/GC state, so
+the allocation advantage is the more stable signal. Nested-shape predicates
+keep their previous cost, no behavioural regression.
 
 Risk: low. The fast path is opt-in by shape; failing a check routes to the
 exact pre-existing code. Tests cover both paths (57/57 PASS in
@@ -458,10 +460,10 @@ the option is on the table when (or if) that data appears.
 
 Optimizations 1 and 2 shipped. Current state on the HotEvaluation benchmark:
 
-- Typed `TInput` cached path: **~115× faster than Roslyn**, zero allocation per row.
+- Typed `TInput` cached path: **~40× faster than Roslyn**, zero allocation per row.
   Optimization 3 stays in tech-debt - no measured bottleneck to escalate to.
-- ExpandoObject flat-shape path: **~2× faster than Roslyn**, ~3× less allocation
-  per row. Direct dict binding (the deferred mitigation under Optimization 2)
+- ExpandoObject flat-shape path: **parity with Roslyn on time, ~3× less allocation
+  per row**. Direct dict binding (the deferred mitigation under Optimization 2)
   stays in tech-debt - re-implementing the parser surface is high cost for
   unproven gain.
 - ExpandoObject path on shapes with nested or collection fields: ~1.2× slower

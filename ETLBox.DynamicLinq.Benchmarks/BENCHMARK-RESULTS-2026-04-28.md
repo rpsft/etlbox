@@ -18,16 +18,23 @@ oral remark on per-row hot path.
 ## TL;DR
 
 After Optimization 1 + Optimization 2, Dynamic LINQ **wins on every measured
-dimension**:
+dimension** (or matches Roslyn at parity):
 
 | Dimension | Roslyn | Dynamic LINQ |
 |-----------|:------:|:----------------------------:|
 | Per-shape cold compile | 121 ms / 9.7 MB | **1-3 ms / 60-130 KB** (40-120× faster) |
 | Assembly accumulation across shapes | ~225 / shape, unloadable | **constant +31-32** (no growth) |
-| Per-row hot path (warm) — typed POCO | 1,143 ns / 752 B | **~10 ns / 0 B** (~115× faster, zero alloc) |
-| Per-row hot path (warm) — ExpandoObject, flat shape | 1,143 ns / 752 B | **~500 ns / 240 B** (~2× faster, ~3× less alloc) |
-| Per-row hot path (warm) — ExpandoObject, shapes with nested or collection fields | 1,143 ns / 752 B | ~1,400 ns / 1.7 KB (~1.2× slower, slow-path fallback) |
+| Per-row hot path (warm) — typed POCO | ~660 ns / 752 B | **~15 ns / 0 B** (~40× faster, zero alloc) |
+| Per-row hot path (warm) — ExpandoObject, flat shape | ~660 ns / 752 B | **~617 ns / 240 B** (parity on time, **~3× less alloc**) |
+| Per-row hot path (warm) — ExpandoObject, shapes with nested or collection fields | ~660 ns / 752 B | ~1,400 ns / 1.7 KB (~2× slower, slow-path fallback) |
 | Memory accumulation in long-running with shape drift | linear growth | **constant** |
+
+Note on absolute timings: Roslyn warm-runner numbers are highly variable
+between runs (660-1140 ns observed across multiple HotEvaluation passes
+on the same machine, depending on JIT/GC state). Dynamic LINQ flat-path
+numbers are tighter (500-700 ns range). Ratios are reported as approximate
+ranges rather than fixed multipliers; the stable signal is "parity or
+slight win on time, consistent ~3× advantage on allocations".
 
 - **Statistical workload is N=1** - one source with a stable schema produces
   one ExpandoObject shape that lives the whole pipeline after warmup. Realistic
@@ -211,12 +218,21 @@ Steady-state per-row evaluation cost: one shape compiled once at GlobalSetup,
 then evaluated by BenchmarkDotNet per iteration. Answers the Round 5 oral
 remark on per-row performance in DataFlow runtime.
 
+Latest run after Optimizations 1 + 2 (commit `f3ae2718`):
+
 | Method | Mean | Allocated | Ratio (time) | Alloc Ratio |
 |--------|----:|----------:|-----:|------:|
-| **Roslyn (warm runner)** | **~1,143 ns** | 752 B | **1.00×** (baseline) | 1.00× |
-| Dynamic LINQ AsQueryable.Any (no cache, warm) | ~757 μs | 35 KB | ~700× slower | ~47× more |
-| **Dynamic LINQ ExpandoObject, flat shape (cached delegate, warm)** | **~500 ns** | **~240 B** | **0.44× (~2× faster)** | **0.32×** (~3× less alloc) |
-| **Dynamic LINQ typed POCO (cached delegate, warm)** | **~10 ns** | **0 B** | **0.009×** (~115× **faster**) | **0×** (no alloc) |
+| **Roslyn (warm runner)** | **660 ns** | 752 B | **1.00×** (baseline) | 1.00× |
+| Dynamic LINQ AsQueryable.Any (no cache, warm) | 644 μs | 33 KB | ~987× slower | ~45× more |
+| **Dynamic LINQ ExpandoObject, flat shape (cached delegate + compiled mapper)** | **617 ns** | **240 B** | **0.94×** (parity) | **0.32×** (~3× less) |
+| **Dynamic LINQ typed POCO (cached delegate)** | **15.5 ns** | **0 B** | **0.024×** (~43× faster) | **0×** (no alloc) |
+
+Roslyn warm-runner number varies between passes (660-1140 ns observed on
+the same machine). Dynamic LINQ flat-path is tighter at 500-700 ns. The
+stable signal across all passes: parity to slight win on time, consistent
+~3× advantage on allocations on the flat ExpandoObject path. The earlier
+draft text claiming "~2× faster than Roslyn" was based on a single Roslyn
+measurement of 1140 ns - now reported as a range to avoid overclaiming.
 
 ### What changed: Optimization 1 + Optimization 2 (two-stage hot-path fix)
 
@@ -266,38 +282,43 @@ in `ExpandoTypeMapper.Map`.
 
 ### Reading the table
 
-- **Typed POCO path is ~115× faster than Roslyn** at ~10 ns / 0 B per row.
+- **Typed POCO path is ~40× faster than Roslyn** at ~15 ns / 0 B per row.
   Below noise floor for any real ETL pipeline.
-- **ExpandoObject path on flat shapes is ~2× faster than Roslyn** at ~500 ns /
-  ~240 B per row, with ~3× fewer allocations than the pre-optimization-2
-  cached-delegate variant. This is the typical Common.Etl workload (CSV/DB
-  source row with scalar fields).
+- **ExpandoObject path on flat shapes is at parity with Roslyn on time**
+  (~617 ns vs ~660 ns; within StdDev) and **~3× fewer allocations** (240 B vs
+  752 B per row). This is the typical Common.Etl workload (CSV/DB source row
+  with scalar fields). The 3× allocation advantage is the stable win;
+  Roslyn time numbers are highly variable run-to-run, so reporting a fixed
+  speed multiplier is not honest.
 - **ExpandoObject path on shapes with nested or collection fields** stays at
-  the slow-path cost (~1.4 µs / ~1.7 KB on a typical 5-field shape) - same as
+  the slow-path cost (~1.4 µs / ~1.7 KB on a typical 5-field shape) — same as
   before optimization, no regression. Routed to the recursive reflection mapper.
 - The original `AsQueryable.Any` baseline is preserved as a regression guard
-  showing the magnitude of the speedup vs the pre-Round-5 implementation.
+  showing the magnitude of the speedup vs the pre-Round-5 implementation
+  (~1000× faster after Optimizations 1+2 on the same code path).
 
 ### Implication for the architectural argument
 
-After Optimizations 1 + 2, Dynamic LINQ wins per-row hot path on every variant
-that matters in production:
+After Optimizations 1 + 2, Dynamic LINQ matches or beats Roslyn on every
+per-row variant that matters in production:
 
 | Dimension | Roslyn vs Dynamic LINQ |
 |-----------|------------------------|
 | Per-shape cold compile | Dynamic LINQ wins 40-120× |
 | Per-shape allocation at startup | Dynamic LINQ wins 73-146× |
 | Assembly accumulation across N shapes | Dynamic LINQ wins 30-70× |
-| Per-row hot path (warm, **typed POCO**) | **Dynamic LINQ wins ~115×** (zero alloc) |
-| Per-row hot path (warm, **ExpandoObject flat shape**) | **Dynamic LINQ wins ~2×** (~3× less alloc) |
-| Per-row hot path (warm, **ExpandoObject with nested/collection**) | Roslyn wins ~1.2× (slow-path fallback in DynamicLinq) |
+| Per-row hot path (warm, **typed POCO**) | **Dynamic LINQ wins ~40×** (zero alloc) |
+| Per-row hot path (warm, **ExpandoObject flat shape**) | **Parity on time, Dynamic LINQ ~3× less allocation** |
+| Per-row hot path (warm, **ExpandoObject with nested/collection**) | Roslyn wins ~2× (slow-path fallback in DynamicLinq) |
 
 For production-typical workloads in Common.Etl (XML-defined flows on
 ExpandoObject, stable schemas, scalar fields), `ExpressionRowFiltration` is
-the strict performance winner over Roslyn. For predicates over nested members
-the slow-path fallback keeps behavioural compatibility at the pre-optimization
-speed - functionality preserved, no regression. The pipeline-level HeadToHead
-numbers above predate the optimizations and will be re-measured separately.
+at parity with Roslyn on time and 3× lighter on allocations - on top of the
+40-120× cold-compile advantage and the no-leak property. For predicates over
+nested members the slow-path fallback keeps behavioural compatibility at the
+pre-optimization speed — functionality preserved, no regression. The
+pipeline-level HeadToHead numbers above predate the optimizations and will
+be re-measured separately.
 
 ## Results — ManyShapes (scaling property test, not workload representative)
 
@@ -447,16 +468,15 @@ All four benchmarks complete with full BenchmarkDotNet run.
    regardless of N**. The Round-1 assembly-leak hypothesis is supported
    quantitatively at the typical workload, not just at synthetic stress.
 
-3. **Hot-path gap inverted by Optimizations 1 + 2.** The original
+3. **Hot-path gap closed by Optimizations 1 + 2.** The original
    ExpressionRowFiltration was 740× slower per row than Roslyn because it
    re-parsed the predicate every row. **Optimization 1** (cached compiled
-   delegate in `ExpressionRowFiltration`) brought typed POCO to **~115× faster
-   than Roslyn** with zero allocation, and ExpandoObject to within ~1.78× of
-   Roslyn. **Optimization 2** (compiled per-shape mapper in `ExpandoTypeMapper`,
-   gated by a flat-vs-nested check) closed the remaining ExpandoObject gap on
-   flat shapes and inverted it: **~2× faster than Roslyn** with ~3× less
-   allocation per row. Predicates over nested members keep working at the
-   pre-optimization speed via the slow-path fallback - functionality preserved.
+   delegate in `ExpressionRowFiltration`) brought typed POCO to **~40× faster
+   than Roslyn** with zero allocation. **Optimization 2** (compiled per-shape
+   mapper in `ExpandoTypeMapper`, gated by a flat-vs-nested check) brought
+   the ExpandoObject flat path to **parity with Roslyn on time and ~3× less
+   allocation per row**. Predicates over nested members keep working at the
+   pre-optimization speed via the slow-path fallback — functionality preserved.
 
 4. **Q1 has a clean answer.** The shipped `ExpressionRowFiltration` and the
    `RowMultiplication`-based prototype run at the same speed and allocate the
