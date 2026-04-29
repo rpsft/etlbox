@@ -57,6 +57,29 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     /// </summary>
     public bool FailOnMissingField { get; set; } = true;
 
+    /// <summary>
+    /// When true, all input fields are copied to the output before applying Mappings.
+    /// Mappings may add new fields or override existing ones. When false (default),
+    /// only the fields listed in Mappings appear in the output.
+    /// </summary>
+    /// <remarks>
+    /// For typed transformations, copy is supported only when <typeparamref name="TInput"/> is the
+    /// same type as, or a subtype of, <typeparamref name="TOutput"/>. Setting this to
+    /// <see langword="true"/> with an incompatible type pair throws
+    /// <see cref="InvalidOperationException"/> at runtime.
+    /// </remarks>
+    public bool PassThrough { get; set; } = false;
+
+    private static readonly bool _outputAssignableFromInput = typeof(TOutput).IsAssignableFrom(
+        typeof(TInput)
+    );
+    private static readonly PropertyInfo[] _passThroughProperties = typeof(TOutput)
+        .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        .Where(p => p.CanRead && p.CanWrite)
+        .ToArray();
+    private static readonly ConcurrentDictionary<string, PropertyInfo?> _outputPropertiesCache =
+        new();
+
     private IEnumerable<Assembly> _additionalAssemblies = Array.Empty<Assembly>();
     private readonly ConcurrentDictionary<string, ScriptRunner<object>?> _runnersCache = new();
 
@@ -90,6 +113,13 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             ?? throw new InvalidOperationException(
                 $"Could not create instance of output type '{typeof(TOutput).FullName}'. This may be caused by a missing parameterless constructor."
             );
+
+        if (PassThrough)
+        {
+            var outputDict = (IDictionary<string, object?>)output;
+            foreach (var pair in arg)
+                outputDict[pair.Key] = pair.Value;
+        }
 
         var type = ScriptBuilder.Default.ForType(arg).WithReferences(_additionalAssemblies);
 
@@ -128,6 +158,19 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             ?? throw new InvalidOperationException(
                 $"Could not create instance of output type {typeof(TOutput).FullName}. This may be caused by a missing parameterless constructor."
             );
+
+        if (PassThrough && _outputAssignableFromInput)
+        {
+            foreach (var prop in _passThroughProperties)
+                prop.SetValue(output, prop.GetValue(arg));
+        }
+        else if (PassThrough)
+        {
+            throw new InvalidOperationException(
+                $"PassThrough requires TInput ({typeof(TInput).FullName}) to be the same type as or a subtype of TOutput ({typeof(TOutput).FullName})."
+            );
+        }
+
         var builder = ScriptBuilder.Default.ForType<TInput>();
         foreach (var key in Mappings.Keys)
         {
@@ -136,7 +179,10 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             var value = runner?.RunAsync(arg).Result.ReturnValue;
             try
             {
-                var property = typeof(TOutput).GetProperty(key);
+                var property = _outputPropertiesCache.GetOrAdd(
+                    key,
+                    k => typeof(TOutput).GetProperty(k)
+                );
                 if (property == null)
                     throw new ArgumentException(
                         $"Property {key} not found on type {typeof(TOutput).FullName}."

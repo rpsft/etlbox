@@ -232,6 +232,185 @@ public class ScriptedRowTransformationTests
         Assert.Equal("{\"Id\":1,\"Name\":\"test\"}", res["Json"]);
     }
 
+    [Fact]
+    public void PassThrough_Dynamic_PreservesInputFieldsNotInMappings()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            PassThrough = true,
+        };
+        script.Mappings.Add("NewId", "Id + 1");
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert — both original fields and the new mapped field are present
+        Assert.Single(memoryDestination.Data);
+        var row = (IDictionary<string, object?>)memoryDestination.Data.First();
+        Assert.Equal(1, row["Id"]);
+        Assert.Equal("Test", row["Name"]);
+        Assert.Equal(2, row["NewId"]);
+    }
+
+    [Fact]
+    public void PassThrough_Dynamic_MappingOverridesExistingField()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            PassThrough = true,
+        };
+        script.Mappings.Add("Id", "Id + 100");
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert — Id is overridden by mapping, Name is preserved from pass-through
+        Assert.Single(memoryDestination.Data);
+        var row = (IDictionary<string, object?>)memoryDestination.Data.First();
+        Assert.Equal(101, row["Id"]);
+        Assert.Equal("Test", row["Name"]);
+    }
+
+    [Fact]
+    public void PassThrough_False_Dynamic_OutputContainsOnlyMappedFields()
+    {
+        // Arrange — PassThrough defaults to false
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>();
+        script.Mappings.Add("NewId", "Id + 1");
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert — only the mapped field is present; originals are not passed through
+        Assert.Single(memoryDestination.Data);
+        var row = (IDictionary<string, object?>)memoryDestination.Data.First();
+        Assert.True(row.ContainsKey("NewId"));
+        Assert.False(row.ContainsKey("Id"));
+        Assert.False(row.ContainsKey("Name"));
+    }
+
+    [Fact]
+    public void PassThrough_Typed_PreservesInputPropertiesNotInMappings()
+    {
+        // Arrange
+        var memorySource = new MemorySource<MyRowType>();
+        memorySource.DataAsList.Add(new MyRowType { Id = 5, Name = "Alice" });
+        var script = new ScriptedRowTransformation<MyRowType, MyRowType> { PassThrough = true };
+        script.Mappings.Add("Id", "Id * 2");
+        var memoryDestination = new MemoryDestination<MyRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert — Name is preserved from pass-through; Id is overridden by the mapping
+        Assert.Single(memoryDestination.Data);
+        var row = memoryDestination.Data.First();
+        Assert.Equal(10, row.Id);
+        Assert.Equal("Alice", row.Name);
+    }
+
+    [Fact]
+    public void PassThrough_False_Typed_PropertiesNotInMappingsAreDefault()
+    {
+        // Arrange
+        var memorySource = new MemorySource<MyRowType>();
+        memorySource.DataAsList.Add(new MyRowType { Id = 5, Name = "Alice" });
+        var script = new ScriptedRowTransformation<MyRowType, MyRowType>();
+        script.Mappings.Add("Id", "Id * 2");
+        var memoryDestination = new MemoryDestination<MyRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert — Name is absent from Mappings and not passed through, so it stays at default (null)
+        Assert.Single(memoryDestination.Data);
+        var row = memoryDestination.Data.First();
+        Assert.Equal(10, row.Id);
+        Assert.Null(row.Name);
+    }
+
+    [Fact]
+    public void PassThrough_Typed_IncompatibleTypes_ThrowsInvalidOperationException()
+    {
+        // Arrange — TInput (MyRowType) is not assignable to TOutput (MyOtherRowType)
+        var memorySource = new MemorySource<MyRowType>();
+        memorySource.DataAsList.Add(new MyRowType { Id = 3, Name = "Bob" });
+        var script = new ScriptedRowTransformation<MyRowType, MyOtherRowType>
+        {
+            PassThrough = true,
+        };
+        script.Mappings.Add("Value", "Id * 10");
+        var memoryDestination = new MemoryDestination<MyOtherRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act & Assert — InvalidOperationException propagates as AggregateException from Wait()
+        Assert.Throws<AggregateException>(() =>
+        {
+            memorySource.Execute(CancellationToken.None);
+            memoryDestination.Wait();
+        });
+    }
+
+    [Fact]
+    public void PassThrough_Typed_SubtypeInput_CopiesBaseProperties()
+    {
+        // Arrange — MyDerivedRowType extends MyRowType, which extends MyOutputBaseType
+        var memorySource = new MemorySource<MyDerivedRowType>();
+        memorySource.DataAsList.Add(
+            new MyDerivedRowType
+            {
+                Id = 7,
+                Name = "Charlie",
+                Extra = "ignored",
+            }
+        );
+        var script = new ScriptedRowTransformation<MyDerivedRowType, MyRowType>
+        {
+            PassThrough = true,
+        };
+        script.Mappings.Add("Id", "Id * 3");
+        var memoryDestination = new MemoryDestination<MyRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert — base properties are copied; mapping overrides Id; Extra is not on TOutput
+        Assert.Single(memoryDestination.Data);
+        var row = memoryDestination.Data.First();
+        Assert.Equal(21, row.Id);
+        Assert.Equal("Charlie", row.Name);
+    }
+
     private static ExpandoObject CreateTestDataItem(int id, string name)
     {
         var result = new ExpandoObject();
@@ -245,5 +424,17 @@ public class ScriptedRowTransformationTests
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    public class MyOtherRowType
+    {
+        public int Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    public class MyDerivedRowType : MyRowType
+    {
+        public string? Extra { get; set; }
     }
 }
