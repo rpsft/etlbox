@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.DynamicLinq;
 using ALE.ETLBox.Scripting;
@@ -32,14 +33,14 @@ public class MethodCallSupportTests
     // ---- Built-in instance method on a string property ---------------------
 
     [Fact]
-    public void Roslyn_StringLength_Works()
+    public async Task Roslyn_StringLength_Works()
     {
         var row = MakeRow(("Type", (object)"Day"));
         var dict = (IDictionary<string, object?>)row;
 
         var runner = ScriptBuilder.Default.ForType(dict).CreateRunner<bool>("Type.Length > 0");
 
-        var result = runner.RunAsync(dict).Result.ReturnValue;
+        var result = (await runner.RunAsync(dict)).ReturnValue;
         Assert.True(result);
     }
 
@@ -58,9 +59,9 @@ public class MethodCallSupportTests
     // ---- Built-in instance method on DateTime ------------------------------
 
     [Fact]
-    public void Roslyn_DateTimeAddDays_Works()
+    public async Task Roslyn_DateTimeAddDays_Works()
     {
-        var date = new DateTime(2026, 1, 1);
+        var date = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
         var row = MakeRow(("Date", (object)date));
         var dict = (IDictionary<string, object?>)row;
 
@@ -68,14 +69,14 @@ public class MethodCallSupportTests
             .Default.ForType(dict)
             .CreateRunner<bool>("Date.AddDays(1).Year == 2026");
 
-        var result = runner.RunAsync(dict).Result.ReturnValue;
+        var result = (await runner.RunAsync(dict)).ReturnValue;
         Assert.True(result);
     }
 
     [Fact]
     public void DynamicLinq_DateTimeAddDays_Works()
     {
-        var date = new DateTime(2026, 1, 1);
+        var date = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
         var row = MakeRow(("Date", (object)date));
         var (type, instance) = ExpandoTypeMapper.Map(row);
         var array = Array.CreateInstance(type, 1);
@@ -88,7 +89,7 @@ public class MethodCallSupportTests
     // ---- Method call on user type (the JsonNode-style case in note 84243) --
 
     [Fact]
-    public void Roslyn_UserTypeMethod_Works()
+    public async Task Roslyn_UserTypeMethod_Works()
     {
         // SimpleBox is a tiny stand-in for any user type with a ToText() method.
         // Roslyn just compiles and dispatches - works out of the box.
@@ -99,7 +100,7 @@ public class MethodCallSupportTests
             .Default.ForType(dict)
             .CreateRunner<bool>("Box.ToText() == \"box(42)\"");
 
-        var result = runner.RunAsync(dict).Result.ReturnValue;
+        var result = (await runner.RunAsync(dict)).ReturnValue;
         Assert.True(result);
     }
 
@@ -191,7 +192,7 @@ public class MethodCallSupportTests
     }
 
     [Fact]
-    public void DynamicLinq_AdditionalAssemblyNames_GetterRoundtrips()
+    public void DynamicLinq_AdditionalAssemblyNames_GetterRoundTrip()
     {
         // Round-trip through the property getter so XML deserialization scenarios
         // (which read back via reflection) see the value they set.
@@ -245,7 +246,7 @@ public class MethodCallSupportTests
     }
 
     [Fact]
-    public void DynamicLinq_AdditionalImports_GetterRoundtrips()
+    public void DynamicLinq_AdditionalImports_GetterRoundTrip()
     {
         var filtration = new ExpressionRowFiltration<RowWithBox>();
         filtration.AdditionalImports = new[] { "MyCompany.Domain", "Other.Namespace" };
@@ -257,7 +258,7 @@ public class MethodCallSupportTests
     // ---- Static method call ------------------------------------------------
 
     [Fact]
-    public void Roslyn_StaticFormat_Works()
+    public async Task Roslyn_StaticFormat_Works()
     {
         var row = MakeRow(("Type", (object)"Day"));
         var dict = (IDictionary<string, object?>)row;
@@ -266,7 +267,7 @@ public class MethodCallSupportTests
             .Default.ForType(dict)
             .CreateRunner<bool>("string.Format(\"{0}\", Type) == \"Day\"");
 
-        var result = runner.RunAsync(dict).Result.ReturnValue;
+        var result = (await runner.RunAsync(dict)).ReturnValue;
         Assert.True(result);
     }
 

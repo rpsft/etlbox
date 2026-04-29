@@ -252,9 +252,9 @@ public class ExpressionRowFiltrationTests
         // Create typed array via reflection so AsQueryable sees the DynamicClass type
         var typedArray = Array.CreateInstance(type, 1);
         typedArray.SetValue(instance, 0);
-        var queryable = typedArray.AsQueryable();
+        var query = typedArray.AsQueryable();
 
-        var result = queryable.Where("Reserve > 0").Any();
+        var result = query.Where("Reserve > 0").Any();
         Assert.True(result);
     }
 
@@ -315,7 +315,15 @@ public class ExpressionRowFiltrationTests
     public void NestedExpando_NullCheckOnMember()
     {
         var withDate = new ExpandoObject();
-        ((IDictionary<string, object>)withDate)["ReportDate"] = new DateTime(2026, 4, 25);
+        ((IDictionary<string, object>)withDate)["ReportDate"] = new DateTime(
+            2026,
+            4,
+            25,
+            0,
+            0,
+            0,
+            DateTimeKind.Unspecified
+        );
         var row1 = MakeRow(("Context", (object)withDate));
 
         var withoutDate = new ExpandoObject();
@@ -457,7 +465,7 @@ public class ExpressionRowFiltrationTests
     // --- Collection of nested dicts: Any(predicate) ---
 
     [Fact]
-    public void CollectionOfDicts_AnyPredicate()
+    public void CollectionOfDictionaries_AnyPredicate()
     {
         ExpandoObject MakeItem(decimal sum)
         {
@@ -477,7 +485,7 @@ public class ExpressionRowFiltrationTests
     // --- Collection: Count() ---
 
     [Fact]
-    public void CollectionOfDicts_Count()
+    public void CollectionOfDictionaries_Count()
     {
         ExpandoObject MakeItem(int id)
         {
@@ -499,7 +507,7 @@ public class ExpressionRowFiltrationTests
     // --- Collection: Sum(selector) ---
 
     [Fact]
-    public void CollectionOfDicts_SumSelector()
+    public void CollectionOfDictionaries_SumSelector()
     {
         ExpandoObject MakeItem(decimal amount)
         {

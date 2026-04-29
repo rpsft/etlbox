@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Expressions;
 using System.Reflection;
 using ALE.ETLBox.DataFlow;
@@ -129,7 +127,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         {
             _additionalAssemblies = (value ?? Array.Empty<string>())
                 .Where(n => !string.IsNullOrWhiteSpace(n))
-                .Select(LoadAssembly)
+                .Select(AssemblyResolver.Load)
                 .ToArray();
             RebuildTypeProvider();
         }
@@ -201,69 +199,20 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     //  - types from RegisterCustomTypes (_registeredTypes)
     //  - public exported types from AdditionalAssemblyNames-loaded assemblies
     // and applies AdditionalImports as namespace prefixes for short-name resolution.
+    // See AssemblyResolver and DynamicLinqTypeProvider for the underlying helpers.
     private void RebuildTypeProvider()
     {
         var types = new HashSet<Type>(_registeredTypes);
         foreach (var assembly in _additionalAssemblies)
         {
-            foreach (var t in SafeGetExportedTypes(assembly))
+            foreach (var t in AssemblyResolver.GetExportedTypesSafe(assembly))
             {
                 types.Add(t);
             }
         }
 
-        ParsingConfig.CustomTypeProvider = new InlineCustomTypeProvider(types, _additionalImports);
+        ParsingConfig.CustomTypeProvider = new DynamicLinqTypeProvider(types, _additionalImports);
         InvalidateCompiledCache();
-    }
-
-    private static Assembly LoadAssembly(string nameOrPath)
-    {
-        // 1. Already loaded in AppDomain (most common case for published packages)
-        var existing = AppDomain
-            .CurrentDomain.GetAssemblies()
-            .FirstOrDefault(a =>
-                a.GetName().Name == nameOrPath || a.GetName().FullName == nameOrPath
-            );
-        if (existing is not null)
-            return existing;
-
-        // 2. AssemblyName-style load (resolves via probing path / GAC)
-        try
-        {
-            return Assembly.Load(new AssemblyName(nameOrPath));
-        }
-        catch (Exception nameEx)
-            when (nameEx is FileNotFoundException or FileLoadException or BadImageFormatException)
-        {
-            // 3. Path-based load (fallback for explicit file paths). Assembly.LoadFrom
-            // is the intentional choice here - the input could be a path provided in
-            // an XML config, and Assembly.Load only accepts AssemblyName / display name.
-#pragma warning disable S3885 // "Assembly.Load" should be used - LoadFrom is intentional path fallback
-            try
-            {
-                return Assembly.LoadFrom(nameOrPath);
-            }
-#pragma warning restore S3885
-            catch (Exception pathEx)
-            {
-                throw new InvalidOperationException(
-                    $"Could not load assembly '{nameOrPath}'. Tried Assembly.Load by name and Assembly.LoadFrom by path. Original load error: {nameEx.Message}",
-                    pathEx
-                );
-            }
-        }
-    }
-
-    private static IEnumerable<Type> SafeGetExportedTypes(Assembly assembly)
-    {
-        try
-        {
-            return assembly.GetExportedTypes();
-        }
-        catch (ReflectionTypeLoadException ex)
-        {
-            return ex.Types.Where(t => t is not null)!;
-        }
     }
 
     // Compiled-delegate cache. Holds the last successful Compile() output for
@@ -315,54 +264,6 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         _compiledPredicate = lambda.Compile();
         _compiledForExpression = FilterExpression;
         _compiledForConfig = ParsingConfig;
-    }
-
-    private sealed class InlineCustomTypeProvider : IDynamicLinqCustomTypeProvider
-    {
-        private readonly HashSet<Type> _types;
-        private readonly string[] _imports;
-
-        public InlineCustomTypeProvider(HashSet<Type> types, string[]? imports = null)
-        {
-            _types = types;
-            _imports = imports ?? Array.Empty<string>();
-        }
-
-        public HashSet<Type> GetCustomTypes() => _types;
-
-        public Dictionary<Type, List<MethodInfo>> GetExtensionMethods() => new();
-
-        public Type? ResolveType(string typeName)
-        {
-            // Direct match by full or short name.
-            var direct = _types.FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
-            if (direct is not null)
-                return direct;
-
-            // Try treating typeName as a short name within imported namespaces.
-            foreach (var import in _imports)
-            {
-                var qualified = $"{import}.{typeName}";
-                var match = _types.FirstOrDefault(t => t.FullName == qualified);
-                if (match is not null)
-                    return match;
-            }
-            return null;
-        }
-
-        public Type? ResolveTypeBySimpleName(string simpleTypeName)
-        {
-            // Imported namespaces win over plain short-name match - explicit user
-            // intent ("I imported this namespace, prefer types from it").
-            foreach (var import in _imports)
-            {
-                var qualified = $"{import}.{simpleTypeName}";
-                var match = _types.FirstOrDefault(t => t.FullName == qualified);
-                if (match is not null)
-                    return match;
-            }
-            return _types.FirstOrDefault(t => t.Name == simpleTypeName);
-        }
     }
 }
 

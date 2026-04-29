@@ -6,6 +6,11 @@ using ALE.ETLBox.Scripting;
 using BenchmarkDotNet.Attributes;
 using ETLBox.DynamicLinq.Benchmarks.TestData;
 
+// GC.Collect / GC.GetTotalMemory in [GlobalSetup] and [GlobalCleanup] are intentional
+// for the memory-delta probe - they bracket the workload to measure assembly and
+// managed-memory accumulation across the run. Not part of the timed workload itself.
+#pragma warning disable S1215 // GC.Collect should not be called - intentional probe boundary
+
 namespace ETLBox.DynamicLinq.Benchmarks.Benchmarks;
 
 /// <summary>
