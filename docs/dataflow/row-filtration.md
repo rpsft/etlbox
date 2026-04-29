@@ -229,3 +229,13 @@ Both paths feed into `DynamicClassFactory.CreateType(properties)` which emits th
 ### Memory characteristics
 
 Types are emitted into one shared persistent `AssemblyBuilder` (Reflection.Emit). There is no `Assembly.Load(bytes)` per shape, so the assembly is not duplicated and not pinned in memory in the way Roslyn-compiled scripts are.
+
+### File layout
+
+Implementation in `ETLBox.DynamicLinq/`:
+
+- `ExpressionRowFiltration.cs` — public surface. Generic `ExpressionRowFiltration<TInput>` and the non-generic `ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>`. Holds the cached compiled predicate, the `EvaluateExpression` method, and the public properties (`FilterExpression`, `ParsingConfig`, `AdditionalAssemblyNames`, `AdditionalImports`).
+- `ExpandoTypeMapper.cs` — internal static class. Handles the fast/slow path routing for `Map(ExpandoObject)` plus the reflection-based recursive mapping for nested shapes.
+- `AssemblyResolver.cs` — internal static helper. `Load(string)` with the three-step resolution fallback (AppDomain → `Assembly.Load(AssemblyName)` → `Assembly.LoadFrom(path)`) and `GetExportedTypesSafe(Assembly)` for partial-load resilience.
+- `DynamicLinqTypeProvider.cs` — internal `IDynamicLinqCustomTypeProvider` implementation. Holds the registered custom types and the namespace imports, used as `ParsingConfig.CustomTypeProvider`.
+- `EtlBoxDynamicLinqServiceCollectionExtensions.cs` — DI registration helpers.

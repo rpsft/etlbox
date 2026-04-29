@@ -142,14 +142,15 @@ ScriptedRowTransformation").
 
 ## Suggested next steps
 
-1. Run the benchmark, attach numbers to this document.
-2. Audit existing `ScriptedRowTransformation` usages.
-3. Based on (1) and (2), pick a direction: keep both, drop one, or extend Dynamic LINQ.
-4. If keeping both — reinforce the documentation boundary and possibly rename one
-   component to make the boundary explicit (e.g. `ScriptedRowFiltration` for the
-   Roslyn-based filter to mirror `ScriptedRowTransformation`).
-5. Mapping-expression idea (note 84246) is a separate design discussion; track it as
-   its own task once the engine question is settled.
+Items 1-3 are complete (Round 5 + 6, 2026-04-29). Items 4-7 remain open:
+
+1. ~~Run the benchmark, attach numbers to this document.~~ — **done**, see "Benchmark Results" below; HotEvaluation re-measured after Optimizations 1+2 (commit `f3ae2718`) and after Phase 1 (commit `0e3c2aaf`).
+2. ~~Phase 1 — `AdditionalAssemblyNames` / `AdditionalImports` symmetry with `ScriptedRowTransformation` MR !113.~~ — **done** (commit `0e3c2aaf`). Closes the XML-flow user-type case raised in MR review note 84488.
+3. ~~Refactor — extract `AssemblyResolver` and `DynamicLinqTypeProvider` helpers.~~ — **done** (commit `e880c843`).
+4. Audit existing `ScriptedRowTransformation` usages in real flows. Goal: count how many genuinely need multi-statement bodies / async vs. how many can move to `ExpressionRowFiltration` or a future `ExpressionRowTransformation`.
+5. Phase 2 — `ExpressionRowTransformation<TInput, TOutput>` as a drop-in alternative to `ScriptedRowTransformation` for the transformation case. Out of scope for MR !116; planned as a follow-up task. After Phase 2 lands, the unification question (drop one engine, keep both, or merge) becomes answerable from data.
+6. Based on (4) and (5), pick a direction: keep both, drop Roslyn for predicate / transformation case, or maintain both with documented boundary. If keeping both — possibly rename one component to make the boundary explicit (e.g. `ScriptedRowFiltration` mirroring `ScriptedRowTransformation`).
+7. Mapping-expression idea (note 84246) is a separate design discussion; track it as its own task once the engine question is settled.
 
 ## Benchmark Results (2026-04-28)
 
@@ -206,7 +207,7 @@ ExpandoObject stays at exactly +33 regardless of N — `DynamicClassFactory`
 emits new shape types into the same shared persistent `AssemblyBuilder`.
 The Round-1 assembly-leak hypothesis is supported quantitatively.
 
-Feature parity matrix (full xUnit run, 9/9 PASS after Round 5):
+Feature parity matrix (full xUnit run, 51/51 PASS after Round 5 + 6):
 
 | Scenario | Roslyn | Dynamic LINQ |
 |----------|:------:|:------------:|
@@ -214,6 +215,8 @@ Feature parity matrix (full xUnit run, 9/9 PASS after Round 5):
 | Static method on built-in type (`string.Format`) | works | **works (out of the box)** |
 | Instance method on user type, no setup | works | does not work |
 | Instance method on user type, after `RegisterCustomTypes(typeof(T))` | works | **works** |
+| Instance method on user type via assembly registration | works | **works** (after Phase 1) |
+| Short type name resolution via namespace imports | works | **works** (after Phase 1) |
 
 The "JsonNode → string" objection from note 84243 is **practically closed** after
 Round 5 (note 84400): `ExpressionRowFiltration<TInput>` exposes
@@ -229,11 +232,39 @@ filtration.FilterExpression = "Payload.ToJsonString().Length > 100";
 For deeper customization (extension methods, alternative type resolution, parser
 flags) the underlying `ParsingConfig` is also exposed as a public property.
 
+**Phase 1 (Round 6, applied 2026-04-29 in commit `0e3c2aaf`):** symmetric
+configuration with `ScriptedRowTransformation` (MR !113):
+
+- `AdditionalAssemblyNames` — names or file paths of assemblies. All public
+  exported types from each assembly are added to the type provider in bulk.
+  Resolution: AppDomain → `Assembly.Load(AssemblyName)` → `Assembly.LoadFrom(path)`.
+- `AdditionalImports` — namespace prefixes used as imports for short type name
+  resolution. Imported namespaces win over plain short-name match.
+
+XML form:
+
+```xml
+<ExpressionRowFiltration>
+    <FilterExpression>MyService.IsValid(Payload)</FilterExpression>
+    <AdditionalAssemblyNames>
+        <string>MyCompany.Domain</string>
+    </AdditionalAssemblyNames>
+    <AdditionalImports>
+        <string>MyCompany.Domain</string>
+    </AdditionalImports>
+</ExpressionRowFiltration>
+```
+
+This closes the XML-flow use case (note 84488 in MR review): users no longer
+need per-type `RegisterCustomTypes` calls; one assembly entry registers the
+whole namespace. Implementation lives in two helper files alongside the main
+class: `AssemblyResolver.cs` and `DynamicLinqTypeProvider.cs` (refactor commit
+`e880c843`), keeping the `ExpressionRowFiltration` class focused on the
+filtration concern.
+
 This narrows the engine difference from "Roslyn supports method calls, Dynamic
-LINQ does not" to "Roslyn discovers user types automatically, Dynamic LINQ
-requires a single registration call". The remaining capability gap is in
-multi-statement bodies, async, and unregistered method discovery — none of which
-apply to the predicate filtration use case this MR ships.
+LINQ does not" to two narrow gaps: multi-statement bodies and async. Neither
+applies to the predicate filtration use case this MR ships.
 
 ## Hot path optimization roadmap (Round 5)
 

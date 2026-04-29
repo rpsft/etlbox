@@ -198,6 +198,8 @@ Supported in the expression: comparisons (`==`, `!=`, `>`, `<`, `>=`, `<=`), log
 
 Heterogeneous collections (items with different field sets or types in the same collection) are not supported and raise an exception when encountered.
 
+User-defined types (DTOs, domain classes) are not visible to the parser by default; their methods become callable from the predicate after either per-type registration via `RegisterCustomTypes(typeof(MyType))` or bulk registration via the `AdditionalAssemblyNames` / `AdditionalImports` properties (symmetric with `ScriptedRowTransformation`). For full configuration, performance characteristics, and the typed-POCO variant `ExpressionRowFiltration<TInput>` see [docs/dataflow/row-filtration.md](row-filtration.md).
+
 ### Splitting data
 
 In some of your data flow you may want to split the data and have it processed differently in the further flow.
