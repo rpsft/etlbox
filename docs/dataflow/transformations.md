@@ -187,7 +187,7 @@ RowFiltration filtration = new RowFiltration(row => ((dynamic)row).Col1 > 0);
 
 ### ExpressionRowFiltration
 
-Available in `ETLBox.Scripting`. Filters `ExpandoObject` rows by a string predicate evaluated via `System.Linq.Dynamic.Core`. Useful in XML-defined data flows where the predicate must be configurable from the package without recompiling.
+Available in `ETLBox.DynamicLinq` (separate lightweight package without the Roslyn dependency). Filters `ExpandoObject` rows by a string predicate evaluated via `System.Linq.Dynamic.Core`. Useful in XML-defined data flows where the predicate must be configurable from the package without recompiling.
 
 ```csharp
 ExpressionRowFiltration filtration = new ExpressionRowFiltration(

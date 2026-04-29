@@ -1,10 +1,10 @@
 using System.Dynamic;
 using System.Linq.Dynamic.Core;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Scripting;
+using ALE.ETLBox.DynamicLinq;
 using ETLBox.Primitives;
 
-namespace ETLBox.Scripting.Tests;
+namespace ETLBox.DynamicLinq.Tests;
 
 public class ExpressionRowFiltrationTests
 {

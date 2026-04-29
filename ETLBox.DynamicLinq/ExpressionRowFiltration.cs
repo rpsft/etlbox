@@ -6,7 +6,7 @@ using ALE.ETLBox.DataFlow;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
-namespace ALE.ETLBox.Scripting;
+namespace ALE.ETLBox.DynamicLinq;
 
 /// <summary>
 /// Filters rows by a string expression parsed and compiled by
@@ -29,9 +29,9 @@ namespace ALE.ETLBox.Scripting;
 /// <c>Items.Contains(value)</c>).
 /// </para>
 /// <para>
-/// For the broader picture — when to pick this over <c>ScriptedRowTransformation</c>,
+/// For the broader picture - when to pick this over <c>ScriptedRowTransformation</c>,
 /// limitations on heterogeneous collections, internals of the
-/// <see cref="ExpressionRowFiltration"/> non-generic form, supported value types — see
+/// <see cref="ExpressionRowFiltration"/> non-generic form, supported value types - see
 /// <c>docs/dataflow/row-filtration.md</c>.
 /// </para>
 /// <para>
@@ -107,7 +107,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
 /// </para>
 /// <para>
 /// The mapped instance is wrapped in an array via <c>Array.CreateInstance(type, 1)</c>
-/// — required because <c>new[] { instance }</c> would give <c>object[]</c> and
+/// - required because <c>new[] { instance }</c> would give <c>object[]</c> and
 /// <c>AsQueryable()</c> would lose the runtime element type, breaking property
 /// resolution in the parsed expression.
 /// </para>

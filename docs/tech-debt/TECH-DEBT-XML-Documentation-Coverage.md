@@ -20,6 +20,7 @@ tooltips for consumers of the NuGet packages.
 | ETLBox.Kafka             |     7 |         4 |        3 | 57%      |
 | ETLBox.Rest              |     3 |         2 |        1 | 66%      |
 | ETLBox.Scripting         |     7 |         5 |        2 | 71%      |
+| ETLBox.DynamicLinq        |     3 |         3 |        0 | 100%     |
 | ETLBox.AI                |     8 |         6 |        2 | 75%      |
 | ETLBox.RabbitMq          |     5 |         4 |        1 | 80%      |
 | ETLBox.Json              |     2 |         2 |        0 | 100%     |

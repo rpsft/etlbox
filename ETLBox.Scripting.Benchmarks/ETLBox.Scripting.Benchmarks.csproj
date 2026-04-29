@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
     <ProjectReference Include="..\ETLBox.Scripting\ETLBox.Scripting.csproj" />
+    <ProjectReference Include="..\ETLBox.DynamicLinq\ETLBox.DynamicLinq.csproj" />
   </ItemGroup>
 
 </Project>

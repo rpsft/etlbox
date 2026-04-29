@@ -1,23 +1,23 @@
-# Tech Debt: Expression Engine Unification in ETLBox.Scripting
+# Tech Debt: Expression Engine Unification
 
-**Status:** Open
+**Status:** Split applied (2026-04-29). Unification question still open.
 **Created:** 2026-04-28
 **Priority:** Medium
 **Origin:** review feedback on MR !116 (RowFiltration / ExpressionRowFiltration), notes 84243 and 84246
 
 ## Problem
 
-`ETLBox.Scripting` currently exposes two different engines for evaluating user-supplied
-expressions on a row:
+Two different engines exist for evaluating user-supplied expressions on a row:
 
-| Component | Engine | What it can express |
-|-----------|--------|---------------------|
-| `ScriptedRowTransformation` | Roslyn | Full C# inside the body — method calls, async, statement blocks, custom helper types |
-| `ExpressionRowFiltration`   | `System.Linq.Dynamic.Core` | Comparisons, arithmetic, logical operators, member access, null checks, LINQ-style collection methods. No method calls on user types, no statements |
+| Component | Package | Engine | What it can express |
+|-----------|---------|--------|---------------------|
+| `ScriptedRowTransformation` | `ETLBox.Scripting` | Roslyn | Full C# inside the body — method calls, async, statement blocks, custom helper types |
+| `ExpressionRowFiltration`   | `ETLBox.DynamicLinq` | `System.Linq.Dynamic.Core` | Comparisons, arithmetic, logical operators, member access, null checks, LINQ-style collection methods. No method calls on user types, no statements |
 
-Two languages with different capabilities living in the same package add cognitive load:
-a user picking up `ETLBox.Scripting` has to learn which one to reach for in each case,
-and the difference is not visible from the names.
+As of 2026-04-29 the two engines live in **separate NuGet packages** so consumers
+who need only predicate filtration pull `ETLBox.DynamicLinq` and avoid the transitive
+Roslyn cost. The deeper question — whether one engine can subsume the other — is
+still open and tracked below.
 
 ## Why both exist today
 
@@ -89,6 +89,45 @@ This file documents the question. The decision is intentionally deferred:
   ScriptedRowTransformation").
 - A separate task will cover the benchmark and the decision.
 - A separate task will cover the mapping-expression idea (note 84246).
+
+## Decision: split into a separate package (applied 2026-04-29)
+
+Following the benchmark results below and reviewer feedback on MR !116, the
+Dynamic LINQ-based filtration was extracted into a dedicated package
+**`ETLBox.DynamicLinq`**.
+
+What landed:
+
+- `ETLBox.Scripting` keeps the Roslyn-based components (`ScriptedRowTransformation`,
+  `ScriptBuilder`, `TypedScriptBuilder`, `EtlBoxScriptingServiceCollectionExtensions`)
+  and its `Microsoft.CodeAnalysis.CSharp.Scripting` dependency. The
+  `System.Linq.Dynamic.Core` dependency was removed.
+- `ETLBox.DynamicLinq` (new) hosts `ExpressionRowFiltration<TInput>`,
+  `ExpressionRowFiltration` (non-generic), `ExpandoTypeMapper` (internal), and
+  `EtlBoxDynamicLinqServiceCollectionExtensions`. Depends on `ETLBox`,
+  `ETLBox.Common` and `System.Linq.Dynamic.Core`. Namespace: `ALE.ETLBox.DynamicLinq`.
+- `ETLBox.DynamicLinq.Tests` (new) hosts `ExpressionRowFiltrationTests` (37 tests)
+  and `FeatureParity/MethodCallSupportTests` (8 tests). Both moved from
+  `ETLBox.Scripting.Tests`.
+- `ETLBox.Serialization.Tests/ExpressionRowFiltrationDeserializationTests.cs`
+  references `ALE.ETLBox.DynamicLinq` instead of `ALE.ETLBox.Scripting`.
+- `ETLBox.Scripting.Benchmarks` references both packages — Roslyn comparisons
+  through `ETLBox.Scripting` and Dynamic LINQ paths through `ETLBox.DynamicLinq`.
+
+Test counts after split:
+
+| Project | Pass | Notes |
+|---------|------|-------|
+| `TestTransformations` | 11/11 | Core `RowFiltration` (no Dynamic LINQ) |
+| `ETLBox.DynamicLinq.Tests` | 45/45 | 37 expression filtration + 8 feature-parity |
+| `ETLBox.Scripting.Tests` | 13/13 | Roslyn (`ScriptBuilder`, `ScriptedRowTransformation`) |
+| `ETLBox.Serialization.Tests` (filter) | 4/4 | XML deserialization + end-to-end pipeline |
+| **Total** | **73/73** | |
+
+The unification question — whether one engine can replace the other — remains
+open (questions 1-4 above). Until that lands, the two packages coexist with the
+boundary documented in `docs/dataflow/row-filtration.md` ("When to use this vs
+ScriptedRowTransformation").
 
 ## Suggested next steps
 

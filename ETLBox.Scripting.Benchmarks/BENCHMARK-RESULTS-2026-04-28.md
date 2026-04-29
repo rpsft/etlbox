@@ -97,7 +97,7 @@ Reading the table:
 
 ## Results — Feature Parity (full xUnit run, 8/8 PASS)
 
-The capability matrix below is asserted by `ETLBox.Scripting.Tests/FeatureParity/MethodCallSupportTests.cs`. Each row corresponds to a pair of test cases.
+The capability matrix below is asserted by `ETLBox.DynamicLinq.Tests/FeatureParity/MethodCallSupportTests.cs`. Each row corresponds to a pair of test cases.
 
 | Scenario | Roslyn | Dynamic LINQ |
 |----------|:------:|:------------:|
@@ -360,7 +360,7 @@ timings depend on hardware — what matters is the ratio between engines.
 > all the predicate algebra we need. The remaining gap is method calls on
 > user types — that one needs ParsingConfig.CustomTypeProvider registration.
 > So a JsonNode → string scenario is solvable, just with explicit setup. 8/8
-> feature-parity tests in ETLBox.Scripting.Tests/FeatureParity/ assert this
+> feature-parity tests in ETLBox.DynamicLinq.Tests/FeatureParity/ assert this
 > matrix.
 >
 > Position on "two languages in one package": for the predicate use case —
@@ -394,7 +394,7 @@ dotnet run --project ETLBox.Scripting.Benchmarks/ETLBox.Scripting.Benchmarks.csp
     --no-build -- --filter "*"
 
 # Feature parity tests
-dotnet test ETLBox.Scripting.Tests/ETLBox.Scripting.Tests.csproj \
+dotnet test ETLBox.DynamicLinq.Tests/ETLBox.DynamicLinq.Tests.csproj \
     --filter "FullyQualifiedName~MethodCallSupportTests"
 ```
 

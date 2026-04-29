@@ -102,6 +102,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.AI.Tests", "ETLBox.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Scripting.Benchmarks", "ETLBox.Scripting.Benchmarks\ETLBox.Scripting.Benchmarks.csproj", "{B78D3E95-60CD-4BE3-B444-7B206EBF2943}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.DynamicLinq", "ETLBox.DynamicLinq\ETLBox.DynamicLinq.csproj", "{FBD3DFAF-F305-4903-9556-32FDC1D88957}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.DynamicLinq.Tests", "ETLBox.DynamicLinq.Tests\ETLBox.DynamicLinq.Tests.csproj", "{ED6CA001-A95C-4E9B-9742-6A72AC62FB50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -228,6 +232,14 @@ Global
 		{B78D3E95-60CD-4BE3-B444-7B206EBF2943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B78D3E95-60CD-4BE3-B444-7B206EBF2943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B78D3E95-60CD-4BE3-B444-7B206EBF2943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBD3DFAF-F305-4903-9556-32FDC1D88957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBD3DFAF-F305-4903-9556-32FDC1D88957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBD3DFAF-F305-4903-9556-32FDC1D88957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBD3DFAF-F305-4903-9556-32FDC1D88957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED6CA001-A95C-4E9B-9742-6A72AC62FB50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED6CA001-A95C-4E9B-9742-6A72AC62FB50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED6CA001-A95C-4E9B-9742-6A72AC62FB50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED6CA001-A95C-4E9B-9742-6A72AC62FB50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,10 +2,11 @@ using System;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using ALE.ETLBox.DynamicLinq;
 using ALE.ETLBox.Scripting;
 using Xunit;
 
-namespace ETLBox.Scripting.Tests.FeatureParity;
+namespace ETLBox.DynamicLinq.Tests.FeatureParity;
 
 /// <summary>
 /// Feature-parity tests for the two expression engines used by ETLBox.Scripting:

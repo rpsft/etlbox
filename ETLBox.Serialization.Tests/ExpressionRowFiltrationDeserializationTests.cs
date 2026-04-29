@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Scripting;
+using ALE.ETLBox.DynamicLinq;
 using ALE.ETLBox.Serialization.DataFlow;
 
 namespace ETLBox.Serialization.Tests;

@@ -5,7 +5,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
-namespace ALE.ETLBox.Scripting;
+namespace ALE.ETLBox.DynamicLinq;
 
 /// <summary>
 /// Maps an <see cref="ExpandoObject"/> to a runtime DynamicClass instance with typed
@@ -30,7 +30,7 @@ namespace ALE.ETLBox.Scripting;
 /// different field sets or types) throw <see cref="InvalidOperationException"/>.
 /// </para>
 /// <para>
-/// Internal API — used by <see cref="ExpressionRowFiltration"/>. Not part of the
+/// Internal API - used by <see cref="ExpressionRowFiltration"/>. Not part of the
 /// public surface.
 /// </para>
 /// </remarks>
