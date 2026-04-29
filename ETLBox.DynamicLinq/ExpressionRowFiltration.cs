@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
@@ -95,6 +96,72 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     }
 
     /// <summary>
+    /// Names (or file paths) of assemblies to load and register so all their public
+    /// types become resolvable from <see cref="FilterExpression"/>. Symmetric with
+    /// <c>ScriptedRowTransformation.AdditionalAssemblyNames</c>; lets users reference
+    /// types from named assemblies in expression text without per-type registration.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Each entry is resolved in order: (1) already loaded in <c>AppDomain</c> by
+    /// short or full name, (2) <c>Assembly.Load(AssemblyName)</c>, (3)
+    /// <c>Assembly.LoadFrom(path)</c> as a fallback for paths. Assemblies that fail
+    /// all three throw <see cref="InvalidOperationException"/>.
+    /// </para>
+    /// <para>
+    /// All public exported types from each assembly are added to
+    /// <see cref="ParsingConfig.CustomTypeProvider"/>. Combined with explicit
+    /// <see cref="RegisterCustomTypes"/> calls and <see cref="AdditionalImports"/>,
+    /// this is the bulk-registration path for XML-defined flows.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code language="xml">
+    /// &lt;AdditionalAssemblyNames&gt;
+    ///     &lt;string&gt;MyCompany.Domain&lt;/string&gt;
+    /// &lt;/AdditionalAssemblyNames&gt;
+    /// </code>
+    /// </example>
+    public IEnumerable<string> AdditionalAssemblyNames
+    {
+        get => _additionalAssemblies.Select(a => a.GetName().Name!);
+        set
+        {
+            _additionalAssemblies = (value ?? Array.Empty<string>())
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .Select(LoadAssembly)
+                .ToArray();
+            RebuildTypeProvider();
+        }
+    }
+
+    /// <summary>
+    /// Namespace prefixes used as imports when resolving short type names in
+    /// <see cref="FilterExpression"/>. Symmetric with
+    /// <c>ScriptedRowTransformation.AdditionalImports</c>; lets users write
+    /// <c>"MyType.Method()"</c> instead of <c>"MyCompany.Domain.MyType.Method()"</c>
+    /// when <c>MyCompany.Domain</c> is in the imports list.
+    /// </summary>
+    /// <remarks>
+    /// Imports are checked in declaration order. A short name resolves to the first
+    /// type whose full name is <c>"{import}.{shortName}"</c> from the registered
+    /// custom types (set via <see cref="AdditionalAssemblyNames"/> or
+    /// <see cref="RegisterCustomTypes"/>). Falls back to the first type with the
+    /// matching short name across all registered types.
+    /// </remarks>
+    public IEnumerable<string> AdditionalImports
+    {
+        get => _additionalImports.AsEnumerable();
+        set
+        {
+            _additionalImports = (value ?? Array.Empty<string>())
+                .Where(i => !string.IsNullOrWhiteSpace(i))
+                .ToArray();
+            RebuildTypeProvider();
+        }
+    }
+
+    /// <summary>
     /// Register user types so their public instance methods become callable from
     /// <see cref="FilterExpression"/>. Without this, expressions like
     /// <c>"MyDto.SomeMethod() == 1"</c> fail to parse on user-defined types.
@@ -104,6 +171,8 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     /// <remarks>
     /// Combines with any types already registered on <see cref="ParsingConfig"/>;
     /// existing <c>CustomTypeProvider</c> is replaced with one that exposes the union.
+    /// For bulk registration of all types from an assembly, use
+    /// <see cref="AdditionalAssemblyNames"/>.
     /// </remarks>
     /// <example>
     /// <code>
@@ -116,16 +185,85 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         if (types is null || types.Length == 0)
             return;
 
-        var existing = ParsingConfig.CustomTypeProvider?.GetCustomTypes() ?? new HashSet<Type>();
-        var merged = new HashSet<Type>(existing);
         foreach (var t in types.Where(t => t is not null))
-            merged.Add(t);
+            _registeredTypes.Add(t);
 
-        ParsingConfig.CustomTypeProvider = new InlineCustomTypeProvider(merged);
+        RebuildTypeProvider();
+    }
 
-        // Type provider change invalidates the compiled cache - any registered type
-        // could change how an expression resolves.
+    // Explicit per-type registrations via RegisterCustomTypes - tracked separately
+    // from assembly-bulk registrations so the two sources can be combined cleanly.
+    private readonly HashSet<Type> _registeredTypes = new();
+    private Assembly[] _additionalAssemblies = Array.Empty<Assembly>();
+    private string[] _additionalImports = Array.Empty<string>();
+
+    // Recomputes ParsingConfig.CustomTypeProvider as the union of:
+    //  - types from RegisterCustomTypes (_registeredTypes)
+    //  - public exported types from AdditionalAssemblyNames-loaded assemblies
+    // and applies AdditionalImports as namespace prefixes for short-name resolution.
+    private void RebuildTypeProvider()
+    {
+        var types = new HashSet<Type>(_registeredTypes);
+        foreach (var assembly in _additionalAssemblies)
+        {
+            foreach (var t in SafeGetExportedTypes(assembly))
+            {
+                types.Add(t);
+            }
+        }
+
+        ParsingConfig.CustomTypeProvider = new InlineCustomTypeProvider(types, _additionalImports);
         InvalidateCompiledCache();
+    }
+
+    private static Assembly LoadAssembly(string nameOrPath)
+    {
+        // 1. Already loaded in AppDomain (most common case for published packages)
+        var existing = AppDomain
+            .CurrentDomain.GetAssemblies()
+            .FirstOrDefault(a =>
+                a.GetName().Name == nameOrPath || a.GetName().FullName == nameOrPath
+            );
+        if (existing is not null)
+            return existing;
+
+        // 2. AssemblyName-style load (resolves via probing path / GAC)
+        try
+        {
+            return Assembly.Load(new AssemblyName(nameOrPath));
+        }
+        catch (Exception nameEx)
+            when (nameEx is FileNotFoundException or FileLoadException or BadImageFormatException)
+        {
+            // 3. Path-based load (fallback for explicit file paths). Assembly.LoadFrom
+            // is the intentional choice here - the input could be a path provided in
+            // an XML config, and Assembly.Load only accepts AssemblyName / display name.
+#pragma warning disable S3885 // "Assembly.Load" should be used - LoadFrom is intentional path fallback
+            try
+            {
+                return Assembly.LoadFrom(nameOrPath);
+            }
+#pragma warning restore S3885
+            catch (Exception pathEx)
+            {
+                throw new InvalidOperationException(
+                    $"Could not load assembly '{nameOrPath}'. Tried Assembly.Load by name and Assembly.LoadFrom by path. Original load error: {nameEx.Message}",
+                    pathEx
+                );
+            }
+        }
+    }
+
+    private static IEnumerable<Type> SafeGetExportedTypes(Assembly assembly)
+    {
+        try
+        {
+            return assembly.GetExportedTypes();
+        }
+        catch (ReflectionTypeLoadException ex)
+        {
+            return ex.Types.Where(t => t is not null)!;
+        }
     }
 
     // Compiled-delegate cache. Holds the last successful Compile() output for
@@ -182,18 +320,49 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     private sealed class InlineCustomTypeProvider : IDynamicLinqCustomTypeProvider
     {
         private readonly HashSet<Type> _types;
+        private readonly string[] _imports;
 
-        public InlineCustomTypeProvider(HashSet<Type> types) => _types = types;
+        public InlineCustomTypeProvider(HashSet<Type> types, string[]? imports = null)
+        {
+            _types = types;
+            _imports = imports ?? Array.Empty<string>();
+        }
 
         public HashSet<Type> GetCustomTypes() => _types;
 
         public Dictionary<Type, List<MethodInfo>> GetExtensionMethods() => new();
 
-        public Type? ResolveType(string typeName) =>
-            _types.FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
+        public Type? ResolveType(string typeName)
+        {
+            // Direct match by full or short name.
+            var direct = _types.FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
+            if (direct is not null)
+                return direct;
 
-        public Type? ResolveTypeBySimpleName(string simpleTypeName) =>
-            _types.FirstOrDefault(t => t.Name == simpleTypeName);
+            // Try treating typeName as a short name within imported namespaces.
+            foreach (var import in _imports)
+            {
+                var qualified = $"{import}.{typeName}";
+                var match = _types.FirstOrDefault(t => t.FullName == qualified);
+                if (match is not null)
+                    return match;
+            }
+            return null;
+        }
+
+        public Type? ResolveTypeBySimpleName(string simpleTypeName)
+        {
+            // Imported namespaces win over plain short-name match - explicit user
+            // intent ("I imported this namespace, prefer types from it").
+            foreach (var import in _imports)
+            {
+                var qualified = $"{import}.{simpleTypeName}";
+                var match = _types.FirstOrDefault(t => t.FullName == qualified);
+                if (match is not null)
+                    return match;
+            }
+            return _types.FirstOrDefault(t => t.Name == simpleTypeName);
+        }
     }
 }
 

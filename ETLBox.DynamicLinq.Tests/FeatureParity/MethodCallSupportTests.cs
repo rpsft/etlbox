@@ -160,6 +160,100 @@ public class MethodCallSupportTests
         public SimpleBox? Box { get; set; }
     }
 
+    // ---- Phase 1: AdditionalAssemblyNames bulk registration ---------------
+
+    [Fact]
+    public void DynamicLinq_AdditionalAssemblyNames_RegistersAllPublicTypes()
+    {
+        // Without per-type RegisterCustomTypes, listing the assembly that declares
+        // SimpleBox in AdditionalAssemblyNames should make all its public types
+        // resolvable. This is the bulk-registration path symmetric with
+        // ScriptedRowTransformation.AdditionalAssemblyNames in MR !113.
+        var filtration = new ExpressionRowFiltration<RowWithBox>("Box.ToText() == \"box(7)\"");
+        filtration.AdditionalAssemblyNames = new[] { typeof(SimpleBox).Assembly.GetName().Name! };
+
+        var rows = new[]
+        {
+            new RowWithBox { Box = new SimpleBox(7) }, // passes
+            new RowWithBox { Box = new SimpleBox(99) }, // dropped
+        };
+        var source = new MemorySource<RowWithBox>();
+        foreach (var row in rows)
+            source.DataAsList.Add(row);
+        var dest = new MemoryDestination<RowWithBox>();
+        source.LinkTo(filtration);
+        filtration.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+
+        Assert.Single(dest.Data);
+        Assert.Equal(7, dest.Data.First().Box!.Value);
+    }
+
+    [Fact]
+    public void DynamicLinq_AdditionalAssemblyNames_GetterRoundtrips()
+    {
+        // Round-trip through the property getter so XML deserialization scenarios
+        // (which read back via reflection) see the value they set.
+        var filtration = new ExpressionRowFiltration<RowWithBox>();
+        filtration.AdditionalAssemblyNames = new[] { typeof(SimpleBox).Assembly.GetName().Name! };
+
+        Assert.Contains(
+            typeof(SimpleBox).Assembly.GetName().Name,
+            filtration.AdditionalAssemblyNames
+        );
+    }
+
+    [Fact]
+    public void DynamicLinq_AdditionalAssemblyNames_BadName_Throws()
+    {
+        var filtration = new ExpressionRowFiltration<RowWithBox>();
+
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => filtration.AdditionalAssemblyNames = new[] { "Definitely.Not.A.Real.Assembly" }
+        );
+        Assert.Contains("Could not load assembly", ex.Message);
+    }
+
+    // ---- Phase 1: AdditionalImports namespace shortcuts -------------------
+
+    [Fact]
+    public void DynamicLinq_AdditionalImports_ResolvesShortNameInNamespace()
+    {
+        // With AdditionalImports = ["ETLBox.DynamicLinq.Tests.FeatureParity"], the
+        // parser can resolve a short type name "SimpleBox" against that namespace
+        // even though it would otherwise need the fully qualified name.
+        var filtration = new ExpressionRowFiltration<RowWithBox>("Box.ToText() == \"box(13)\"");
+        filtration.AdditionalAssemblyNames = new[] { typeof(SimpleBox).Assembly.GetName().Name! };
+        filtration.AdditionalImports = new[] { typeof(SimpleBox).Namespace! };
+
+        var rows = new[]
+        {
+            new RowWithBox { Box = new SimpleBox(13) }, // passes
+            new RowWithBox { Box = new SimpleBox(99) }, // dropped
+        };
+        var source = new MemorySource<RowWithBox>();
+        foreach (var row in rows)
+            source.DataAsList.Add(row);
+        var dest = new MemoryDestination<RowWithBox>();
+        source.LinkTo(filtration);
+        filtration.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+
+        Assert.Single(dest.Data);
+    }
+
+    [Fact]
+    public void DynamicLinq_AdditionalImports_GetterRoundtrips()
+    {
+        var filtration = new ExpressionRowFiltration<RowWithBox>();
+        filtration.AdditionalImports = new[] { "MyCompany.Domain", "Other.Namespace" };
+
+        var actual = filtration.AdditionalImports.ToArray();
+        Assert.Equal(new[] { "MyCompany.Domain", "Other.Namespace" }, actual);
+    }
+
     // ---- Static method call ------------------------------------------------
 
     [Fact]

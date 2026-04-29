@@ -159,6 +159,40 @@ filtration.ParsingConfig.AllowEqualsAndToStringMethodsOnObject = true;
 
 `RegisterCustomTypes` is a convenience layer over `ParsingConfig.CustomTypeProvider` for the common case; using `ParsingConfig` directly remains supported for advanced configuration.
 
+### Bulk registration via `AdditionalAssemblyNames` and `AdditionalImports`
+
+`RegisterCustomTypes(params Type[])` is per-type and works well from C# code where types are referenced symbolically. For XML-defined flows where users do not have type references at hand, two collection properties cover the bulk case:
+
+- **`AdditionalAssemblyNames`** — names (or file paths) of assemblies to load. All public types from each assembly are added to the type provider, making them resolvable from `FilterExpression` without per-type registration.
+- **`AdditionalImports`** — namespace prefixes used as imports when resolving short type names. With `AdditionalImports = ["MyCompany.Domain"]`, an expression like `MyType.Method()` resolves against `MyCompany.Domain.MyType` first.
+
+Both are symmetric with `ScriptedRowTransformation.AdditionalAssemblyNames` / `AdditionalImports` so users can switch between Roslyn-based and Dynamic-LINQ-based row filtration without changing the configuration shape.
+
+XML form:
+
+```xml
+<ExpressionRowFiltration>
+    <FilterExpression>Customer.IsPremium() &amp;&amp; Total &gt; 100</FilterExpression>
+    <AdditionalAssemblyNames>
+        <string>MyCompany.Domain</string>
+    </AdditionalAssemblyNames>
+    <AdditionalImports>
+        <string>MyCompany.Domain</string>
+    </AdditionalImports>
+</ExpressionRowFiltration>
+```
+
+Programmatic form:
+
+```csharp
+filtration.AdditionalAssemblyNames = new[] { "MyCompany.Domain" };
+filtration.AdditionalImports = new[] { "MyCompany.Domain" };
+```
+
+Assembly resolution tries three strategies in order: (1) already loaded in the current `AppDomain` by short or full name, (2) `Assembly.Load(AssemblyName)`, (3) `Assembly.LoadFrom(path)` as a fallback. An assembly that fails all three throws `InvalidOperationException` from the property setter — configuration errors surface at flow build time, not at evaluation time.
+
+`AdditionalAssemblyNames`, `AdditionalImports`, and `RegisterCustomTypes` compose: types from all three sources are unioned in the parser's custom-type set. Setting any one rebuilds the provider and invalidates the compiled-predicate cache.
+
 ### Limitations
 
 - **Heterogeneous collections** — collections whose elements have different field sets or types throw `InvalidOperationException`. Each element in `Items` must have the same shape.
