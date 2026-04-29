@@ -16,14 +16,20 @@ namespace ALE.ETLBox.Scripting
     public class TypedScriptBuilder
     {
         private readonly GlobalsTypeInfo _globalsTypeInfo;
+        private readonly IEnumerable<string> _additionalImports;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="globalsTypeInfo">Script "Global" type information</param>
-        public TypedScriptBuilder(GlobalsTypeInfo globalsTypeInfo)
+        /// <param name="additionalImports">Additional namespaces to import into the script</param>
+        public TypedScriptBuilder(
+            GlobalsTypeInfo globalsTypeInfo,
+            IEnumerable<string>? additionalImports = null
+        )
         {
             _globalsTypeInfo = globalsTypeInfo;
+            _additionalImports = additionalImports ?? Enumerable.Empty<string>();
         }
 
         /// <summary>
@@ -44,8 +50,19 @@ namespace ALE.ETLBox.Scripting
                     reference: _globalsTypeInfo.Reference,
                     type: _globalsTypeInfo.Type,
                     referencedAssemblies: _globalsTypeInfo.ReferencedAssemblies.Concat(assemblies)
-                )
+                ),
+                _additionalImports
             );
+        }
+
+        /// <summary>
+        /// Copy and add namespace imports to the script.
+        /// </summary>
+        /// <param name="imports">Additional namespaces to import (e.g. <c>"System.Text.Json"</c>)</param>
+        /// <returns>Copy of original script builder with imports added</returns>
+        public TypedScriptBuilder WithImports(IEnumerable<string> imports)
+        {
+            return new TypedScriptBuilder(_globalsTypeInfo, _additionalImports.Concat(imports));
         }
 
         /// <summary>
@@ -68,6 +85,7 @@ namespace ALE.ETLBox.Scripting
             var options = ScriptOptions
                 .Default.AddImports("System")
                 .AddImports("System.Text")
+                .AddImports(_additionalImports)
                 .AddReferences(_globalsTypeInfo.ReferencedAssemblies)
                 .AddReferences(_globalsTypeInfo.Reference);
 

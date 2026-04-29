@@ -8,21 +8,37 @@ All notable changes to this project will be documented in this file.
 
 ✨ Features
 
-- Новое: свойство `PassThrough` в `ScriptedRowTransformation<TInput, TOutput>` (и в не-generic
-  псевдониме `ScriptedTransformation`). При значении `true` все поля входной записи копируются в
-  выходную запись до применения `Mappings` — таким образом, не перечисленные в `Mappings` поля
-  сохраняются без изменений. `Mappings` по-прежнему может добавлять новые поля или перезаписывать
-  скопированные. При значении `false` (по умолчанию) в выходной записи присутствуют только поля,
-  явно указанные в `Mappings`.
+- New: `AdditionalImports` property on `ScriptedRowTransformation<TInput, TOutput>`. Accepts a list
+  of namespaces to import into every `Mappings` expression — equivalent to `using` directives. For
+  example, adding `"System.Text.Json"` allows writing `JsonSerializer.Serialize(…)` instead of the
+  fully qualified `System.Text.Json.JsonSerializer.Serialize(…)`.
 
-  Пример использования в XML (режим `PassThrough`):
+- Improvement: `AdditionalAssemblyNames` on `ScriptedRowTransformation<TInput, TOutput>` now accepts
+  both file paths (e.g. `Files/MyLib.dll`) and runtime assembly names (e.g. `System.Text.Json`).
+  Previously only file paths were supported, making it impossible to reference system assemblies
+  already loaded in the process.
+
+🐛 Bug Fixes
+
+- Fixed: `AdditionalAssemblyNames` was silently ignored when using typed `TInput`/`TOutput` (i.e.
+  any non-`ExpandoObject` pair). Additional assemblies were only passed to the script compiler on the
+  dynamic path; the typed path omitted the `WithReferences` call, so scripts referencing types from
+  external assemblies would fail to compile.
+
+- New: `PassThrough` property on `ScriptedRowTransformation<TInput, TOutput>` (and the non-generic
+  alias `ScriptedTransformation`). When `true`, all input fields are copied to the output before
+  `Mappings` are applied — fields not listed in `Mappings` are preserved unchanged. `Mappings` can
+  still add new fields or override copied ones. When `false` (default), only fields explicitly listed
+  in `Mappings` appear in the output.
+
+  Example XML usage (`PassThrough` mode):
   ```xml
   <ScriptedTransformation>
     <PassThrough>true</PassThrough>
     <Mappings>
-      <!-- Добавляет новое поле FullName, исходные поля FirstName и LastName сохраняются -->
+      <!-- Adds new field FullName; original fields FirstName and LastName are preserved -->
       <FullName>$"{FirstName} {LastName}"</FullName>
-      <!-- Перезаписывает существующее поле Amount -->
+      <!-- Overrides existing field Amount -->
       <Amount>Amount * 1.2</Amount>
     </Mappings>
     <LinkTo>

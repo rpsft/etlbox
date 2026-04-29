@@ -1,4 +1,5 @@
 using System.Dynamic;
+using System.Reflection;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Scripting;
 using ETLBox.Primitives;
@@ -379,7 +380,7 @@ public class ScriptedRowTransformationTests
     }
 
     [Fact]
-    public void PassThrough_Typed_SubtypeInput_CopiesBaseProperties()
+    public void PassThrough_Typed_DerivedInput_CopiesBaseProperties()
     {
         // Arrange — MyDerivedRowType extends MyRowType, which extends MyOutputBaseType
         var memorySource = new MemorySource<MyDerivedRowType>();
@@ -409,6 +410,135 @@ public class ScriptedRowTransformationTests
         var row = memoryDestination.Data.First();
         Assert.Equal(21, row.Id);
         Assert.Equal("Charlie", row.Name);
+    }
+
+    [Fact]
+    public void ShouldLoadSystemAssemblyByName_Dynamic()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = true,
+        };
+        script.Mappings.Add("Json", "System.Text.Json.JsonSerializer.Serialize(Id)");
+        script.AdditionalAssemblyNames = ["System.Text.Json"];
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var row = (IDictionary<string, object?>)memoryDestination.Data.First();
+        Assert.Equal("1", row["Json"]);
+    }
+
+    [Fact]
+    public void ShouldLoadSystemAssemblyByName_Typed()
+    {
+        // Arrange — AdditionalAssemblyNames only, no AdditionalImports: verifies WithReferences works in typed path
+        var memorySource = new MemorySource<MyRowType>();
+        memorySource.DataAsList.Add(new MyRowType { Id = 7, Name = "x" });
+        var script = new ScriptedRowTransformation<MyRowType, MyRowType>
+        {
+            FailOnMissingField = true,
+        };
+        script.Mappings.Add("Name", "System.Text.Json.JsonSerializer.Serialize(Name)");
+        script.AdditionalAssemblyNames = ["System.Text.Json"];
+        var memoryDestination = new MemoryDestination<MyRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        Assert.Equal("\"x\"", memoryDestination.Data.First().Name);
+    }
+
+    [Fact]
+    public void ShouldApplyAdditionalImports_Dynamic()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = true,
+        };
+        script.Mappings.Add("Json", "JsonSerializer.Serialize(Id)");
+        script.AdditionalAssemblyNames = ["System.Text.Json"];
+        script.AdditionalImports = ["System.Text.Json"];
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var row = (IDictionary<string, object?>)memoryDestination.Data.First();
+        Assert.Equal("1", row["Json"]);
+    }
+
+    [Fact]
+    public void ShouldApplyAdditionalImports_Typed()
+    {
+        // Arrange
+        var memorySource = new MemorySource<MyRowType>();
+        memorySource.DataAsList.Add(new MyRowType { Id = 7, Name = "world" });
+        var script = new ScriptedRowTransformation<MyRowType, MyRowType>
+        {
+            FailOnMissingField = true,
+        };
+        script.Mappings.Add("Id", "Id * 2");
+        script.Mappings.Add("Name", "JsonSerializer.Serialize(Name)");
+        script.AdditionalAssemblyNames = ["System.Text.Json"];
+        script.AdditionalImports = ["System.Text.Json"];
+        var memoryDestination = new MemoryDestination<MyRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var row = memoryDestination.Data.First();
+        Assert.Equal(14, row.Id);
+        Assert.Equal("\"world\"", row.Name);
+    }
+
+    [Fact]
+    public async Task TypedScriptBuilder_WithImports_AppliesNamespace()
+    {
+        // Arrange
+        var expando = new ExpandoObject() as IDictionary<string, object?>;
+        expando["Id"] = 1;
+        var assembly = Assembly.Load("System.Text.Json");
+        var builder = ScriptBuilder
+            .Default.ForType(expando)
+            .WithReferences([assembly])
+            .WithImports(["System.Text.Json"]);
+
+        // Act
+        var runner = builder.CreateRunner("JsonSerializer.Serialize(Id)");
+        var diagnostics = runner.Script.Compile();
+        var result = (await runner.RunAsync(expando)).ReturnValue;
+
+        // Assert
+        Assert.Empty(diagnostics);
+        Assert.Equal("1", result?.ToString());
     }
 
     private static ExpandoObject CreateTestDataItem(int id, string name)

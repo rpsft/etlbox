@@ -302,6 +302,9 @@ SOURCE CODE:
         {
             typeof(Attribute).Assembly,
             typeof(DynamicAttribute).Assembly,
+            // Required when struct types from non-core assemblies (e.g. JsonElement) appear as
+            // property types: Roslyn resolves ValueType from System.Runtime, not System.Private.CoreLib.
+            Assembly.Load(new AssemblyName("System.Runtime")),
         };
         CollectExpandoObjectAssemblies(expando, assemblies);
         return assemblies;

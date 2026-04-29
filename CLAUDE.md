@@ -77,6 +77,11 @@ Rules:
 - No trailing period or whitespace
 - Hook auto-appends `Changelog:` trailer (feat->added, fix->fixed, perf->performance, other->other)
 
+## Language
+
+All written content in this project must be in **English**: documentation, changelog entries, commit
+messages, and code comments.
+
 ## Testing
 
 - **Do NOT use FluentAssertions.** Use xUnit's built-in `Assert.*` methods instead.
