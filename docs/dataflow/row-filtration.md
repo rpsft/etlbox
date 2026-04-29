@@ -181,12 +181,14 @@ The compile-time element type of the array is `TInput`, so `AsQueryable()` retur
 
 ### ExpandoObject path
 
-`ExpressionRowFiltration` (non-generic) overrides `EvaluateExpression` to map the row to a runtime DynamicClass before calling `Any`:
+`ExpressionRowFiltration` (non-generic) overrides `EvaluateExpression` to map the row to a runtime DynamicClass and then invoke a cached compiled predicate. The predicate is compiled once per `(FilterExpression, ParsingConfig, mapped DynamicClass type)` triple and reused across rows.
 
-1. `ExpandoTypeMapper.Map(row)` walks the dictionary recursively. For nested `IDictionary<string, object>` it generates a nested DynamicClass; for a homogeneous collection it generates a `List<TElement>`; for a scalar or custom class it keeps the `GetType()` of the value.
-2. `DynamicClassFactory.CreateType(properties)` emits the type into a persistent `AssemblyBuilder` and caches it by property signature. Repeated rows of the same shape reuse the same type — amortised cost is low.
-3. The instance is wrapped in a typed array via `Array.CreateInstance(type, 1)`. This is required: `new[] { instance }` would give `object[]` because `Activator.CreateInstance` returns `object`, and `AsQueryable()` would lose the element type.
-4. `array.AsQueryable().Any(ParsingConfig, FilterExpression)` parses the string into an expression tree, compiles to a delegate, and evaluates it.
+`ExpandoTypeMapper.Map(row)` chooses one of two paths per row based on the shape:
+
+- **Fast path** (flat shapes — scalars, nullables, strings, byte arrays, custom classes): a per-shape `Func<IDictionary<string, object?>, object>` is compiled once via Expression Trees and cached by `(field name, runtime value type)` signature. Per-row cost is one dictionary walk + cache lookup + delegate invoke. No reflection in the hot path. This covers the typical XML-defined flow case (DB row -> ExpandoObject with scalar fields).
+- **Slow path** (shapes containing nested `IDictionary<string, object>` or homogeneous collections): the original recursive reflection-based mapping. For nested `IDictionary<string, object>` it generates a nested DynamicClass; for a homogeneous collection it generates a `List<TElement>`; for a scalar or custom class it keeps the `GetType()` of the value. Recursion handles arbitrary nesting depth so predicates like `Order.Total > 100` and `Items.Any(Sum > 100)` keep working.
+
+Both paths feed into `DynamicClassFactory.CreateType(properties)` which emits the runtime type into a persistent `AssemblyBuilder` (one shared builder per process) and caches by property signature. The cached compiled predicate then operates on the mapped instance directly via a `Func<object, bool>` wrapper - no per-row `AsQueryable()` wrap.
 
 `ParsingConfig.ConvertObjectToSupportComparison = true` lets comparison operators work on properties typed as `object` — needed for null-valued fields and for mixed numeric literals such as `Reserve > 0` when `Reserve` is `decimal`.
 

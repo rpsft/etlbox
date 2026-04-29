@@ -66,7 +66,10 @@ public class HotEvaluationBenchmarks
         _parsingConfig = new ParsingConfig { ConvertObjectToSupportComparison = true };
         _ = DynamicLinq_AsQueryableAny_HotEval();
 
-        // Pre-warmed ExpressionRowFiltration with cached compiled delegate (post-optimization).
+        // Pre-warmed ExpressionRowFiltration with cached compiled delegate.
+        // The ExpandoTypeMapper now routes flat shapes through a compiled per-shape
+        // mapper (Expression Trees, no per-row reflection), so this single cell
+        // measures the post-Optimization-2 hot path on ExpandoObject.
         _expandoFiltration = new ExpressionRowFiltration(Expression);
         _ = _expandoFiltration_HotEval(); // first call compiles + caches the delegate
 
@@ -108,9 +111,10 @@ public class HotEvaluationBenchmarks
     }
 
     /// <summary>
-    /// ExpressionRowFiltration on ExpandoObject WITH cached compiled delegate
-    /// (Round 5 optimization). Per call: ExpandoTypeMapper.Map + cached
-    /// Func&lt;object, bool&gt; invocation. No re-parse, no Queryable wrap.
+    /// ExpressionRowFiltration on ExpandoObject with cached compiled delegate.
+    /// Per call: ExpandoTypeMapper.Map (compiled per-shape mapper for flat shapes)
+    /// + cached Func&lt;object, bool&gt; invocation. No re-parse, no Queryable wrap,
+    /// no per-row reflection.
     /// </summary>
     [Benchmark(Description = "Dynamic LINQ ExpandoObject (cached delegate) - per-row eval (warm)")]
     public bool _expandoFiltration_HotEval()

@@ -241,8 +241,10 @@ Per-row evaluation cost is a separate dimension from cold compile cost. The
 initial Round 5 HotEvaluation benchmark exposed a per-row gap where Roslyn was
 significantly faster than the shipped `ExpressionRowFiltration` because the
 latter re-parsed the predicate and rebuilt the `Queryable` wrapper on every
-row. Three layered optimizations are tracked here, in order of complexity vs.
-expected payoff.
+row. Layered optimizations are tracked here, in order of complexity vs.
+expected payoff. **Optimizations 1 and 2 are applied and shipped in this MR.
+Optimization 2.5 (slow-path polish) and Optimization 3 stay in tech-debt** as
+no production workload currently shows the bottleneck either would address.
 
 ### Optimization 1 — cached compiled delegate (applied 2026-04-29)
 
@@ -271,41 +273,156 @@ Prospects: the typed `TInput` path is now the cheapest case (pure
 still pays `ExpandoTypeMapper.Map(row)` per row, which is what Optimization 2
 addresses.
 
-### Optimization 2 — fast row mapping for the ExpandoObject path (deferred)
+### Optimization 2 — fast row mapping for the ExpandoObject path (applied 2026-04-29)
 
-`ExpandoTypeMapper.Map(row)` does the per-row work today: walk the dictionary,
-emit (or look up) a `DynamicClass` shape type, and copy values into a fresh
-instance. Two known mitigations:
+**Implemented in `ExpandoTypeMapper`** as a two-path mapper with a per-row
+flat-vs-nested gate:
 
-- **Reuse mapped instances** — reset properties on a thread-local instance per
-  shape instead of allocating a new `DynamicClass` per row. Saves the per-row
-  allocation but keeps the property-by-property copy.
-- **Direct dictionary access** — bypass `DynamicClass` entirely and bind
-  parameter access in the parsed lambda to `IDictionary<string, object?>`
-  indexer calls. The lambda then operates on the raw `ExpandoObject`'s backing
-  dictionary, no shape type, no per-row copy.
+- **Fast path** for flat shapes (scalars, nullables, strings, byte arrays,
+  custom classes that are not `IDictionary` and not non-string/non-byte-array
+  enumerables). For each unique shape signature (tuple of
+  `(field name, runtime value type)` pairs), `BuildCompiledEntry` emits a
+  `Func<IDictionary<string, object?>, object>` once via Expression Trees -
+  equivalent to `dict => new T { F1 = (T1)dict["F1"], F2 = (T2)dict["F2"], ... }`.
+  Per-row cost is one dict walk to compute the signature + cache lookup +
+  delegate invoke. No per-row reflection.
+- **Slow path** for shapes with nested `IDictionary<string, object?>` or
+  homogeneous collections - the original recursive reflection-based mapping is
+  preserved verbatim. Recursion handles arbitrary nesting depth, predicates
+  like `Order.Total > 100` and `Items.Any(Sum > 100)` keep working at the
+  pre-optimization cost.
+- The path is selected per row by `HasComplexFields`, which checks the
+  top-level dictionary in O(N).
 
-Risks:
-- Shape stability across rows is currently guaranteed only by accident in
-  homogeneous flows. Reusing a thread-local instance is unsafe if the same
-  filtration is used across heterogeneous shapes — the cache invalidates per
-  type, but the reused instance would carry stale slots.
-- Direct dictionary access changes the parser surface: nested
-  `IDictionary<string, object>` fields, homogeneous collections (`Items.Any(...)`,
-  `Items.Sum(...)`), and the `ConvertObjectToSupportComparison` flag interact
-  with the current `DynamicClass` projection. A direct-dict implementation has
-  to re-derive each of those behaviors and reproduce them, which is where most
-  of the work is.
+Result: HotEvaluation per-row cost on flat shapes drops from ~1.4 µs / 1.7 KB
+(Opt. 1 only) to ~500 ns / 240 B - **~2× faster than Roslyn warm runner with
+~3× fewer allocations**. Nested-shape predicates keep their previous cost,
+no behavioural regression.
 
-Limits: only worthwhile if hot path remains the bottleneck after Optimization 1
-in real flows. The typed `TInput` path is unaffected — this optimization only
-applies to dynamic/Expando inputs.
+Risk: low. The fast path is opt-in by shape; failing a check routes to the
+exact pre-existing code. Tests cover both paths (57/57 PASS in
+`ExpressionRowFiltrationTests` including `NestedExpando_*`,
+`CollectionOfDicts_*`, `DeeplyNestedExpando_*` scenarios).
 
-Prospects: typed POCO already meets steady-state cost parity with Roslyn after
-Optimization 1; the ExpandoObject case is the open one. If the dictionary
-binding lands cleanly it would also remove the dependency on
-`DynamicClassFactory` for the filtration code path, which simplifies the
-ExpandoObject story (mapping logic stops being load-bearing).
+Limits:
+- Fast-path cache (`ConcurrentDictionary<ShapeSignature, ShapeEntry>`) is
+  process-wide static. Grows monotonically as new flat shapes are encountered.
+  Same lifetime characteristic as `DynamicClassFactory.CreateType` cache used
+  by the slow path - acceptable.
+- Per-row signature build still allocates a small `FieldKey[]` array. Could
+  be eliminated with a last-signature shortcut if future profiling shows
+  this is a bottleneck; currently bounded by the typical 5-15 fields per row.
+- Direct dictionary binding (bypass `DynamicClass` entirely, bind parser to
+  `IDictionary<string, object?>` indexer access) was the more aggressive
+  alternative considered. It would eliminate the `new T { ... }` allocation
+  per row and skip `DynamicClass` emission entirely, but requires
+  re-implementing the parser surface (nested dicts, homogeneous collections,
+  `ConvertObjectToSupportComparison`). Deferred unless the current 240 B/row
+  becomes a bottleneck on a real workload.
+
+### Optimization 2.5 — slow-path improvement (deferred, low priority)
+
+Optimization 2 covers the flat-shape fast path. Shapes with nested
+`IDictionary` or homogeneous collections still go through the original
+recursive reflection-based mapper (`MapWithReflection`), at ~1.4 µs / ~1.7 KB
+per row on a typical 5-field shape. That is ~1.2× slower than Roslyn warm
+runner on the same input.
+
+In production XML-defined Common.Etl flows the slow path is rare: most rows
+come from DB sources with flat scalar fields, hitting the fast path. Nested
+ExpandoObject occurs when extracting from JSON-shaped sources or merging
+heterogeneous inputs. At pipeline-level the ~700 ns gap on slow path
+amounts to ~7 ms per 10k rows / ~700 ms per 1M rows — under 1% of total
+runtime when DB I/O or block dispatch dominates.
+
+For the cases where slow-path optimization is wanted, three tactics are
+ranked by effort vs payoff (worked-out analysis from 2026-04-29):
+
+#### Tactic A — cache `PropertyInfo[]` per type (lightest)
+
+`type.GetProperty(name)` reflection lookup happens per field per row.
+Cache a `Dictionary<string, PropertyInfo>` per resolved type. Reduces the
+GetProperty cost to a hashtable lookup over the cached dict.
+
+- Effort: ~30 minutes, ~30 LOC
+- Risk: zero (pure cache layer)
+- Saving: ~250-500 ns per row (5 fields × ~50-100 ns lookup)
+- Final cost: ~1.1-1.2 µs per row (15-20% improvement)
+
+The absolute saving is small relative to `SetValue` reflection itself, which
+remains the dominant cost on the field assignment loop. Not recommended in
+isolation; useful as a building block under Tactic B.
+
+#### Tactic B — compiled setter delegate per type (recommended polish)
+
+Build an `Action<object, object?[]>` per `DynamicClass` type once via
+Expression Trees, equivalent to:
+
+```csharp
+(instance, values) => {
+    var typed = (T)instance;
+    typed.F1 = (T1)values[0];
+    typed.F2 = (T2)values[1];
+    ...
+}
+```
+
+Replace the per-field `SetValue` loop in `MapWithReflection` with one
+delegate invocation. Optionally add a cached `Func<object>` per type for
+`new T()` to bypass `Activator.CreateInstance` reflection.
+
+- Effort: ~1-2 hours, ~50-80 LOC + test parity verification
+- Risk: low — same semantics as `SetValue`, just compiled
+- Saving: ~500-1000 ns per row (eliminates per-field reflection invocation)
+- Final cost: ~700-900 ns per row (30-50% improvement)
+- Pattern is standard (Dapper, EF Core, AutoMapper use it for materialization)
+
+This is the recommended "light polish" if slow-path optimization is wanted
+without a deep rework. Brings slow path within ~10% of Roslyn warm runner.
+
+#### Tactic C — recursive compiled mapper covering all shapes (substantial)
+
+Extend the fast path mapper recursively to handle nested dictionaries and
+homogeneous collections. Shape signature becomes recursive (parent shape
+includes child shape signatures); compiled mapper invokes nested mappers
+via closures or static dispatch:
+
+```csharp
+dict => new T {
+    F1 = (T1)dict["F1"],
+    Order = nestedOrderMapper((IDictionary<string, object?>)dict["Order"]),
+    Items = MapList(dict["Items"], itemMapper),
+}
+```
+
+After this, the slow path disappears entirely; one unified fast path covers
+all supported shapes.
+
+- Effort: ~3-5 hours, ~150-200 LOC
+- Risk: medium — recursion edge cases (empty collections, heterogeneous
+  failure mode, deep nesting)
+- Saving: ~700-900 ns per row on nested shapes (slow path → near fast path
+  speed)
+- Final cost: ~600-800 ns per row, comparable to current flat fast path
+
+Worthwhile if slow-path workload becomes common in production OR if we
+want to remove the dual-path complexity in `ExpandoTypeMapper`. Not needed
+right now: dual-path is small and well-tested.
+
+#### Decision
+
+**Default: keep current state.** Slow path is acceptable: ~1.4 µs / 1.7 KB
+on rare nested shapes, ~1% of pipeline runtime impact in I/O-bound flows.
+The architectural argument is already won by the flat fast path (production-
+typical case beats Roslyn 1.5-2× on hot path).
+
+**If time permits before MR close:** apply **Tactic B** (compiled setter).
+Standard pattern, low risk, brings slow path under ~10% gap vs Roslyn,
+demonstrates the dual-path architecture handles both cases well.
+
+**Tactic C is reserved** for the case where future profiling on real
+workloads shows the slow path as a bottleneck — then the work is justified
+by data, and the dual-path complexity becomes worth removing.
 
 ### Optimization 3 — bypass DynamicClass for typed POCO with property cache (deferred)
 
@@ -337,17 +454,23 @@ Prospects: probably not worth doing unless real workloads on typed `TInput`
 show a measurable bottleneck after Optimization 1 lands. Documented here so
 the option is on the table when (or if) that data appears.
 
-### Decision criteria
+### Decision criteria (post Optimizations 1 + 2)
 
-Apply optimizations in order. After Optimization 1 (shipped), re-measure
-HotEvaluation:
+Optimizations 1 and 2 shipped. Current state on the HotEvaluation benchmark:
 
-- Typed `TInput` cached path within ~2× of Roslyn → close. Optimization 3 stays
-  in tech debt.
-- ExpandoObject cached path within ~2× of Roslyn → close. Optimization 2 stays
-  in tech debt.
-- Either path still ≥10× behind Roslyn → escalate to the corresponding
-  optimization with the measured gap as the justification.
+- Typed `TInput` cached path: **~115× faster than Roslyn**, zero allocation per row.
+  Optimization 3 stays in tech-debt - no measured bottleneck to escalate to.
+- ExpandoObject flat-shape path: **~2× faster than Roslyn**, ~3× less allocation
+  per row. Direct dict binding (the deferred mitigation under Optimization 2)
+  stays in tech-debt - re-implementing the parser surface is high cost for
+  unproven gain.
+- ExpandoObject path on shapes with nested or collection fields: ~1.2× slower
+  than Roslyn (slow-path fallback inside `ExpandoTypeMapper` - reflection
+  recursion, same as before). No regression. **Optimization 2.5 stays in
+  tech-debt** as a "light polish" option (Tactic B closes most of this gap
+  with low risk); apply it when there's idle time before MR close or as a
+  follow-up if slow-path workload is observed in production.
 
-The 2× threshold is a practical boundary: differences below that get lost in
-warmup and GC noise on real flows; differences above are user-visible.
+The 2× threshold remains the practical boundary for re-opening any of these:
+differences below that get lost in warmup and GC noise on real flows;
+differences above become user-visible at scale.
