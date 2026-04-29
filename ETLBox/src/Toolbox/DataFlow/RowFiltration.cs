@@ -85,6 +85,10 @@ namespace ALE.ETLBox.DataFlow
         {
             if (row is null)
                 return Array.Empty<TInput>();
+            if (PredicateFunc is null)
+                throw new InvalidOperationException(
+                    "PredicateFunc is not set. Provide a predicate via the constructor or by assigning the property before running the flow."
+                );
             try
             {
                 return PredicateFunc.Invoke(row) ? [row] : Array.Empty<TInput>();

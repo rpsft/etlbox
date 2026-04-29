@@ -49,8 +49,21 @@ internal sealed class DynamicLinqTypeProvider : IDynamicLinqCustomTypeProvider
     {
         // Imported namespaces win over plain short-name match - explicit user
         // intent ("I imported this namespace, prefer types from it").
-        return ResolveBySimpleNameInImports(simpleTypeName)
-            ?? _types.FirstOrDefault(t => t.Name == simpleTypeName);
+        var fromImport = ResolveBySimpleNameInImports(simpleTypeName);
+        if (fromImport is not null)
+            return fromImport;
+
+        // Detect ambiguity: two or more registered types share the short name
+        // and no import disambiguates them. Throw with a clear pointer instead
+        // of silently picking one based on HashSet iteration order.
+        var matches = _types.Where(t => t.Name == simpleTypeName).Take(2).ToArray();
+        if (matches.Length > 1)
+        {
+            throw new InvalidOperationException(
+                $"Ambiguous short type name '{simpleTypeName}': multiple registered types match. Use the full type name in the expression, or add the resolving namespace to AdditionalImports."
+            );
+        }
+        return matches.Length == 1 ? matches[0] : null;
     }
 
     private Type? ResolveBySimpleNameInImports(string simpleName)

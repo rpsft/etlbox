@@ -122,11 +122,13 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     /// </example>
     public IEnumerable<string> AdditionalAssemblyNames
     {
-        get => _additionalAssemblies.Select(a => a.GetName().Name!);
+        get => _additionalAssemblyNames.AsEnumerable();
         set
         {
-            _additionalAssemblies = (value ?? Array.Empty<string>())
+            _additionalAssemblyNames = (value ?? Array.Empty<string>())
                 .Where(n => !string.IsNullOrWhiteSpace(n))
+                .ToArray();
+            _additionalAssemblies = _additionalAssemblyNames
                 .Select(AssemblyResolver.Load)
                 .ToArray();
             RebuildTypeProvider();
@@ -192,6 +194,12 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     // Explicit per-type registrations via RegisterCustomTypes - tracked separately
     // from assembly-bulk registrations so the two sources can be combined cleanly.
     private readonly HashSet<Type> _registeredTypes = new();
+
+    // Original strings the caller passed to AdditionalAssemblyNames (whether short
+    // names, full names or file paths). Kept separate from _additionalAssemblies so
+    // the property getter is symmetric with the setter - an XML round-trip yields
+    // exactly what the user wrote.
+    private string[] _additionalAssemblyNames = Array.Empty<string>();
     private Assembly[] _additionalAssemblies = Array.Empty<Assembly>();
     private string[] _additionalImports = Array.Empty<string>();
 

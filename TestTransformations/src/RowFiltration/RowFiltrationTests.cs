@@ -147,5 +147,29 @@ namespace TestTransformations.RowFiltration
             Assert.Contains(dest.Data, d => d.Col1 == 20);
             Assert.Contains(dest.Data, d => d.Col1 == 30);
         }
+
+        [Fact]
+        public void FilterRows_NoPredicateSet_ThrowsClearError()
+        {
+            // RowFiltration's parameter-less ctor leaves PredicateFunc unset. Running
+            // the flow without supplying a predicate should fail with an actionable
+            // message, not a bare NullReferenceException buried in the dataflow stack.
+            var source = new MemorySource<MySimpleRow>();
+            source.DataAsList.Add(new MySimpleRow { Col1 = 1, Col2 = "A" });
+
+            var filtration = new RowFiltration<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
+
+            source.LinkTo(filtration);
+            filtration.LinkTo(dest);
+            source.Execute();
+
+            var ex = Assert.Throws<AggregateException>(() => dest.Wait());
+            var inner = ex.Flatten()
+                .InnerExceptions.OfType<InvalidOperationException>()
+                .FirstOrDefault();
+            Assert.NotNull(inner);
+            Assert.Contains("PredicateFunc is not set", inner!.Message);
+        }
     }
 }

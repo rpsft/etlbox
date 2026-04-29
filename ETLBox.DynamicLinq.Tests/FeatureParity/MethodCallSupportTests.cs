@@ -255,6 +255,55 @@ public class MethodCallSupportTests
         Assert.Equal(new[] { "MyCompany.Domain", "Other.Namespace" }, actual);
     }
 
+    [Fact]
+    public void DynamicLinq_AdditionalAssemblyNames_GetterReturnsExactInputStrings()
+    {
+        // Round-trip: whatever the caller wrote as input - short name, full
+        // assembly-qualified name, or file path - the getter should return
+        // exactly that string. The internal Assembly[] is a load-side detail.
+        var filtration = new ExpressionRowFiltration<RowWithBox>();
+        var fullName = typeof(SimpleBox).Assembly.GetName().FullName!;
+
+        filtration.AdditionalAssemblyNames = new[] { fullName };
+
+        Assert.Equal(new[] { fullName }, filtration.AdditionalAssemblyNames);
+    }
+
+    // ---- Phase 1: ambiguity detection in short-name resolution ------------
+
+    [Fact]
+    public void DynamicLinq_ResolveTypeBySimpleName_AmbiguousWithoutImports_Throws()
+    {
+        // Two distinct types share the short name "Timer" - System.Threading.Timer
+        // and System.Timers.Timer. Without AdditionalImports to disambiguate, the
+        // parser must not silently pick one based on hashset iteration order; the
+        // user gets a clear pointer instead.
+        var filtration = new ExpressionRowFiltration<RowWithBox>("Box != null");
+        filtration.RegisterCustomTypes(typeof(System.Threading.Timer), typeof(System.Timers.Timer));
+
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => filtration.ParsingConfig.CustomTypeProvider!.ResolveTypeBySimpleName("Timer")
+        );
+        Assert.Contains("Ambiguous short type name 'Timer'", ex.Message);
+        Assert.Contains("AdditionalImports", ex.Message);
+    }
+
+    [Fact]
+    public void DynamicLinq_ResolveTypeBySimpleName_AmbiguousResolvedByImports()
+    {
+        // Same two Timer types as above, but AdditionalImports picks one
+        // namespace explicitly - resolution succeeds without ambiguity.
+        var filtration = new ExpressionRowFiltration<RowWithBox>("Box != null");
+        filtration.RegisterCustomTypes(typeof(System.Threading.Timer), typeof(System.Timers.Timer));
+        filtration.AdditionalImports = new[] { "System.Threading" };
+
+        var resolved = filtration.ParsingConfig.CustomTypeProvider!.ResolveTypeBySimpleName(
+            "Timer"
+        );
+
+        Assert.Equal(typeof(System.Threading.Timer), resolved);
+    }
+
     // ---- Static method call ------------------------------------------------
 
     [Fact]
