@@ -73,6 +73,86 @@ public class ExpressionRowFiltrationDeserializationTests
         Assert.Empty(dest.Data);
     }
 
+    [Fact]
+    public void ExpressionRowFiltration_XmlDeserialization_AdditionalAssemblyNames_RoundTrip()
+    {
+        // AdditionalAssemblyNames is the headline Phase 1 feature for XML-defined
+        // flows (closes XML-flow user-type case from review note 84488). Verify
+        // that <AdditionalAssemblyNames><string>...</string></...> populates the
+        // property as written and the assembly resolution succeeds during the
+        // setter. System.Linq is used as a known-loaded contract assembly.
+        var xml =
+            @"<ExpressionRowFiltration>
+                <FilterExpression>true</FilterExpression>
+                <AdditionalAssemblyNames>
+                    <string>System.Linq</string>
+                </AdditionalAssemblyNames>
+              </ExpressionRowFiltration>";
+
+        var result = Deserialize(xml);
+
+        Assert.NotNull(result);
+        Assert.Equal(new[] { "System.Linq" }, result.AdditionalAssemblyNames);
+    }
+
+    [Fact]
+    public void ExpressionRowFiltration_XmlDeserialization_AdditionalImports_RoundTrip()
+    {
+        // AdditionalImports is the namespace-prefix companion to AdditionalAssemblyNames.
+        // Pure round-trip - no assembly load happens for imports, so we can use any
+        // namespace-shaped string.
+        var xml =
+            @"<ExpressionRowFiltration>
+                <FilterExpression>true</FilterExpression>
+                <AdditionalImports>
+                    <string>System.Globalization</string>
+                    <string>MyCompany.Domain</string>
+                </AdditionalImports>
+              </ExpressionRowFiltration>";
+
+        var result = Deserialize(xml);
+
+        Assert.NotNull(result);
+        Assert.Equal(
+            new[] { "System.Globalization", "MyCompany.Domain" },
+            result.AdditionalImports
+        );
+    }
+
+    [Fact]
+    public void ExpressionRowFiltration_XmlDeserialization_MixedPropertyOrder_LazyRebuildSucceeds()
+    {
+        // Property setters fire in document order during XmlSerializer-style
+        // deserialization. Round 8 made type-provider rebuild lazy specifically
+        // because that order is not guaranteed across XML packages. Verify that
+        // an arbitrary order (Imports before FilterExpression, AssemblyNames after)
+        // still produces a working filtration with the type provider correctly
+        // installed on the first row evaluation (review note 84548).
+        var xml =
+            @"<ExpressionRowFiltration>
+                <AdditionalImports>
+                    <string>System.Linq</string>
+                </AdditionalImports>
+                <FilterExpression>Reserve &gt; 0</FilterExpression>
+                <AdditionalAssemblyNames>
+                    <string>System.Linq</string>
+                </AdditionalAssemblyNames>
+              </ExpressionRowFiltration>";
+
+        var result = Deserialize(xml);
+
+        Assert.NotNull(result);
+        Assert.Single(result.AdditionalImports);
+        Assert.Single(result.AdditionalAssemblyNames);
+
+        // Trigger first-row evaluation - lazy RebuildTypeProvider must run here
+        // and install DynamicLinqTypeProvider into ParsingConfig.
+        Assert.True(result.PredicateFunc!(MakeRow(("Reserve", 100m))));
+        Assert.False(result.PredicateFunc!(MakeRow(("Reserve", -1m))));
+
+        Assert.IsType<DynamicLinqTypeProvider>(result.ParsingConfig.CustomTypeProvider);
+    }
+
     private static string BuildPipelineXml(string filterExpression) =>
         $@"<EtlDataFlowStep>
             <MemorySource>
