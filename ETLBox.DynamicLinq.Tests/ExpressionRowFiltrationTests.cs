@@ -549,17 +549,65 @@ public class ExpressionRowFiltrationTests
         Assert.Single(result);
     }
 
-    // --- Heterogeneous collection: explicit failure ---
+    // --- Heterogeneous collection: unification rules ---
 
     [Fact]
-    public void HeterogeneousCollection_Throws()
+    public void HeterogeneousCollection_DifferentFieldSets_FieldsUnifiedAsNullable()
     {
+        // Items differ in which fields they carry. Missing fields are treated as
+        // null, so the unified element shape contains both A and B - no throw.
         var item1 = new ExpandoObject();
         ((IDictionary<string, object>)item1)["A"] = 1;
         var item2 = new ExpandoObject();
         ((IDictionary<string, object>)item2)["B"] = 2;
 
         var row = MakeRow(("Items", (object)new object[] { item1, item2 }));
+
+        var result = RunFiltration("Items.Count() == 2", row);
+        Assert.Single(result);
+    }
+
+    [Fact]
+    public void HeterogeneousCollection_NullVsNonNullValueType_FieldUnifiedAsNullable()
+    {
+        // The motivating case for note 84547: optional value-type fields where
+        // some items have null and others a concrete value. Field type widens to
+        // Nullable<T> automatically.
+        var item1 = new ExpandoObject();
+        ((IDictionary<string, object>)item1)["X"] = null!;
+        var item2 = new ExpandoObject();
+        ((IDictionary<string, object>)item2)["X"] = 100m;
+
+        var row = MakeRow(("Items", (object)new object[] { item1, item2 }));
+
+        var result = RunFiltration("Items.Any(X > 50)", row);
+        Assert.Single(result);
+    }
+
+    [Fact]
+    public void HeterogeneousCollection_ConflictingNonNullTypes_Throws()
+    {
+        // Genuine type conflict in the same field across items - no safe
+        // unification, throws with a clear pointer to the conflicting field.
+        var item1 = new ExpandoObject();
+        ((IDictionary<string, object>)item1)["A"] = 1;
+        var item2 = new ExpandoObject();
+        ((IDictionary<string, object>)item2)["A"] = "string";
+
+        var row = MakeRow(("Items", (object)new object[] { item1, item2 }));
+
+        Assert.Throws<AggregateException>(() => RunFiltration("Items.Count() > 0", row));
+    }
+
+    [Fact]
+    public void HeterogeneousCollection_DictAndScalarMix_Throws()
+    {
+        // Mix of dictionary item and a scalar item is a real shape mismatch -
+        // no unified projection makes sense.
+        var item1 = new ExpandoObject();
+        ((IDictionary<string, object>)item1)["A"] = 1;
+
+        var row = MakeRow(("Items", (object)new object[] { item1, "not-a-dict" }));
 
         Assert.Throws<AggregateException>(() => RunFiltration("Items.Count() > 0", row));
     }

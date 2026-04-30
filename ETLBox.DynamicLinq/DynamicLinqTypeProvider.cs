@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Reflection;
 
@@ -23,11 +22,28 @@ internal sealed class DynamicLinqTypeProvider : IDynamicLinqCustomTypeProvider
 {
     private readonly HashSet<Type> _types;
     private readonly string[] _imports;
+    private readonly Dictionary<string, Type> _byFullName;
+    private readonly Dictionary<string, List<Type>> _byShortName;
 
     public DynamicLinqTypeProvider(HashSet<Type> types, string[]? imports = null)
     {
         _types = types;
         _imports = imports ?? Array.Empty<string>();
+        _byFullName = new Dictionary<string, Type>(types.Count, StringComparer.Ordinal);
+        _byShortName = new Dictionary<string, List<Type>>(StringComparer.Ordinal);
+        foreach (var t in types)
+        {
+            if (t.FullName is { } fn)
+            {
+                _byFullName[fn] = t;
+            }
+            if (!_byShortName.TryGetValue(t.Name, out var bucket))
+            {
+                bucket = new List<Type>();
+                _byShortName[t.Name] = bucket;
+            }
+            bucket.Add(t);
+        }
     }
 
     public HashSet<Type> GetCustomTypes() => _types;
@@ -36,12 +52,14 @@ internal sealed class DynamicLinqTypeProvider : IDynamicLinqCustomTypeProvider
 
     public Type? ResolveType(string typeName)
     {
-        // Direct match by full or short name.
-        var direct = _types.FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
-        if (direct is not null)
-            return direct;
+        // Direct match by full or short name. Lookup is O(1) on the indexed
+        // dictionaries; falls back to import-prefixed search only when neither
+        // direct form is registered.
+        if (_byFullName.TryGetValue(typeName, out var byFull))
+            return byFull;
+        if (_byShortName.TryGetValue(typeName, out var byShort))
+            return byShort[0];
 
-        // Try treating typeName as a short name within imported namespaces.
         return ResolveBySimpleNameInImports(typeName);
     }
 
@@ -55,25 +73,26 @@ internal sealed class DynamicLinqTypeProvider : IDynamicLinqCustomTypeProvider
 
         // Detect ambiguity: two or more registered types share the short name
         // and no import disambiguates them. Throw with a clear pointer instead
-        // of silently picking one based on HashSet iteration order.
-        var matches = _types.Where(t => t.Name == simpleTypeName).Take(2).ToArray();
-        if (matches.Length > 1)
+        // of silently picking one based on iteration order.
+        if (_byShortName.TryGetValue(simpleTypeName, out var matches))
         {
-            throw new InvalidOperationException(
-                $"Ambiguous short type name '{simpleTypeName}': multiple registered types match. Use the full type name in the expression, or add the resolving namespace to AdditionalImports."
-            );
+            if (matches.Count > 1)
+            {
+                throw new InvalidOperationException(
+                    $"Ambiguous short type name '{simpleTypeName}': multiple registered types match. Use the full type name in the expression, or add the resolving namespace to AdditionalImports."
+                );
+            }
+            return matches[0];
         }
-        return matches.Length == 1 ? matches[0] : null;
+        return null;
     }
 
     private Type? ResolveBySimpleNameInImports(string simpleName)
     {
         foreach (var import in _imports)
         {
-            var qualified = $"{import}.{simpleName}";
-            var match = _types.FirstOrDefault(t => t.FullName == qualified);
-            if (match is not null)
-                return match;
+            if (_byFullName.TryGetValue($"{import}.{simpleName}", out var t))
+                return t;
         }
         return null;
     }

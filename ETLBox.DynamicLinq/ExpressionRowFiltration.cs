@@ -96,15 +96,19 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     /// <summary>
     /// Names (or file paths) of assemblies to load and register so all their public
     /// types become resolvable from <see cref="FilterExpression"/>. Symmetric with
-    /// <c>ScriptedRowTransformation.AdditionalAssemblyNames</c>; lets users reference
-    /// types from named assemblies in expression text without per-type registration.
+    /// <c>ScriptedRowTransformation.AdditionalAssemblyNames</c> (open-source/etlbox
+    /// MR !115, MLRSSL-1510); lets users reference types from named assemblies in
+    /// expression text without per-type registration.
     /// </summary>
     /// <remarks>
     /// <para>
     /// Each entry is resolved in order: (1) already loaded in <c>AppDomain</c> by
     /// short or full name, (2) <c>Assembly.Load(AssemblyName)</c>, (3)
     /// <c>Assembly.LoadFrom(path)</c> as a fallback for paths. Assemblies that fail
-    /// all three throw <see cref="InvalidOperationException"/>.
+    /// all three throw <see cref="InvalidOperationException"/>. The AppDomain
+    /// pre-check (step 1) extends the two-step strategy used on the Roslyn side
+    /// (MR !115) - long-running processes avoid double-loading already-resident
+    /// assemblies.
     /// </para>
     /// <para>
     /// All public exported types from each assembly are added to
@@ -131,16 +135,17 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
             _additionalAssemblies = _additionalAssemblyNames
                 .Select(AssemblyResolver.Load)
                 .ToArray();
-            RebuildTypeProvider();
+            MarkTypeProviderDirty();
         }
     }
 
     /// <summary>
     /// Namespace prefixes used as imports when resolving short type names in
     /// <see cref="FilterExpression"/>. Symmetric with
-    /// <c>ScriptedRowTransformation.AdditionalImports</c>; lets users write
-    /// <c>"MyType.Method()"</c> instead of <c>"MyCompany.Domain.MyType.Method()"</c>
-    /// when <c>MyCompany.Domain</c> is in the imports list.
+    /// <c>ScriptedRowTransformation.AdditionalImports</c> (open-source/etlbox
+    /// MR !115, MLRSSL-1510); lets users write <c>"MyType.Method()"</c> instead of
+    /// <c>"MyCompany.Domain.MyType.Method()"</c> when <c>MyCompany.Domain</c> is in
+    /// the imports list.
     /// </summary>
     /// <remarks>
     /// Imports are checked in declaration order. A short name resolves to the first
@@ -157,7 +162,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
             _additionalImports = (value ?? Array.Empty<string>())
                 .Where(i => !string.IsNullOrWhiteSpace(i))
                 .ToArray();
-            RebuildTypeProvider();
+            MarkTypeProviderDirty();
         }
     }
 
@@ -188,7 +193,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         foreach (var t in types.Where(t => t is not null))
             _registeredTypes.Add(t);
 
-        RebuildTypeProvider();
+        MarkTypeProviderDirty();
     }
 
     // Explicit per-type registrations via RegisterCustomTypes - tracked separately
@@ -202,6 +207,21 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     private string[] _additionalAssemblyNames = Array.Empty<string>();
     private Assembly[] _additionalAssemblies = Array.Empty<Assembly>();
     private string[] _additionalImports = Array.Empty<string>();
+
+    // Marks the type provider as needing a rebuild on next EnsureCompiled call.
+    // Avoids running RebuildTypeProvider directly from property setters or
+    // RegisterCustomTypes - during XML deserialization the order in which
+    // AdditionalAssemblyNames / AdditionalImports / RegisterCustomTypes are
+    // applied is not guaranteed, and rebuilding mid-stream wastes work and
+    // produces transient ParsingConfig states. The actual rebuild happens once,
+    // lazily, when the predicate is first evaluated.
+    private bool _typeProviderDirty;
+
+    private void MarkTypeProviderDirty()
+    {
+        _typeProviderDirty = true;
+        InvalidateCompiledCache();
+    }
 
     // Recomputes ParsingConfig.CustomTypeProvider as the union of:
     //  - types from RegisterCustomTypes (_registeredTypes)
@@ -220,8 +240,30 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         }
 
         ParsingConfig.CustomTypeProvider = new DynamicLinqTypeProvider(types, _additionalImports);
-        InvalidateCompiledCache();
+        _typeProviderDirty = false;
     }
+
+    // Called from EnsureCompiled (and from the non-generic Expando override) just
+    // before the parser runs, so a deferred rebuild becomes the user's first
+    // observable side effect on ParsingConfig.
+    private protected void EnsureTypeProviderInternal()
+    {
+        if (_typeProviderDirty)
+        {
+            RebuildTypeProvider();
+        }
+    }
+
+    /// <summary>
+    /// Forces an immediate rebuild of <see cref="ParsingConfig"/>'s
+    /// <c>CustomTypeProvider</c> using the currently registered types, assemblies
+    /// and imports. By default the rebuild is deferred to the first row evaluation
+    /// to avoid intermediate state during configuration (XML deserialization
+    /// applies property setters in unspecified order). Use this when you need the
+    /// provider available before any row is processed - typically tests or
+    /// diagnostic code that inspects <c>CustomTypeProvider</c> directly.
+    /// </summary>
+    public void PrepareTypeProvider() => EnsureTypeProviderInternal();
 
     // Compiled-delegate cache. Holds the last successful Compile() output for
     // FilterExpression + ParsingConfig pair. The TInput-typed path produces a
@@ -237,7 +279,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     /// <see cref="ParsingConfig"/> in place; reassigning the property is
     /// detected automatically.
     /// </summary>
-    public void InvalidateCompiledCache()
+    public virtual void InvalidateCompiledCache()
     {
         _compiledPredicate = null;
         _compiledForExpression = null;
@@ -259,11 +301,13 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
             _compiledPredicate is not null
             && _compiledForExpression == FilterExpression
             && ReferenceEquals(_compiledForConfig, ParsingConfig)
+            && !_typeProviderDirty
         )
         {
             return;
         }
 
+        EnsureTypeProviderInternal();
         var lambda = DynamicExpressionParser.ParseLambda<TInput, bool>(
             ParsingConfig,
             createParameterCtor: false,
@@ -335,11 +379,21 @@ public class ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>
     public ExpressionRowFiltration([CanBeNull] ILogger<ExpressionRowFiltration> logger)
         : base(logger) { }
 
+    public override void InvalidateCompiledCache()
+    {
+        base.InvalidateCompiledCache();
+        _expandoCompiledPredicate = null;
+        _expandoCompiledForExpression = null;
+        _expandoCompiledForConfig = null;
+        _expandoCompiledForType = null;
+    }
+
     protected override bool EvaluateExpression(ExpandoObject row)
     {
         if (string.IsNullOrWhiteSpace(FilterExpression))
             throw new InvalidOperationException("FilterExpression is not set.");
 
+        EnsureTypeProviderInternal();
         var (type, instance) = ExpandoTypeMapper.Map(row);
 
         if (

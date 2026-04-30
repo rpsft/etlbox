@@ -116,7 +116,7 @@ When the expression contains XML special characters they must be escaped: `&gt;`
 | Member access — custom class | `Person.Name == "John" && Person.Age > 18` |
 | Collection methods | `Items.Any(Sum > 100)`, `Lines.Count() > 5`, `Lines.Sum(Amount) > 1000`, `Tags.Contains("Premium")` |
 
-Supported value types: `decimal`, `int`, `string`, `bool`, `DateTime`, `Guid`, `byte[]`, `null`, nested `ExpandoObject`, custom classes with public properties, homogeneous collections.
+Supported value types: `decimal`, `int`, `string`, `bool`, `DateTime`, `Guid`, `byte[]`, `null`, nested `ExpandoObject`, custom classes with public properties, collections of items that share a unifiable shape (see Limitations on heterogeneity).
 
 ### When to use this vs ScriptedRowTransformation
 
@@ -191,11 +191,13 @@ filtration.AdditionalImports = new[] { "MyCompany.Domain" };
 
 Assembly resolution tries three strategies in order: (1) already loaded in the current `AppDomain` by short or full name, (2) `Assembly.Load(AssemblyName)`, (3) `Assembly.LoadFrom(path)` as a fallback. An assembly that fails all three throws `InvalidOperationException` from the property setter — configuration errors surface at flow build time, not at evaluation time.
 
-`AdditionalAssemblyNames`, `AdditionalImports`, and `RegisterCustomTypes` compose: types from all three sources are unioned in the parser's custom-type set. Setting any one rebuilds the provider and invalidates the compiled-predicate cache.
+`AdditionalAssemblyNames`, `AdditionalImports`, and `RegisterCustomTypes` compose: types from all three sources are unioned in the parser's custom-type set. Setters mark the provider dirty and invalidate the compiled-predicate cache; the actual rebuild runs lazily on the first row evaluation. This avoids transient intermediate state during XML deserialization, where setter ordering is not guaranteed - the final provider is built once from whatever the user set, regardless of the order in which the fields arrived.
+
+If you need the `ParsingConfig.CustomTypeProvider` available before the first row (for tests or diagnostic code that inspects it directly), call `filtration.PrepareTypeProvider()` after configuration. In normal pipeline usage it is not needed.
 
 ### Limitations
 
-- **Heterogeneous collections** — collections whose elements have different field sets or types throw `InvalidOperationException`. Each element in `Items` must have the same shape.
+- **Heterogeneous collections** — items with different field sets or with optional value-type fields (some items have `null`, others a concrete value) are unified automatically: missing fields are treated as `null`, and value-type fields that appear as both `null` and non-null are widened to `Nullable<T>`. Items with conflicting non-null types for the same field name (e.g. `Reserve = 1` in one item and `Reserve = "text"` in another) still throw `InvalidOperationException` with a pointer to the offending field. Mixing dictionary items and scalar items in the same collection also throws.
 - **Empty collection with `.Any(predicate)`** — when the source `ExpandoObject` collection is empty its element type cannot be inferred, so it falls back to `List<object>`. `.Count()` and `.Any()` (no predicate) work; `.Any(predicate)` does not because there are no element properties to bind to.
 - **Cyclic references** — runtime types are emitted by `DynamicClassFactory` and cannot reference themselves. ETL row data does not normally contain cycles, but if it does the mapping fails.
 - **`byte[]` and `string`** — treated as scalar values, not as enumerable collections. `Tags.Contains("Premium")` works on `List<string>`; it does not work on a `string` field treated as a sequence of characters.
@@ -220,7 +222,7 @@ The compile-time element type of the array is `TInput`, so `AsQueryable()` retur
 `ExpandoTypeMapper.Map(row)` chooses one of two paths per row based on the shape:
 
 - **Fast path** (flat shapes — scalars, nullables, strings, byte arrays, custom classes): a per-shape `Func<IDictionary<string, object?>, object>` is compiled once via Expression Trees and cached by `(field name, runtime value type)` signature. Per-row cost is one dictionary walk + cache lookup + delegate invoke. No reflection in the hot path. This covers the typical XML-defined flow case (DB row -> ExpandoObject with scalar fields).
-- **Slow path** (shapes containing nested `IDictionary<string, object>` or homogeneous collections): the original recursive reflection-based mapping. For nested `IDictionary<string, object>` it generates a nested DynamicClass; for a homogeneous collection it generates a `List<TElement>`; for a scalar or custom class it keeps the `GetType()` of the value. Recursion handles arbitrary nesting depth so predicates like `Order.Total > 100` and `Items.Any(Sum > 100)` keep working.
+- **Slow path** (shapes containing nested `IDictionary<string, object>` or item collections): recursive reflection-based mapping. For nested `IDictionary<string, object>` it generates a nested DynamicClass; for a collection it walks the items once to build a unified element shape and generates a `List<TElement>`; for a scalar or custom class it keeps the `GetType()` of the value. Recursion handles arbitrary nesting depth so predicates like `Order.Total > 100` and `Items.Any(Sum > 100)` keep working.
 
 Both paths feed into `DynamicClassFactory.CreateType(properties)` which emits the runtime type into a persistent `AssemblyBuilder` (one shared builder per process) and caches by property signature. The cached compiled predicate then operates on the mapped instance directly via a `Func<object, bool>` wrapper - no per-row `AsQueryable()` wrap.
 

@@ -280,6 +280,7 @@ public class MethodCallSupportTests
         // user gets a clear pointer instead.
         var filtration = new ExpressionRowFiltration<RowWithBox>("Box != null");
         filtration.RegisterCustomTypes(typeof(System.Threading.Timer), typeof(System.Timers.Timer));
+        filtration.PrepareTypeProvider();
 
         var ex = Assert.Throws<InvalidOperationException>(
             () => filtration.ParsingConfig.CustomTypeProvider!.ResolveTypeBySimpleName("Timer")
@@ -296,6 +297,7 @@ public class MethodCallSupportTests
         var filtration = new ExpressionRowFiltration<RowWithBox>("Box != null");
         filtration.RegisterCustomTypes(typeof(System.Threading.Timer), typeof(System.Timers.Timer));
         filtration.AdditionalImports = new[] { "System.Threading" };
+        filtration.PrepareTypeProvider();
 
         var resolved = filtration.ParsingConfig.CustomTypeProvider!.ResolveTypeBySimpleName(
             "Timer"

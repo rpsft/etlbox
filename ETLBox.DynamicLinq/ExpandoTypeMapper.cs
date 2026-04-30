@@ -29,9 +29,7 @@ namespace ALE.ETLBox.DynamicLinq;
 /// <item><description>
 /// <b>Slow path</b> for shapes with nested <see cref="IDictionary{TKey,TValue}"/> or
 /// homogeneous collections (lists of dictionaries or scalars). Recurses into nested
-/// shapes and uses reflection-based property assignment. Same behaviour as before
-/// optimization - kept for compatibility with predicates over nested objects
-/// (<c>Order.Total > 100</c>, <c>Items.Any(Sum > 100)</c>, etc.).
+/// shapes and uses reflection-based property assignment.
 /// </description></item>
 /// </list>
 /// <para>
@@ -43,9 +41,11 @@ namespace ALE.ETLBox.DynamicLinq;
 /// </para>
 /// <para>
 /// <c>string</c> and <c>byte[]</c> are deliberately treated as scalar values rather
-/// than as <c>IEnumerable</c> collections. Heterogeneous collections (items with
-/// different field sets or types) throw <see cref="InvalidOperationException"/> from
-/// the slow path.
+/// than as <c>IEnumerable</c> collections. Items in a nested collection that share
+/// field names are unified: missing fields and null values widen the property type
+/// to <c>Nullable&lt;T&gt;</c> for value types so optional values do not throw.
+/// Conflicting non-null types for the same field across items still throw
+/// <see cref="InvalidOperationException"/>.
 /// </para>
 /// <para>
 /// Internal API - used by <see cref="ExpressionRowFiltration"/>. Not part of the
@@ -131,12 +131,9 @@ internal static class ExpandoTypeMapper
         return new ShapeEntry(type, lambda.Compile());
     }
 
-    // === Slow path: recursive reflection-based mapper ===
-
-    // Original mapping logic preserved for shapes the compiled fast path cannot
-    // express directly (nested dictionaries, homogeneous collections). Cost is one
-    // walk to build properties + Activator.CreateInstance + reflection-based field
-    // assignment; recursion handles arbitrary nesting depth.
+    // Slow path: recursive reflection-based mapper for nested dictionaries and
+    // collections that the compiled fast path cannot express. Recursion handles
+    // arbitrary nesting depth.
     private static (Type Type, object Instance) MapWithReflection(IDictionary<string, object?> dict)
     {
         var properties = new DynamicProperty[dict.Count];
@@ -199,8 +196,11 @@ internal static class ExpandoTypeMapper
         return false;
     }
 
-    // Builds a typed List<T> from a homogeneous collection.
-    // Throws if items have inconsistent shapes (different field sets / types).
+    // Builds a typed List<T> from a collection of items. For dict elements the
+    // element type is unified across all items: a field that is null in some and
+    // non-null in others is widened to Nullable<T> for value types, so the common
+    // "optional value" case in heterogeneous-shape input doesn't throw. Items
+    // with genuinely conflicting non-null types for the same field still throw.
     private static (Type ListType, object ListInstance) MapCollection(IList<object> items)
     {
         if (items.Count == 0)
@@ -211,31 +211,37 @@ internal static class ExpandoTypeMapper
             return (emptyType, Activator.CreateInstance(emptyType)!);
         }
 
-        var first = items[0];
-        Type elementType;
-        Func<object, object> projectItem;
-
-        if (first is IDictionary<string, object?> firstDict)
+        var sample = items.FirstOrDefault(i => i is not null);
+        if (sample is null)
         {
-            elementType = MapWithReflection(firstDict).Type;
+            // All items null: there is no element type to infer.
+            var nullListType = typeof(List<object>);
+            var nullList = (IList)Activator.CreateInstance(nullListType)!;
+            foreach (var _ in items)
+                nullList.Add(null);
+            return (nullListType, nullList);
+        }
+
+        Type elementType;
+        Func<object, object?> projectItem;
+
+        if (sample is IDictionary<string, object?>)
+        {
+            var (props, type) = BuildUnifiedDictShape(items);
+            elementType = type;
             projectItem = item =>
             {
                 if (item is not IDictionary<string, object?> d)
                     throw new InvalidOperationException(
                         "Heterogeneous collection: mix of dictionary and non-dictionary items."
                     );
-                var (itemType, itemInstance) = MapWithReflection(d);
-                if (itemType != elementType)
-                    throw new InvalidOperationException(
-                        "Heterogeneous collection: items have different field sets or types."
-                    );
-                return itemInstance;
+                return ProjectDictToShape(d, type, props);
             };
         }
         else
         {
-            elementType = first?.GetType() ?? typeof(object);
-            projectItem = item => item!;
+            elementType = sample.GetType();
+            projectItem = item => item;
         }
 
         var listType = typeof(List<>).MakeGenericType(elementType);
@@ -246,6 +252,123 @@ internal static class ExpandoTypeMapper
         }
 
         return (listType, listInstance);
+    }
+
+    // Walks every dict item once, collecting the most specific non-null type
+    // observed per field name. If a field appears as null somewhere and non-null
+    // elsewhere, the property type is wrapped in Nullable<T> for value types so
+    // null assignment does not throw at projection time. Conflicting non-null
+    // types for the same field name throw - that is the "real" heterogeneity case.
+    private static (DynamicProperty[] Props, Type Type) BuildUnifiedDictShape(IList<object> items)
+    {
+        var byField = new Dictionary<string, FieldStats>();
+        var fieldOrder = new List<string>();
+
+        foreach (var item in items)
+        {
+            if (item is null)
+                continue;
+            if (item is not IDictionary<string, object?> dict)
+                throw new InvalidOperationException(
+                    "Heterogeneous collection: mix of dictionary and non-dictionary items."
+                );
+            AccumulateFromDict(dict, byField, fieldOrder);
+        }
+
+        var props = fieldOrder
+            .Select(name => new DynamicProperty(name, ResolvePropertyType(byField[name])))
+            .ToArray();
+        return (props, DynamicClassFactory.CreateType(props));
+    }
+
+    private static void AccumulateFromDict(
+        IDictionary<string, object?> dict,
+        Dictionary<string, FieldStats> byField,
+        List<string> fieldOrder
+    )
+    {
+        foreach (var pair in dict)
+        {
+            if (!byField.TryGetValue(pair.Key, out var stats))
+            {
+                stats = new FieldStats();
+                byField[pair.Key] = stats;
+                fieldOrder.Add(pair.Key);
+            }
+            UpdateFieldStats(pair.Key, pair.Value, stats);
+        }
+
+        // Fields seen in earlier items but absent here also count as null.
+        foreach (var missing in fieldOrder.Where(n => !dict.ContainsKey(n)))
+        {
+            byField[missing].HadNull = true;
+        }
+    }
+
+    private static void UpdateFieldStats(string fieldName, object? value, FieldStats stats)
+    {
+        if (value is null)
+        {
+            stats.HadNull = true;
+            return;
+        }
+        var (resolvedType, _) = ResolveProperty(value);
+        if (stats.NonNullType is null)
+        {
+            stats.NonNullType = resolvedType;
+        }
+        else if (stats.NonNullType != resolvedType)
+        {
+            throw new InvalidOperationException(
+                $"Heterogeneous collection: field '{fieldName}' has conflicting non-null types '{stats.NonNullType}' and '{resolvedType}'."
+            );
+        }
+    }
+
+    private static Type ResolvePropertyType(FieldStats stats)
+    {
+        if (stats.NonNullType is null)
+            return typeof(object);
+        if (
+            stats.HadNull
+            && stats.NonNullType.IsValueType
+            && Nullable.GetUnderlyingType(stats.NonNullType) is null
+        )
+            return typeof(Nullable<>).MakeGenericType(stats.NonNullType);
+        return stats.NonNullType;
+    }
+
+    private sealed class FieldStats
+    {
+        public Type? NonNullType;
+        public bool HadNull;
+    }
+
+    private static object ProjectDictToShape(
+        IDictionary<string, object?> dict,
+        Type targetType,
+        DynamicProperty[] props
+    )
+    {
+        var instance = Activator.CreateInstance(targetType)!;
+        foreach (var name in props.Select(p => p.Name))
+        {
+            if (!dict.TryGetValue(name, out var raw))
+                continue;
+
+            object? value;
+            if (raw is null)
+            {
+                value = null;
+            }
+            else
+            {
+                var (_, projected) = ResolveProperty(raw);
+                value = projected;
+            }
+            targetType.GetProperty(name)?.SetValue(instance, value);
+        }
+        return instance;
     }
 
     // === Shape signature for the fast-path cache ===
