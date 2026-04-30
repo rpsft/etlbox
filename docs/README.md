@@ -13,6 +13,7 @@ For API reference documentation, see the [hosted API docs](https://rpsft.github.
 - [Integrate databases](dataflow/db-sources-destinations.md)
 - [Integrate flat files and web services](dataflow/file-sources-destinations.md)
 - [Transformations](dataflow/transformations.md)
+- [Row filtration](dataflow/row-filtration.md)
 - [Linking and execution](dataflow/linking-execution.md)
 - [Working with data types](dataflow/data-types.md)
 - [Syncing tables with Merge](dataflow/db-merge.md)

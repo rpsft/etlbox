@@ -15,6 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ETLBox\ETLBox.csproj"/>
     <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ETLBox.DynamicLinq.Benchmarks"/>
+    <InternalsVisibleTo Include="ETLBox.Scripting.Tests"/>
   </ItemGroup>
 </Project>

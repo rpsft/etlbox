@@ -196,6 +196,8 @@ The following table is an overview of the most common transformations in ETLBox:
 | Multicast                 |                      |                     |
 | RowDuplication            |                      |                     |
 | RowMultiplication         |                      |                     |
+| RowFiltration             |                      |                     |
+| ExpressionRowFiltration   |                      |                     |
 | JsonTransformation        |                      |                     |
 | ScriptedRowTransformation |                      |                     |
 | AIBatchTransformation     |                      |                     |

@@ -59,7 +59,8 @@ Root namespace: `ALE.ETLBox` with sub-namespaces (`ALE.ETLBox.DataFlow`, `ALE.ET
 etc.).
 
 Extension libraries follow the pattern `ETLBox.<Feature>/` (e.g., ETLBox.Kafka, ETLBox.Json,
-ETLBox.Rest, ETLBox.Serialization) with corresponding `ETLBox.<Feature>.Tests/` projects.
+ETLBox.Rest, ETLBox.Serialization, ETLBox.Scripting, ETLBox.DynamicLinq) with corresponding
+`ETLBox.<Feature>.Tests/` projects.
 
 Shared test utilities live in `TestShared/`. Tests that cannot run in parallel are in
 `TestNonParallel/`.
