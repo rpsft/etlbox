@@ -135,7 +135,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
             _additionalAssemblies = _additionalAssemblyNames
                 .Select(AssemblyResolver.Load)
                 .ToArray();
-            MarkTypeProviderDirty();
+            InvalidateCompiledCache();
         }
     }
 
@@ -162,7 +162,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
             _additionalImports = (value ?? Array.Empty<string>())
                 .Where(i => !string.IsNullOrWhiteSpace(i))
                 .ToArray();
-            MarkTypeProviderDirty();
+            InvalidateCompiledCache();
         }
     }
 
@@ -193,7 +193,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         foreach (var t in types.Where(t => t is not null))
             _registeredTypes.Add(t);
 
-        MarkTypeProviderDirty();
+        InvalidateCompiledCache();
     }
 
     // Explicit per-type registrations via RegisterCustomTypes - tracked separately
@@ -208,28 +208,26 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     private Assembly[] _additionalAssemblies = Array.Empty<Assembly>();
     private string[] _additionalImports = Array.Empty<string>();
 
-    // Marks the type provider as needing a rebuild on next EnsureCompiled call.
-    // Avoids running RebuildTypeProvider directly from property setters or
-    // RegisterCustomTypes - during XML deserialization the order in which
-    // AdditionalAssemblyNames / AdditionalImports / RegisterCustomTypes are
-    // applied is not guaranteed, and rebuilding mid-stream wastes work and
-    // produces transient ParsingConfig states. The actual rebuild happens once,
-    // lazily, when the predicate is first evaluated.
-    private bool _typeProviderDirty;
-
-    private void MarkTypeProviderDirty()
-    {
-        _typeProviderDirty = true;
-        InvalidateCompiledCache();
-    }
-
-    // Recomputes ParsingConfig.CustomTypeProvider as the union of:
+    // Rebuilds ParsingConfig.CustomTypeProvider from the union of:
     //  - types from RegisterCustomTypes (_registeredTypes)
     //  - public exported types from AdditionalAssemblyNames-loaded assemblies
     // and applies AdditionalImports as namespace prefixes for short-name resolution.
-    // See AssemblyResolver and DynamicLinqTypeProvider for the underlying helpers.
-    private void RebuildTypeProvider()
+    // Called on every compile cache miss (right before parsing) so XML
+    // deserialization, where setter ordering is not guaranteed, never sees a
+    // partially-rebuilt provider - the rebuild happens once, on the first row.
+    // No-op when the user did not register any types/assemblies/imports through
+    // our APIs - that case preserves a manually-assigned ParsingConfig.CustomTypeProvider.
+    private protected void RebuildTypeProvider()
     {
+        if (
+            _registeredTypes.Count == 0
+            && _additionalAssemblies.Length == 0
+            && _additionalImports.Length == 0
+        )
+        {
+            return;
+        }
+
         var types = new HashSet<Type>(_registeredTypes);
         foreach (var assembly in _additionalAssemblies)
         {
@@ -240,30 +238,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         }
 
         ParsingConfig.CustomTypeProvider = new DynamicLinqTypeProvider(types, _additionalImports);
-        _typeProviderDirty = false;
     }
-
-    // Called from EnsureCompiled (and from the non-generic Expando override) just
-    // before the parser runs, so a deferred rebuild becomes the user's first
-    // observable side effect on ParsingConfig.
-    private protected void EnsureTypeProviderInternal()
-    {
-        if (_typeProviderDirty)
-        {
-            RebuildTypeProvider();
-        }
-    }
-
-    /// <summary>
-    /// Forces an immediate rebuild of <see cref="ParsingConfig"/>'s
-    /// <c>CustomTypeProvider</c> using the currently registered types, assemblies
-    /// and imports. By default the rebuild is deferred to the first row evaluation
-    /// to avoid intermediate state during configuration (XML deserialization
-    /// applies property setters in unspecified order). Use this when you need the
-    /// provider available before any row is processed - typically tests or
-    /// diagnostic code that inspects <c>CustomTypeProvider</c> directly.
-    /// </summary>
-    public void PrepareTypeProvider() => EnsureTypeProviderInternal();
 
     // Compiled-delegate cache. Holds the last successful Compile() output for
     // FilterExpression + ParsingConfig pair. The TInput-typed path produces a
@@ -301,13 +276,12 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
             _compiledPredicate is not null
             && _compiledForExpression == FilterExpression
             && ReferenceEquals(_compiledForConfig, ParsingConfig)
-            && !_typeProviderDirty
         )
         {
             return;
         }
 
-        EnsureTypeProviderInternal();
+        RebuildTypeProvider();
         var lambda = DynamicExpressionParser.ParseLambda<TInput, bool>(
             ParsingConfig,
             createParameterCtor: false,
@@ -393,7 +367,6 @@ public class ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>
         if (string.IsNullOrWhiteSpace(FilterExpression))
             throw new InvalidOperationException("FilterExpression is not set.");
 
-        EnsureTypeProviderInternal();
         var (type, instance) = ExpandoTypeMapper.Map(row);
 
         if (
@@ -403,6 +376,7 @@ public class ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>
             || _expandoCompiledForType != type
         )
         {
+            RebuildTypeProvider();
             // Build a Func<object, bool> wrapper around the type-specific lambda
             // so we can invoke it without DynamicInvoke (slow) and without
             // wrapping each row in an Array.CreateInstance + AsQueryable per call.

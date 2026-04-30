@@ -191,9 +191,7 @@ filtration.AdditionalImports = new[] { "MyCompany.Domain" };
 
 Assembly resolution tries three strategies in order: (1) already loaded in the current `AppDomain` by short or full name, (2) `Assembly.Load(AssemblyName)`, (3) `Assembly.LoadFrom(path)` as a fallback. An assembly that fails all three throws `InvalidOperationException` from the property setter — configuration errors surface at flow build time, not at evaluation time.
 
-`AdditionalAssemblyNames`, `AdditionalImports`, and `RegisterCustomTypes` compose: types from all three sources are unioned in the parser's custom-type set. Setters mark the provider dirty and invalidate the compiled-predicate cache; the actual rebuild runs lazily on the first row evaluation. This avoids transient intermediate state during XML deserialization, where setter ordering is not guaranteed - the final provider is built once from whatever the user set, regardless of the order in which the fields arrived.
-
-If you need the `ParsingConfig.CustomTypeProvider` available before the first row (for tests or diagnostic code that inspects it directly), call `filtration.PrepareTypeProvider()` after configuration. In normal pipeline usage it is not needed.
+`AdditionalAssemblyNames`, `AdditionalImports`, and `RegisterCustomTypes` compose: types from all three sources are unioned in the parser's custom-type set. Setters invalidate the compiled-predicate cache; the type provider is rebuilt on the next row evaluation, before the predicate is parsed. This avoids transient intermediate state during XML deserialization, where setter ordering is not guaranteed - the final provider is built once from whatever the user set, regardless of the order in which the fields arrived. If none of the three are set, a manually-assigned `ParsingConfig.CustomTypeProvider` is preserved untouched.
 
 ### Limitations
 
