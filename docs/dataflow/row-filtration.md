@@ -191,7 +191,11 @@ filtration.AdditionalImports = new[] { "MyCompany.Domain" };
 
 Assembly resolution tries three strategies in order: (1) already loaded in the current `AppDomain` by short or full name, (2) `Assembly.Load(AssemblyName)`, (3) `Assembly.LoadFrom(path)` as a fallback. An assembly that fails all three throws `InvalidOperationException` from the property setter — configuration errors surface at flow build time, not at evaluation time.
 
-`AdditionalAssemblyNames`, `AdditionalImports`, and `RegisterCustomTypes` compose: types from all three sources are unioned in the parser's custom-type set. Setters invalidate the compiled-predicate cache; the type provider is rebuilt on the next row evaluation, before the predicate is parsed. This avoids transient intermediate state during XML deserialization, where setter ordering is not guaranteed - the final provider is built once from whatever the user set, regardless of the order in which the fields arrived. If none of the three are set, a manually-assigned `ParsingConfig.CustomTypeProvider` is preserved untouched.
+`AdditionalAssemblyNames`, `AdditionalImports`, and `RegisterCustomTypes` compose: types from all three sources are unioned in the parser's custom-type set. Setters invalidate the compiled-predicate cache; the type provider is rebuilt on the next row evaluation, before the predicate is parsed. This avoids transient intermediate state during XML deserialization, where setter ordering is not guaranteed - the final provider is built once from whatever the user set, regardless of the order in which the fields arrived. If none of the three are set, a manually-assigned `ParsingConfig.CustomTypeProvider` is preserved untouched. Clearing every registration after having set one drops our installed provider and restores the framework default, so stale types or imports do not survive into subsequent evaluations.
+
+### Thread safety
+
+`ExpressionRowFiltration` is not thread-safe. Configure all of its public surface (`FilterExpression`, `AdditionalAssemblyNames`, `AdditionalImports`, `RegisterCustomTypes`, `ParsingConfig`) once before the dataflow starts. ETLBox runs each dataflow step on a single thread, so concurrent calls to `EvaluateExpression` from the same instance do not happen in normal usage. Sharing one instance across multiple parallel pipelines is unsupported.
 
 ### Limitations
 

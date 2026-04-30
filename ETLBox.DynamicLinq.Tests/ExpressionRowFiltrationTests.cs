@@ -770,4 +770,50 @@ public class ExpressionRowFiltrationTests
         Assert.Equal(2, dest.Data.Count);
         Assert.Single(errorDest.Data);
     }
+
+    // --- ParsingConfig.CustomTypeProvider lifecycle ---
+
+    private sealed class ProvenanceRow
+    {
+        public int Foo { get; set; }
+    }
+
+    [Fact]
+    public void ManuallySetCustomTypeProvider_PreservedWhenNoOurRegistrations()
+    {
+        // User assigns a CustomTypeProvider directly and never touches our
+        // RegisterCustomTypes / AdditionalAssemblyNames / AdditionalImports.
+        // RebuildTypeProvider must leave the provider untouched.
+        var filtration = new ExpressionRowFiltration<ProvenanceRow>("Foo > 0");
+        var manualProvider = new ALE.ETLBox.DynamicLinq.DynamicLinqTypeProvider(
+            new HashSet<Type> { typeof(string) }
+        );
+        filtration.ParsingConfig.CustomTypeProvider = manualProvider;
+
+        // Trigger compile path so RebuildTypeProvider would run if it was going to.
+        Assert.True(filtration.PredicateFunc!(new ProvenanceRow { Foo = 1 }));
+
+        Assert.Same(manualProvider, filtration.ParsingConfig.CustomTypeProvider);
+    }
+
+    [Fact]
+    public void AdditionalImports_ClearedAfterSet_DropsOurInstalledProvider()
+    {
+        // After installing our provider via AdditionalImports, clearing the
+        // collection must drop the stale provider on the next evaluation rather
+        // than leave it pinned.
+        var filtration = new ExpressionRowFiltration<ProvenanceRow>("Foo > 0");
+        filtration.AdditionalImports = new[] { "Bogus.Namespace" };
+        Assert.True(filtration.PredicateFunc!(new ProvenanceRow { Foo = 1 }));
+
+        var providerAfterImport = filtration.ParsingConfig.CustomTypeProvider;
+        Assert.IsType<ALE.ETLBox.DynamicLinq.DynamicLinqTypeProvider>(providerAfterImport);
+
+        filtration.AdditionalImports = Array.Empty<string>();
+        Assert.True(filtration.PredicateFunc!(new ProvenanceRow { Foo = 1 }));
+
+        Assert.IsNotType<ALE.ETLBox.DynamicLinq.DynamicLinqTypeProvider>(
+            filtration.ParsingConfig.CustomTypeProvider
+        );
+    }
 }

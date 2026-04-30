@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Expressions;
 using System.Reflection;
 using ALE.ETLBox.DataFlow;
@@ -42,6 +43,14 @@ namespace ALE.ETLBox.DynamicLinq;
 /// comparison operators work on properties typed as <c>object</c> (null-valued fields
 /// and mixed numeric literals such as <c>Reserve &gt; 0</c> when <c>Reserve</c> is
 /// <c>decimal</c>).
+/// </para>
+/// <para>
+/// Thread safety: not thread-safe. Configure (<see cref="FilterExpression"/>,
+/// <see cref="AdditionalAssemblyNames"/>, <see cref="AdditionalImports"/>,
+/// <see cref="RegisterCustomTypes"/>, <see cref="ParsingConfig"/>) once before the
+/// dataflow starts. ETLBox runs each dataflow step on a single thread, so
+/// concurrent calls to <c>EvaluateExpression</c> from the same instance are not
+/// expected. Sharing one instance across multiple parallel pipelines is unsupported.
 /// </para>
 /// </remarks>
 /// <example>
@@ -208,6 +217,12 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     private Assembly[] _additionalAssemblies = Array.Empty<Assembly>();
     private string[] _additionalImports = Array.Empty<string>();
 
+    // Tracks whether the current ParsingConfig.CustomTypeProvider was installed
+    // by RebuildTypeProvider. Lets us drop our provider when the user clears
+    // every registration, without overwriting a manually-assigned provider that
+    // was never ours to begin with.
+    private bool _providerOwnedByUs;
+
     // Rebuilds ParsingConfig.CustomTypeProvider from the union of:
     //  - types from RegisterCustomTypes (_registeredTypes)
     //  - public exported types from AdditionalAssemblyNames-loaded assemblies
@@ -215,16 +230,26 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
     // Called on every compile cache miss (right before parsing) so XML
     // deserialization, where setter ordering is not guaranteed, never sees a
     // partially-rebuilt provider - the rebuild happens once, on the first row.
-    // No-op when the user did not register any types/assemblies/imports through
-    // our APIs - that case preserves a manually-assigned ParsingConfig.CustomTypeProvider.
+    // When all registrations are empty: leaves a manually-assigned
+    // ParsingConfig.CustomTypeProvider untouched, but drops our previously-installed
+    // provider so stale types/imports do not leak into subsequent evaluations.
     private protected void RebuildTypeProvider()
     {
-        if (
-            _registeredTypes.Count == 0
-            && _additionalAssemblies.Length == 0
-            && _additionalImports.Length == 0
-        )
+        var hasRegistrations =
+            _registeredTypes.Count > 0
+            || _additionalAssemblies.Length > 0
+            || _additionalImports.Length > 0;
+
+        if (!hasRegistrations)
         {
+            if (_providerOwnedByUs)
+            {
+                ParsingConfig.CustomTypeProvider = new DefaultDynamicLinqCustomTypeProvider(
+                    ParsingConfig,
+                    Array.Empty<Type>()
+                );
+                _providerOwnedByUs = false;
+            }
             return;
         }
 
@@ -238,6 +263,7 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         }
 
         ParsingConfig.CustomTypeProvider = new DynamicLinqTypeProvider(types, _additionalImports);
+        _providerOwnedByUs = true;
     }
 
     // Compiled-delegate cache. Holds the last successful Compile() output for

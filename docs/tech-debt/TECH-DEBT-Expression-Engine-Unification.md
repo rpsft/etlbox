@@ -152,6 +152,14 @@ Items 1-3 are complete (Round 5 + 6, 2026-04-29). Items 4-7 remain open:
 6. Based on (4) and (5), pick a direction: keep both, drop Roslyn for predicate / transformation case, or maintain both with documented boundary. If keeping both — possibly rename one component to make the boundary explicit (e.g. `ScriptedRowFiltration` mirroring `ScriptedRowTransformation`).
 7. Mapping-expression idea (note 84246) is a separate design discussion; track it as its own task once the engine question is settled.
 
+## Deferred ExpandoObject mapping optimisations (2026-04-30)
+
+Surfaced during the Round 8 self-review. These improve the slow path and are tracked for a dedicated perf MR with before/after benchmarks; they are out of scope for MR !116 because each one is a non-trivial change to working, stabilised code:
+
+1. **Single-pass `MapCollection`.** `BuildUnifiedDictShape` walks every dict element to build the unified shape, then `ProjectDictToShape` walks the same elements again to fill the typed list. For a collection of size N this is `O(2N)`. A single-pass variant - collect raw values during the unification walk and project them once the shape is known - cuts to `O(N + F)` where F is the field count. Trickier control flow because nested dicts and collections can recurse, so worth its own MR with regression tests.
+2. **Compiled per-shape mapper for the slow path.** The fast path emits a `Func<IDictionary<string, object?>, object>` per `(field name, runtime value type)` signature via Expression Trees. The slow path (`MapCollection`, `ProjectDictToShape`) still uses `Activator.CreateInstance` plus reflection-based `SetValue` per item. A symmetric compiled mapper would close the per-row cost gap for nested-collection workloads. Significant new code (Expression Trees over `IDictionary<string, object?>` with nested-dict and nested-collection projection) - belongs in a focused perf MR, not bundled with feature work.
+3. **Multi-shape cache for the non-generic Expando path.** `ExpressionRowFiltration` (non-generic) caches one compiled lambda per (`FilterExpression`, `ParsingConfig`, mapped DynamicClass type). When the input stream interleaves rows of two or more shapes (typical for nullable scalar fields where some rows have `null` and others a concrete value, producing two distinct DynamicClass types), the single-slot cache thrashes - every alternation triggers a fresh `ParseLambda` + `Compile`. Replacing the cache with a small `Dictionary<Type, Func<object, bool>>` keyed by mapped type would eliminate the thrash for the common alternating-shape case. Bounded scope (~20 lines) but introduces a new cache invariant; deferred to keep MR !116 focused on the review feedback.
+
 ## Benchmark Results (2026-04-28)
 
 Full report:
