@@ -277,6 +277,10 @@ internal static class ExpandoTypeMapper
             AccumulateFromDict(dict, byField, fieldOrder);
         }
 
+        // Pass 1's invariant holds here: every non-null item is a dict (otherwise
+        // Pass 1 would have thrown). OfType is used purely to filter out nulls
+        // and let Sonar see a Where-style enumeration, not to silently drop
+        // unexpected types.
         foreach (var dict in items.OfType<IDictionary<string, object?>>())
         {
             foreach (var missing in fieldOrder.Where(n => !dict.ContainsKey(n)))
