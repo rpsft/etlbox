@@ -54,11 +54,20 @@ internal sealed class DynamicLinqTypeProvider : IDynamicLinqCustomTypeProvider
     {
         // Direct match by full or short name. Lookup is O(1) on the indexed
         // dictionaries; falls back to import-prefixed search only when neither
-        // direct form is registered.
+        // direct form is registered. Mirrors ResolveTypeBySimpleName: ambiguous
+        // short names throw with a clear pointer rather than silently picking one.
         if (_byFullName.TryGetValue(typeName, out var byFull))
             return byFull;
         if (_byShortName.TryGetValue(typeName, out var byShort))
+        {
+            if (byShort.Count > 1)
+            {
+                throw new InvalidOperationException(
+                    $"Ambiguous short type name '{typeName}': multiple registered types match. Use the full type name in the expression, or add the resolving namespace to AdditionalImports."
+                );
+            }
             return byShort[0];
+        }
 
         return ResolveBySimpleNameInImports(typeName);
     }

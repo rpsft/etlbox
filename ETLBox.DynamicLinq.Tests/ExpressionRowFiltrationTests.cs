@@ -554,17 +554,28 @@ public class ExpressionRowFiltrationTests
     [Fact]
     public void HeterogeneousCollection_DifferentFieldSets_FieldsUnifiedAsNullable()
     {
-        // Items differ in which fields they carry. Missing fields are treated as
-        // null, so the unified element shape contains both A and B - no throw.
+        // Items differ in which fields they carry. The unified element shape
+        // contains both A and B; fields missing from a given item project to null
+        // (Nullable<int>) rather than default(int)=0, so predicates do not see
+        // a phantom 0 value for absent fields.
         var item1 = new ExpandoObject();
-        ((IDictionary<string, object>)item1)["A"] = 1;
+        ((IDictionary<string, object>)item1)["A"] = 1; // B absent
         var item2 = new ExpandoObject();
-        ((IDictionary<string, object>)item2)["B"] = 2;
+        ((IDictionary<string, object>)item2)["A"] = 2;
+        ((IDictionary<string, object>)item2)["B"] = 5;
 
         var row = MakeRow(("Items", (object)new object[] { item1, item2 }));
 
-        var result = RunFiltration("Items.Count() == 2", row);
-        Assert.Single(result);
+        // Both elements are mapped (no throw on heterogeneous shape).
+        Assert.Single(RunFiltration("Items.Count() == 2", row));
+
+        // A is present in both items, accessible via predicate.
+        Assert.Single(RunFiltration("Items.Any(A == 1)", row));
+        Assert.Single(RunFiltration("Items.Any(A == 2)", row));
+
+        // B is present only in item2; item1's missing B must NOT show as 0.
+        Assert.Single(RunFiltration("Items.Any(B == 5)", row));
+        Assert.Empty(RunFiltration("Items.Any(B == 0)", row));
     }
 
     [Fact]

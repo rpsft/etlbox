@@ -254,11 +254,13 @@ internal static class ExpandoTypeMapper
         return (listType, listInstance);
     }
 
-    // Walks every dict item once, collecting the most specific non-null type
-    // observed per field name. If a field appears as null somewhere and non-null
-    // elsewhere, the property type is wrapped in Nullable<T> for value types so
-    // null assignment does not throw at projection time. Conflicting non-null
-    // types for the same field name throw - that is the "real" heterogeneity case.
+    // Two-pass walk over every dict item. First pass collects each field name and
+    // its most specific non-null type. Second pass marks any field that is missing
+    // from at least one dict, so it gets widened to Nullable<T> for value types -
+    // a single pass cannot do this because a field discovered for the first time
+    // late in the sequence still needs to be marked HadNull for the earlier dicts
+    // that did not contain it. Conflicting non-null types for the same field name
+    // throw - that is the "real" heterogeneity case.
     private static (DynamicProperty[] Props, Type Type) BuildUnifiedDictShape(IList<object> items)
     {
         var byField = new Dictionary<string, FieldStats>();
@@ -273,6 +275,14 @@ internal static class ExpandoTypeMapper
                     "Heterogeneous collection: mix of dictionary and non-dictionary items."
                 );
             AccumulateFromDict(dict, byField, fieldOrder);
+        }
+
+        foreach (var dict in items.OfType<IDictionary<string, object?>>())
+        {
+            foreach (var missing in fieldOrder.Where(n => !dict.ContainsKey(n)))
+            {
+                byField[missing].HadNull = true;
+            }
         }
 
         var props = fieldOrder
@@ -296,12 +306,6 @@ internal static class ExpandoTypeMapper
                 fieldOrder.Add(pair.Key);
             }
             UpdateFieldStats(pair.Key, pair.Value, stats);
-        }
-
-        // Fields seen in earlier items but absent here also count as null.
-        foreach (var missing in fieldOrder.Where(n => !dict.ContainsKey(n)))
-        {
-            byField[missing].HadNull = true;
         }
     }
 
@@ -351,8 +355,9 @@ internal static class ExpandoTypeMapper
     )
     {
         var instance = Activator.CreateInstance(targetType)!;
-        foreach (var name in props.Select(p => p.Name))
+        for (var i = 0; i < props.Length; i++)
         {
+            var name = props[i].Name;
             if (!dict.TryGetValue(name, out var raw))
                 continue;
 

@@ -63,6 +63,21 @@ public class DynamicLinqTypeProviderTests
     }
 
     [Fact]
+    public void ResolveType_AmbiguousShortName_Throws()
+    {
+        // Same ambiguity contract as ResolveTypeBySimpleName: two registered
+        // types share a short name, no import disambiguates - throw with a
+        // pointer to AdditionalImports rather than silently picking one.
+        var provider = new DynamicLinqTypeProvider(
+            new HashSet<Type> { typeof(System.Threading.Timer), typeof(System.Timers.Timer) }
+        );
+
+        var ex = Assert.Throws<InvalidOperationException>(() => provider.ResolveType("Timer"));
+        Assert.Contains("Ambiguous short type name 'Timer'", ex.Message);
+        Assert.Contains("AdditionalImports", ex.Message);
+    }
+
+    [Fact]
     public void ResolveType_ShortNameInImports_ReturnsImportedType()
     {
         var provider = new DynamicLinqTypeProvider(
