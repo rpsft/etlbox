@@ -100,6 +100,39 @@ This file documents the question. The decision is intentionally deferred:
 - A separate task will cover the benchmark and the decision.
 - A separate task will cover the mapping-expression idea (note 84246).
 
+## Cross-references — parallel work on `ScriptedRowTransformation` (MLRSSL-1510)
+
+MR !116 (this Dynamic LINQ work) was developed in parallel with three
+merged Roslyn-side MRs under MLRSSL-1510. They share the
+`ETLBox.Scripting` package and influence the symmetric API choices on
+the Dynamic LINQ side. Decisions to track:
+
+- **MR !113** — `ScriptedRowTransformation.PassThrough` — copies input
+  fields into the output before applying `Mappings`. Typed path requires
+  `TInput` assignable to `TOutput`, throws `InvalidOperationException`
+  otherwise. Three static reflection caches (`_outputAssignableFromInput`,
+  `_passThroughProperties`, `_outputPropertiesCache`) for hot-path perf.
+  Not directly mirrored in Dynamic LINQ (filtration does not produce a
+  transformed output); will become relevant if Phase 2
+  (`ExpressionRowTransformation<TInput, TOutput>`) is added.
+- **MR !115** — `ScriptedRowTransformation.AdditionalImports` and
+  `AdditionalAssemblyNames` — the reference for our Phase 1. Roslyn-side
+  uses `Assembly.Load(name)` -> `Assembly.LoadFrom(path)` fallback on
+  `FileNotFoundException`/`FileLoadException`. `TypedScriptBuilder.WithImports`
+  is the immutable-builder entrypoint, symmetric to existing `WithReferences`.
+  A bug in the typed path (missing `WithReferences` call) was fixed there.
+  Project-wide policy added in this MR: "All written content in this
+  project must be in English".
+- **MR !114** — `<Pipeline>` flat-sequence XML syntax — design plan only,
+  not yet implemented. Two outcomes that affect our future work:
+  `LinkTo` and `LinkErrorTo` became `virtual` in `DataFlowTransformation`
+  (after follow-up review — switched from `new`/shadow to `virtual`/
+  `override` because shadowing breaks through interface or base reference);
+  two new interfaces `IDataFlowXmlContext` and `IDataFlowXmlSerializable`
+  planned for XML-deserialization extensibility. Worth checking if/when
+  any future override of `LinkTo` is needed in `ExpressionRowFiltration`
+  or its descendants.
+
 ## Decision: split into a separate package (applied 2026-04-29)
 
 Following the benchmark results below and reviewer feedback on MR !116, the
@@ -145,7 +178,7 @@ ScriptedRowTransformation").
 Items 1-3 are complete (Round 5 + 6, 2026-04-29). Items 4-7 remain open:
 
 1. ~~Run the benchmark, attach numbers to this document.~~ — **done**, see "Benchmark Results" below; HotEvaluation re-measured after Optimizations 1+2 (commit `f3ae2718`) and after Phase 1 (commit `0e3c2aaf`).
-2. ~~Phase 1 — `AdditionalAssemblyNames` / `AdditionalImports` symmetry with `ScriptedRowTransformation` MR !113.~~ — **done** (commit `0e3c2aaf`). Closes the XML-flow user-type case raised in MR review note 84488.
+2. ~~Phase 1 — `AdditionalAssemblyNames` / `AdditionalImports` symmetry with `ScriptedRowTransformation` (MR !115).~~ — **done** (commit `0e3c2aaf`). Closes the XML-flow user-type case raised in MR review note 84488. The Roslyn-side reference implementation is the merged `feature/MLRSSL-1510-scripted-transform-system-dlls` branch (MR !115); our `AssemblyResolver.Load` extends its two-step strategy (`Assembly.Load` -> `Assembly.LoadFrom` on `FileNotFoundException`/`FileLoadException`) with an AppDomain pre-check as step 1 to avoid double-loading already-resident assemblies.
 3. ~~Refactor — extract `AssemblyResolver` and `DynamicLinqTypeProvider` helpers.~~ — **done** (commit `e880c843`).
 4. Audit existing `ScriptedRowTransformation` usages in real flows. Goal: count how many genuinely need multi-statement bodies / async vs. how many can move to `ExpressionRowFiltration` or a future `ExpressionRowTransformation`.
 5. Phase 2 — `ExpressionRowTransformation<TInput, TOutput>` as a drop-in alternative to `ScriptedRowTransformation` for the transformation case. Out of scope for MR !116; planned as a follow-up task. After Phase 2 lands, the unification question (drop one engine, keep both, or merge) becomes answerable from data.
@@ -241,7 +274,9 @@ For deeper customization (extension methods, alternative type resolution, parser
 flags) the underlying `ParsingConfig` is also exposed as a public property.
 
 **Phase 1 (Round 6, applied 2026-04-29 in commit `0e3c2aaf`):** symmetric
-configuration with `ScriptedRowTransformation` (MR !113):
+configuration with `ScriptedRowTransformation` (MR !115 added the same two
+properties on the Roslyn side; our implementation mirrors the API surface
+so users can switch between engines without changing config shape):
 
 - `AdditionalAssemblyNames` — names or file paths of assemblies. All public
   exported types from each assembly are added to the type provider in bulk.

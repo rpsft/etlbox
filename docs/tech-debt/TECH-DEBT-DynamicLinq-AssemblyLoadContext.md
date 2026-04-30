@@ -6,7 +6,7 @@
 `System.Linq.Dynamic.Core.DynamicClassFactory.CreateType(properties)` emits a dynamic type per
 unique `ExpandoObject` shape (see `ExpandoTypeMapper`). These generated types are loaded into the
 default `AssemblyLoadContext`, which is non-unloadable - the same accumulation pattern documented
-in [TECH-DEBT-ScriptBuilder-AssemblyLoadContext.md](TECH-DEBT-ScriptBuilder-AssemblyLoadContext.md).
+in [TECH-DEBT-ScriptBuilder-AssemblyLoadContext.md](TECH-DEBT-ScriptBuilder-AssemblyLoadContext.md) (sibling document landing in MR !115; the link will resolve once that MR is merged).
 
 User-supplied assemblies (`AdditionalAssemblyNames`) are also loaded into the default ALC by
 `AssemblyResolver.Load`. Those load once per assembly name and are not part of the per-row hot

@@ -166,7 +166,7 @@ filtration.ParsingConfig.AllowEqualsAndToStringMethodsOnObject = true;
 - **`AdditionalAssemblyNames`** — names (or file paths) of assemblies to load. All public types from each assembly are added to the type provider, making them resolvable from `FilterExpression` without per-type registration.
 - **`AdditionalImports`** — namespace prefixes used as imports when resolving short type names. With `AdditionalImports = ["MyCompany.Domain"]`, an expression like `MyType.Method()` resolves against `MyCompany.Domain.MyType` first.
 
-Both are symmetric with `ScriptedRowTransformation.AdditionalAssemblyNames` / `AdditionalImports` so users can switch between Roslyn-based and Dynamic-LINQ-based row filtration without changing the configuration shape.
+Both are symmetric with `ScriptedRowTransformation.AdditionalAssemblyNames` / `AdditionalImports` (added in MR !115 on the Roslyn side, MLRSSL-1510), so users can switch between Roslyn-based and Dynamic-LINQ-based row filtration without changing the configuration shape.
 
 XML form:
 
@@ -189,7 +189,7 @@ filtration.AdditionalAssemblyNames = new[] { "MyCompany.Domain" };
 filtration.AdditionalImports = new[] { "MyCompany.Domain" };
 ```
 
-Assembly resolution tries three strategies in order: (1) already loaded in the current `AppDomain` by short or full name, (2) `Assembly.Load(AssemblyName)`, (3) `Assembly.LoadFrom(path)` as a fallback. An assembly that fails all three throws `InvalidOperationException` from the property setter — configuration errors surface at flow build time, not at evaluation time.
+Assembly resolution tries three strategies in order: (1) already loaded in the current `AppDomain` by short or full name, (2) `Assembly.Load(AssemblyName)`, (3) `Assembly.LoadFrom(path)` as a fallback. An assembly that fails all three throws `InvalidOperationException` from the property setter — configuration errors surface at flow build time, not at evaluation time. The Roslyn-side `ScriptedRowTransformation` (see MR !115) uses a two-step variant (`Assembly.Load` -> `Assembly.LoadFrom` on `FileNotFoundException`/`FileLoadException`); the AppDomain pre-check we add as step 1 avoids double-loading already-resident assemblies in long-running processes.
 
 `AdditionalAssemblyNames`, `AdditionalImports`, and `RegisterCustomTypes` compose: types from all three sources are unioned in the parser's custom-type set. Setters invalidate the compiled-predicate cache; the type provider is rebuilt on the next row evaluation, before the predicate is parsed. This avoids transient intermediate state during XML deserialization, where setter ordering is not guaranteed - the final provider is built once from whatever the user set, regardless of the order in which the fields arrived. If none of the three are set, a manually-assigned `ParsingConfig.CustomTypeProvider` is preserved untouched. Clearing every registration after having set one drops our installed provider and restores the framework default, so stale types or imports do not survive into subsequent evaluations.
 
