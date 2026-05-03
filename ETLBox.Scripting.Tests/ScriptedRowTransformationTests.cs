@@ -541,6 +541,62 @@ public class ScriptedRowTransformationTests
         Assert.Equal("1", result?.ToString());
     }
 
+    [Fact]
+    public void ShouldHandleNullAndMissingFieldInMapping()
+    {
+        // With UseRowAccessor=true, scripts access row fields via a 'Row' dynamic accessor
+        // (e.g. Row.Score) instead of bare identifiers. This sidesteps the per-shape static type
+        // generation and handles null/absent fields gracefully at runtime:
+        //   - Present, non-null field → expression evaluates normally.
+        //   - Present but null field  → Row.Score returns null; null arithmetic
+        //     (null + 1) throws RuntimeBinderException, which is caught and yields null output.
+        //   - Absent field            → Row.Score also returns null (TryGetMember always succeeds);
+        //     same null-arithmetic path, same null output.
+        //
+        // In both null cases no exception reaches the caller and no error record is emitted.
+        var itemWithScore = new ExpandoObject() as IDictionary<string, object?>;
+        itemWithScore["Id"] = 1;
+        itemWithScore["Score"] = 10;
+
+        var itemWithNullScore = new ExpandoObject() as IDictionary<string, object?>;
+        itemWithNullScore["Id"] = 2;
+        itemWithNullScore["Score"] = null;
+
+        var itemWithoutScore = new ExpandoObject() as IDictionary<string, object?>;
+        itemWithoutScore["Id"] = 3;
+
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add((ExpandoObject)itemWithScore);
+        memorySource.DataAsList.Add((ExpandoObject)itemWithNullScore);
+        memorySource.DataAsList.Add((ExpandoObject)itemWithoutScore);
+
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = false,
+            UseRowAccessor = true,
+        };
+        script.Mappings.Add("OutputScore", "Row.Score + 1");
+
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        var errorDestination = new MemoryDestination<ETLBoxError>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+        script.LinkErrorTo(errorDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+        errorDestination.Wait();
+
+        // Assert
+        Assert.Empty(errorDestination.Data);
+        Assert.Equal(3, memoryDestination.Data.Count);
+        var rows = memoryDestination.Data.Select(r => (IDictionary<string, object?>)r).ToList();
+        Assert.Equal(11, rows[0]["OutputScore"]); // Score=10  → Row.Score + 1 = 11
+        Assert.Null(rows[1]["OutputScore"]); // Score=null  → null + 1 → null (graceful)
+        Assert.Null(rows[2]["OutputScore"]); // Score absent → null + 1 → null (graceful)
+    }
+
     private static ExpandoObject CreateTestDataItem(int id, string name)
     {
         var result = new ExpandoObject();
