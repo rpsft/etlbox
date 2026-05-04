@@ -33,10 +33,10 @@
 
 ## Tech Debt
 
-- [ScriptedRowTransformation UseRowAccessor Mode](docs/tech-debt/TECH-DEBT-ScriptedTransformation-UseRowAccessor.md)
-  - Null/absent ExpandoObject fields silently produce null output due to `object`-typed compile errors
-  - Fix: opt-in `UseRowAccessor` property using `ScriptGlobals { dynamic Row }` + `ScriptRow : DynamicObject`
-  - Also fixes `diagnostics.Any()` bug that rejects valid scripts with Roslyn warnings (e.g. CS0472)
+- [Pipeline component — flat XML sequence sugar for DataFlowXmlReader](docs/tech-debt/TECH-DEBT-Pipeline-XmlSequence.md)
+  - New `Pipeline<TIn, TOut>` (transformation) and `Pipeline` (ExpandoObject source) classes
+  - `IDataFlowXmlSerializable` extension point so any component can self-describe its XML format
+  - Eliminates deep `<LinkTo>` nesting in XML pipeline configs
 - [XML Documentation Coverage — 59% → 95%](docs/tech-debt/TECH-DEBT-XML-Documentation-Coverage.md)
   - Phase 1: Core interfaces in ETLBox.Primitives (14 types)
   - Phase 2: Abstract base classes in ETLBox.Common + main library (13 types)

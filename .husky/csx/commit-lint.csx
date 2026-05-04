@@ -10,7 +10,8 @@ if (Args.Count != 1)
     return 1;
 }
 private var msgFilePath = Args[0];
-private var msg = File.ReadAllLines(msgFilePath)[0];
+private var lines = File.ReadAllLines(msgFilePath);
+private var msg = lines[0];
 
 if (Regex.IsMatch(msg, "^(Revert|Merge branch|Merge remote-tracking branch)"))
 {
@@ -54,9 +55,9 @@ else if (!CheckEnding(msg))
 }
 else
 {
-    // Append GitLab trailer to the commit message
-    msg += GetTrailer(msg);
-    File.WriteAllText(msgFilePath, msg);
+    // Append GitLab trailer to the full commit message, preserving body and existing trailers.
+    var fullContent = File.ReadAllText(msgFilePath).TrimEnd();
+    File.WriteAllText(msgFilePath, fullContent + GetTrailer(msg));
     return 0;
 }
 
