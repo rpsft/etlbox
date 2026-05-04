@@ -20,7 +20,7 @@ namespace ALE.ETLBox.Serialization.DataFlow;
 /// Read data flow configuration from XML
 /// </summary>
 [PublicAPI]
-public sealed class DataFlowXmlReader
+public sealed class DataFlowXmlReader : IDataFlowXmlContext
 {
     // Type cache for all serializable Dataflow types
     private readonly Type[] _types;
@@ -33,6 +33,9 @@ public sealed class DataFlowXmlReader
 
     // Check if the universal error destination was added to data flow
     private bool _allErrorsDestinationAdded;
+
+    // Suppresses per-step error linking inside a Pipeline (Pipeline.LinkErrorTo covers all steps)
+    private bool _suppressIndividualErrorLinking;
 
     // Activator used to create data flow component instances
     private readonly IDataFlowActivator _activator;
@@ -100,6 +103,50 @@ public sealed class DataFlowXmlReader
         : this(dataFlow, currentCulture, linkAllErrorsTo)
     {
         _activator = activator ?? throw new ArgumentNullException(nameof(activator));
+    }
+
+    /// <inheritdoc />
+    Type? IDataFlowXmlContext.ResolveType(string typeName)
+    {
+        try
+        {
+            return GetTypeByName(_types, typeName);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+        catch (InvalidDataException)
+        {
+            return null;
+        }
+    }
+
+    /// <inheritdoc />
+    object? IDataFlowXmlContext.CreateObject(string typeName, XElement element)
+    {
+        Type type;
+        try
+        {
+            type = GetTypeByName(_types, typeName);
+        }
+        catch
+        {
+            return null;
+        }
+
+        var result = CreateObject(type, element);
+        if (
+            result is IDataFlowDestination<ExpandoObject> dest
+            && !_dataFlow.Destinations.Contains(dest)
+        )
+            _dataFlow.Destinations.Add(dest);
+        if (
+            result is IDataFlowDestination<ETLBoxError> errDest
+            && !_dataFlow.ErrorDestinations.Contains(errDest)
+        )
+            _dataFlow.ErrorDestinations.Add(errDest);
+        return result;
     }
 
     public void Read(XmlReader reader)
@@ -317,27 +364,50 @@ public sealed class DataFlowXmlReader
             return null;
         }
 
+        if (instance is IDataFlowXmlSerializable xmlSerializable)
+        {
+            var wasSuppressed = _suppressIndividualErrorLinking;
+            if (IsPipelineType(instance.GetType()))
+                _suppressIndividualErrorLinking = true;
+            xmlSerializable.ReadXml((XElement)node, this);
+            _suppressIndividualErrorLinking = wasSuppressed;
+            ApplyLinkAllErrorsTo(instance);
+            return instance;
+        }
+
         // Standard property-by-property deserialization
         foreach (var propXml in node.Elements())
         {
             InitializeInstanceProperty(instance, type, propXml);
         }
 
-        if (_linkAllErrorsTo == null || instance is not ILinkErrorSource errorSource)
-        {
-            return instance;
-        }
+        ApplyLinkAllErrorsTo(instance);
+        return instance;
+    }
+
+    private static bool IsPipelineType(Type type)
+    {
+        for (var t = type; t != null; t = t.BaseType)
+            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Pipeline<,>))
+                return true;
+        return false;
+    }
+
+    private void ApplyLinkAllErrorsTo(object instance)
+    {
+        if (
+            _linkAllErrorsTo == null
+            || _suppressIndividualErrorLinking
+            || instance is not ILinkErrorSource errorSource
+        )
+            return;
 
         errorSource.LinkErrorTo(_linkAllErrorsTo);
         if (_allErrorsDestinationAdded)
-        {
-            return instance;
-        }
+            return;
 
         _dataFlow.ErrorDestinations.Add(_linkAllErrorsTo);
         _allErrorsDestinationAdded = true;
-
-        return instance;
     }
 
     private void InitializeInstanceProperty(object instance, MemberInfo type, XElement? propXml)
