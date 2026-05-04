@@ -185,6 +185,23 @@ For dynamic rows (`ExpandoObject`) use the non-generic version:
 RowFiltration filtration = new RowFiltration(row => ((dynamic)row).Col1 > 0);
 ```
 
+### ScriptedRowTransformation
+
+`ScriptedRowTransformation<TInput, TOutput>` (in `ETLBox.Scripting`) transforms rows by
+evaluating a C# expression per output field, compiled at runtime via Roslyn. Each entry in
+`Mappings` maps an output field name to a C# expression that can reference input fields by name.
+
+```csharp
+var transform = new ScriptedTransformation();
+transform.Mappings["FullName"] = "$\"{FirstName} {LastName}\"";
+transform.Mappings["TaxAmount"] = "Amount * 0.2m";
+```
+
+The non-generic alias `ScriptedTransformation` is equivalent to
+`ScriptedRowTransformation<ExpandoObject, ExpandoObject>`. For full configuration options
+(`PassThrough`, nullable context, assembly references, XML usage) see
+[scripted-transformation.md](scripted-transformation.md).
+
 ### ExpressionRowFiltration
 
 Available in `ETLBox.DynamicLinq` (separate lightweight package without the Roslyn dependency). Filters `ExpandoObject` rows by a string predicate evaluated via `System.Linq.Dynamic.Core`. Useful in XML-defined data flows where the predicate must be configurable from the package without recompiling.
