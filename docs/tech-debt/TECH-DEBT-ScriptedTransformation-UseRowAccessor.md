@@ -155,6 +155,17 @@ File: `ETLBox.Scripting.Tests/ScriptedRowTransformationTests.cs`
   (the `DiagnosticSeverity.Error` filter in `GetScriptRunner` is shared by both paths).
 - Regression suite — all existing tests must pass without `UseRowAccessor`.
 
+## Release Checklist
+
+Before closing the implementation PR, update `CHANGELOG.md` with the following entries:
+
+- **Added** — `ScriptedRowTransformation.UseRowAccessor` property (opt-in, default `false`).
+- **Added** — `ScriptGlobals` and `ScriptGlobals<T>` public types (`ETLBox.Scripting` namespace).
+- **Added** — `TypedScriptBuilder<TGlobals>` — generic form of `TypedScriptBuilder`, usable with
+  custom globals types outside `ScriptedRowTransformation`.
+- **Fixed** — scripts with Roslyn warnings (e.g. CS0472) were incorrectly rejected; now only
+  `DiagnosticSeverity.Error` diagnostics block compilation.
+
 ## Why Deferred
 
 The fix is low-risk but requires careful branching to preserve the existing per-shape path (which
