@@ -41,6 +41,7 @@ issue #3194 while still dispatching member access through `DynamicObject.TryGetM
 ### New Files
 
 **`ETLBox.Scripting/ScriptRow.cs`** — internal `DynamicObject` wrapper:
+
 ```csharp
 internal sealed class ScriptRow : DynamicObject
 {
@@ -56,6 +57,7 @@ internal sealed class ScriptRow : DynamicObject
 ```
 
 **`ETLBox.Scripting/ScriptGlobals.cs`** — public globals classes:
+
 ```csharp
 public sealed class ScriptGlobals
 {
@@ -84,27 +86,33 @@ public sealed class ScriptGlobals<T>
    ```
 
 3. **Branch `TransformWithScriptDynamic`** — when `UseRowAccessor=true`:
-   - Build `TypedScriptBuilder` from `ScriptBuilder.Default.ForType<ScriptGlobals>()`.
-   - Use cache key `"Row::{expression}"` (single runner per expression, shared across all shapes).
-   - Construct `new ScriptGlobals(new ScriptRow(arg))` and call `runner.Script.RunAsync(globals)` directly.
-   - Catch `AggregateException` with inner `RuntimeBinderException` when `FailOnMissingField=false`.
+    - Build `TypedScriptBuilder` from `ScriptBuilder.Default.ForType<ScriptGlobals>()`.
+    - Use cache key `"Row::{expression}"` (single runner per expression, shared across all shapes).
+    - Construct `new ScriptGlobals(new ScriptRow(arg))` and call `runner.Script.RunAsync(globals)` directly.
+    - Catch `AggregateException` with inner `RuntimeBinderException` when `FailOnMissingField=false`.
+    - **Exception contract**: only `RuntimeBinderException` is caught (narrow contract: "field not
+      resolvable by the DLR binder"). All other exceptions (`NullReferenceException`,
+      `DivideByZeroException`, etc.) propagate to the caller — null-propagation and arithmetic safety
+      remain the explicit responsibility of the script author. Rationale: widening the catch to
+      `Exception` would silently swallow genuine script errors.
 
 4. **Branch `TransformWithScriptTyped`** — when `UseRowAccessor=true`:
-   - Build `TypedScriptBuilder` from `ScriptBuilder.Default.ForType<ScriptGlobals<TInput>>()`.
-   - Use cache key `"Row<{typeof(TInput).FullName}>::{expression}"`.
-   - Construct `new ScriptGlobals<TInput>(arg)` and call `runner.Script.RunAsync(globals)` directly.
+    - Build `TypedScriptBuilder` from `ScriptBuilder.Default.ForType<ScriptGlobals<TInput>>()`.
+    - Use cache key `"Row<{typeof(TInput).FullName}>::{expression}"`.
+    - Construct `new ScriptGlobals<TInput>(arg)` and call `runner.Script.RunAsync(globals)` directly.
 
 5. **No changes needed** to `ScriptBuilder.cs`, `TypedScriptBuilder.cs`, `ScriptRunner.cs`, or `GlobalsTypeInfo.cs`.
 
 ### Behavior Change Summary
 
-| Scenario | `UseRowAccessor=false` (default) | `UseRowAccessor=true` |
-|---|---|---|
-| Field present, non-null | Works | Works (`Row.Field`) |
-| Field present, null | Compile error → silent null | `RuntimeBinderException` caught → null |
-| Field absent | Compile error → silent null | `RuntimeBinderException` caught → null |
-| `FailOnMissingField=true` + absent field | Throws at compile time | Throws `RuntimeBinderException` at runtime |
-| Script with warnings (e.g. CS0472) | Incorrectly rejected (BUG) | Fixed (errors only) |
+| Scenario                                 | `UseRowAccessor=false` (default)         | `UseRowAccessor=true`                       |
+|------------------------------------------|------------------------------------------|---------------------------------------------|
+| Field present, non-null                  | Works                                    | Works (`Row.Field`)                         |
+| Field present, null                      | Compile error → silent null              | `RuntimeBinderException` caught → null      |
+| Field absent                             | Compile error → silent null              | `RuntimeBinderException` caught → null      |
+| `FailOnMissingField=true` + absent field | Throws at compile time                   | Throws `RuntimeBinderException` at runtime  |
+| Script with warnings (e.g. CS0472)       | Incorrectly rejected (BUG)               | Fixed (errors only)                         |
+| `PassThrough=true`                       | Copies input fields to output            | Identical — independent of `UseRowAccessor` |
 
 ## Cache Key Design
 
@@ -128,6 +136,9 @@ File: `ETLBox.Scripting.Tests/ScriptedRowTransformationTests.cs`
 - `UseRowAccessor_PassThrough` — `PassThrough=true`, verify input fields copied + mapped field computed.
 - `UseRowAccessor_MultipleShapes_SameExpression` — two different shapes, same expression, verify single cache entry.
 - `UseRowAccessor_Typed` — typed `TInput`/`TOutput`, `Row.Property + 1`.
+- `ShouldNotRejectScriptsWithWarnings` — expression `"Score != null ? Score + 1 : 0"` triggers
+  CS0472; the runner must compile and return `11`. Run with both `UseRowAccessor=false` and `true`
+  (the `DiagnosticSeverity.Error` filter in `GetScriptRunner` is shared by both paths).
 - Regression suite — all existing tests must pass without `UseRowAccessor`.
 
 ## Why Deferred
