@@ -86,7 +86,7 @@ public sealed class ScriptGlobals<T>
    ```
 
 3. **Branch `TransformWithScriptDynamic`** — when `UseRowAccessor=true`:
-    - Build `TypedScriptBuilder` from `ScriptBuilder.Default.ForType<ScriptGlobals>()`.
+    - Build `TypedScriptBuilder<ScriptGlobals>` from `ScriptBuilder.Default.ForType<ScriptGlobals>()`.
     - Use cache key `"Row::{expression}"` (single runner per expression, shared across all shapes).
     - Construct `new ScriptGlobals(new ScriptRow(arg))` and call `runner.Script.RunAsync(globals)` directly.
     - Catch `AggregateException` with inner `RuntimeBinderException` when `FailOnMissingField=false`.
@@ -97,11 +97,25 @@ public sealed class ScriptGlobals<T>
       `Exception` would silently swallow genuine script errors.
 
 4. **Branch `TransformWithScriptTyped`** — when `UseRowAccessor=true`:
-    - Build `TypedScriptBuilder` from `ScriptBuilder.Default.ForType<ScriptGlobals<TInput>>()`.
+    - Build `TypedScriptBuilder<ScriptGlobals<TInput>>` from `ScriptBuilder.Default.ForType<ScriptGlobals<TInput>>()`.
     - Use cache key `"Row<{typeof(TInput).FullName}>::{expression}"`.
     - Construct `new ScriptGlobals<TInput>(arg)` and call `runner.Script.RunAsync(globals)` directly.
 
-5. **No changes needed** to `ScriptBuilder.cs`, `TypedScriptBuilder.cs`, `ScriptRunner.cs`, or `GlobalsTypeInfo.cs`.
+5. **Refactor `TypedScriptBuilder` → `TypedScriptBuilder<TGlobals>`** — make the class generic over
+   the complete globals type (not just `GlobalsTypeInfo.Type` internally). `ScriptBuilder.ForType<TGlobals>()`
+   already captures the type at the call site; surfacing it as the class-level generic parameter keeps
+   it visible through caching and execution without erasing it to `Type`:
+   ```csharp
+   // before
+   TypedScriptBuilder builder = ScriptBuilder.Default.ForType<ScriptGlobals>();
+   // after
+   TypedScriptBuilder<ScriptGlobals> builder = ScriptBuilder.Default.ForType<ScriptGlobals>();
+   ```
+   This makes `TypedScriptBuilder<TGlobals>` usable outside `ScriptedRowTransformation` with any
+   custom globals class — callers construct `TGlobals` directly and pass it to `RunAsync`, with no
+   `Activator.CreateInstance` reflection involved.
+   `ScriptRunner.cs` and `GlobalsTypeInfo.cs` require no changes; `ScriptBuilder.cs` return type
+   changes from `TypedScriptBuilder` to `TypedScriptBuilder<TGlobals>`.
 
 ### Behavior Change Summary
 
