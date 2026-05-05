@@ -82,6 +82,7 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
         var pendingMethodElements = new List<XElement>();
         object? lastStep = null;
         Type? lastOutputType = null;
+        object? lastSourceStep = null;
 
         for (var i = startIndex; i < children.Count; i++)
         {
@@ -93,51 +94,68 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
                 continue;
             }
 
-            if (child.Elements("LinkTo").Any() || child.Elements("LinkErrorTo").Any())
-                throw new InvalidDataException(
-                    $"Step '{child.Name.LocalName}' inside <Pipeline> must not contain "
-                        + "<LinkTo> or <LinkErrorTo>. Route links at the <Pipeline> level."
-                );
-
-            var step =
-                context.CreateObject(child.Name.LocalName, child)
-                ?? throw new InvalidOperationException(
-                    $"Could not create step '{child.Name.LocalName}' inside <Pipeline>."
-                );
+            var step = CreateAndValidateStep(child, lastOutputType, context);
             _steps.Add(step);
-
-            var inputType = GetLinkTargetInputType(step);
-            if (lastOutputType != null && inputType != lastOutputType)
-                throw new InvalidDataException(
-                    $"Type mismatch at '{child.Name.LocalName}': "
-                        + $"expected IDataFlowLinkTarget<{lastOutputType.Name}>, "
-                        + $"got IDataFlowLinkTarget<{inputType?.Name}>"
-                );
 
             if (lastStep != null && lastOutputType != null)
                 LinkSteps(lastStep, lastOutputType, step);
 
-            lastOutputType = GetLinkSourceOutputType(step);
+            var outputType = GetLinkSourceOutputType(step);
+            if (outputType != null)
+            {
+                lastOutputType = outputType;
+                lastSourceStep = step;
+            }
             lastStep = step;
         }
 
         if (_steps.Count > stepsStartIndex)
-        {
-            var head =
-                _steps[stepsStartIndex] as IDataFlowLinkTarget<TIn>
-                ?? throw new InvalidDataException(
-                    $"First step must implement IDataFlowLinkTarget<{typeof(TIn).Name}>"
-                );
-            var tail =
-                _steps[_steps.Count - 1] as IDataFlowLinkSource<TOut>
-                ?? throw new InvalidDataException(
-                    $"Last step must implement IDataFlowLinkSource<{typeof(TOut).Name}>"
-                );
-            SetHeadAndTail(head, tail);
-        }
+            FinalizeHeadAndTail(stepsStartIndex, lastSourceStep);
 
         foreach (var element in pendingMethodElements)
             TryInvokeXmlMethod(element, context);
+    }
+
+    private static object CreateAndValidateStep(
+        XElement child,
+        Type? lastOutputType,
+        IDataFlowXmlContext context
+    )
+    {
+        if (child.Elements("LinkTo").Any() || child.Elements("LinkErrorTo").Any())
+            throw new InvalidDataException(
+                $"Step '{child.Name.LocalName}' inside <Pipeline> must not contain "
+                    + "<LinkTo> or <LinkErrorTo>. Route links at the <Pipeline> level."
+            );
+
+        var step =
+            context.CreateObject(child.Name.LocalName, child)
+            ?? throw new InvalidOperationException(
+                $"Could not create step '{child.Name.LocalName}' inside <Pipeline>."
+            );
+
+        if (lastOutputType != null && !ImplementsLinkTarget(step, lastOutputType))
+            throw new InvalidDataException(
+                $"Type mismatch at '{child.Name.LocalName}': "
+                    + $"expected IDataFlowLinkTarget<{lastOutputType.Name}>"
+            );
+
+        return step;
+    }
+
+    private void FinalizeHeadAndTail(int stepsStartIndex, object? lastSourceStep)
+    {
+        var head =
+            _steps[stepsStartIndex] as IDataFlowLinkTarget<TIn>
+            ?? throw new InvalidDataException(
+                $"First step must implement IDataFlowLinkTarget<{typeof(TIn).Name}>"
+            );
+        var tail =
+            lastSourceStep as IDataFlowLinkSource<TOut>
+            ?? throw new InvalidDataException(
+                $"No step implements IDataFlowLinkSource<{typeof(TOut).Name}>"
+            );
+        SetHeadAndTail(head, tail);
     }
 
     private bool HasMatchingMethod(XElement element) =>
@@ -158,13 +176,14 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
         ReadSteps(children, 0, context.WithoutGlobalActions());
     }
 
-    private static Type? GetLinkTargetInputType(object step) =>
+    private static bool ImplementsLinkTarget(object step, Type itemType) =>
         step.GetType()
             .GetInterfaces()
-            .FirstOrDefault(i =>
-                i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDataFlowLinkTarget<>)
-            )
-            ?.GetGenericArguments()[0];
+            .Any(i =>
+                i.IsGenericType
+                && i.GetGenericTypeDefinition() == typeof(IDataFlowLinkTarget<>)
+                && i.GetGenericArguments()[0] == itemType
+            );
 
     private static Type? GetLinkSourceOutputType(object step) =>
         step.GetType()

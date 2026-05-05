@@ -339,7 +339,37 @@ public class DataFlowPipelineTests
     }
 
     // ---------------------------------------------------------------------------
-    // 11. Generic Pipeline<TIn,TOut> — typed steps wired and data flows through
+    // 11. Batch destination as last pipeline step — DataFlowBatchDestination(T)
+    //     implements both IDataFlowLinkTarget(T) and IDataFlowLinkTarget(T[]);
+    //     the type-check must pick the matching interface, not the array one.
+    // ---------------------------------------------------------------------------
+
+    [Fact]
+    public async Task Pipeline_BatchDestinationAsLastStep_ReceivesAllRows()
+    {
+        var xml =
+            @"<EtlDataFlowStep>
+                <Pipeline>
+                    <MemorySource />
+                    <PassthroughTransformation />
+                    <BatchMemoryDestination />
+                </Pipeline>
+            </EtlDataFlowStep>";
+
+        var step = Deserialize(xml);
+        var pipeline = Assert.IsType<Pipeline>(step.Source);
+        var internalSource = Assert.IsType<MemorySource>(pipeline.Steps[0]);
+        internalSource.Data = new[] { Row("v", 1), Row("v", 2), Row("v", 3) };
+
+        await pipeline.ExecuteAsync(CancellationToken.None).ConfigureAwait(true);
+
+        var batchDest = Assert.IsType<BatchMemoryDestination>(pipeline.Steps[2]);
+        await batchDest.Completion.ConfigureAwait(true);
+        Assert.Equal(3, batchDest.Rows.Count);
+    }
+
+    // ---------------------------------------------------------------------------
+    // 13. Generic Pipeline<TIn,TOut> — typed steps wired and data flows through
     // ---------------------------------------------------------------------------
 
     [Fact]
@@ -377,7 +407,7 @@ public class DataFlowPipelineTests
     }
 
     // ---------------------------------------------------------------------------
-    // 12. IDataFlowXmlSerializable extensibility — ReadXml is delegated correctly
+    // 14. IDataFlowXmlSerializable extensibility — ReadXml is delegated correctly
     // ---------------------------------------------------------------------------
 
     [Fact]
@@ -412,6 +442,34 @@ public class DataFlowPipelineTests
     // ---------------------------------------------------------------------------
     // Helpers: PassthroughTransformation, TestContext, CustomSerializableSource
     // ---------------------------------------------------------------------------
+
+    /// <summary>
+    /// Concrete <see cref="DataFlowBatchDestination{TInput}"/> used in tests.
+    /// Inherits both <c>IDataFlowLinkTarget&lt;ExpandoObject&gt;</c> (from
+    /// <see cref="IDataFlowBatchDestination{TInput}"/>) and
+    /// <c>IDataFlowLinkTarget&lt;ExpandoObject[]&gt;</c> (from the array base class),
+    /// which is exactly the ambiguous case that triggered the type-mismatch bug.
+    /// </summary>
+    public sealed class BatchMemoryDestination : DataFlowBatchDestination<ExpandoObject>
+    {
+        /// <summary>All individual rows received across all batches.</summary>
+        public List<ExpandoObject> Rows { get; } = new();
+
+        /// <summary>Initialises with batch size 2 so tests can verify batching.</summary>
+        public BatchMemoryDestination()
+        {
+            BatchSize = 2;
+        }
+
+        /// <inheritdoc />
+        protected override void PrepareWrite() { }
+
+        /// <inheritdoc />
+        protected override void TryBulkInsertData(ExpandoObject[] data) => Rows.AddRange(data);
+
+        /// <inheritdoc />
+        protected override void FinishWrite() { }
+    }
 
     /// <summary>
     /// Identity row transformation — initialises its block in the constructor
