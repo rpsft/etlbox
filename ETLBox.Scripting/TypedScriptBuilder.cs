@@ -110,10 +110,17 @@ namespace ALE.ETLBox.Scripting
                 .AddReferences(_globalsTypeInfo.Reference);
 
             // ScriptOptions has no NullableContextOptions API; inject the pragma instead.
-            var code =
-                _nullableContextOptions == NullableContextOptions.Disable
-                    ? scriptContent
-                    : $"#nullable {_nullableContextOptions.ToString().ToLowerInvariant()}\n{scriptContent}";
+            // The `#nullable` directive only accepts enable|disable|restore, optionally
+            // followed by `warnings` or `annotations`, so the enum values that toggle a
+            // single dimension must be mapped to the explicit `enable <dimension>` form.
+            var directive = _nullableContextOptions switch
+            {
+                NullableContextOptions.Enable => "#nullable enable",
+                NullableContextOptions.Warnings => "#nullable enable warnings",
+                NullableContextOptions.Annotations => "#nullable enable annotations",
+                _ => null,
+            };
+            var code = directive is null ? scriptContent : $"{directive}\n{scriptContent}";
 
             using var loader = new InteractiveAssemblyLoader();
             loader.RegisterDependency(_globalsTypeInfo.Assembly);
