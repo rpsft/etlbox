@@ -101,8 +101,10 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
         if (!parsedJsonFields.TryGetValue(mapping.Name, out JObject? jsonObj))
             return string.Empty;
 
-        // Use JSONPath to retrieve the value
-        JToken value = jsonObj.SelectToken(mapping.Path!)!;
+        // Use JSONPath to retrieve the value; null means path not found
+        JToken? value = jsonObj.SelectToken(mapping.Path!);
+        if (value == null)
+            return null;
 
         // Convert the value to result object
         return value.Type switch
