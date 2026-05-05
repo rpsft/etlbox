@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -33,7 +32,7 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
     /// <inheritdoc />
     public override ISourceBlock<TOut> SourceBlock => TransformBlock;
 
-    private readonly List<object> _steps = new();
+    private readonly List<object> _steps = [];
 
     /// <summary>All steps added via <see cref="ReadSteps"/>.</summary>
     public IReadOnlyList<object> Steps => _steps;
@@ -74,7 +73,7 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
     /// Method-like child elements (<c>LinkTo</c>, <c>LinkErrorTo</c>) are collected and
     /// dispatched via reflection on <c>this</c> only after <see cref="SetHeadAndTail"/> is
     /// called, so that <see cref="DataFlowTransformation{TInput,TOutput}.SourceBlock"/> is
-    /// already initialised when those methods run.
+    /// already initialized when those methods run.
     /// </summary>
     protected void ReadSteps(IList<XElement> children, int startIndex, IDataFlowXmlContext context)
     {
@@ -122,7 +121,10 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
         IDataFlowXmlContext context
     )
     {
-        if (child.Elements("LinkTo").Any() || child.Elements("LinkErrorTo").Any())
+        if (
+            child.Elements(nameof(IDataFlowSource<object>.LinkTo)).Any()
+            || child.Elements(nameof(IDataFlowSource<object>.LinkErrorTo)).Any()
+        )
             throw new InvalidDataException(
                 $"Step '{child.Name.LocalName}' inside <Pipeline> must not contain "
                     + "<LinkTo> or <LinkErrorTo>. Route links at the <Pipeline> level."
@@ -218,7 +220,7 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
                 ?? throw new InvalidOperationException(
                     $"Could not create '{childElement.Name.LocalName}' for method '{element.Name.LocalName}'."
                 );
-            method.Invoke(this, new[] { target });
+            method.Invoke(this, [target]);
         }
     }
 
@@ -232,23 +234,28 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
         var linkSourceType = typeof(IDataFlowLinkSource<>).MakeGenericType(itemType);
         var linkTargetType = typeof(IDataFlowLinkTarget<>).MakeGenericType(itemType);
 
-        var sourceBlock = linkSourceType.GetProperty("SourceBlock")!.GetValue(source)!;
-        var targetBlock = linkTargetType.GetProperty("TargetBlock")!.GetValue(target)!;
+        var sourceBlock = linkSourceType
+            .GetProperty(nameof(IDataFlowLinkSource<object>.SourceBlock))!
+            .GetValue(source)!;
+        var targetBlock = linkTargetType
+            .GetProperty(nameof(IDataFlowLinkTarget<object>.TargetBlock))!
+            .GetValue(target)!;
 
         // Find DataflowBlock.LinkTo<T>(ISourceBlock<T>, ITargetBlock<T>) — the 2-param overload
         var linkToMethod = typeof(DataflowBlock)
             .GetMethods()
             .First(m =>
-                m.Name == "LinkTo" && m.IsGenericMethodDefinition && m.GetParameters().Length == 2
+                m.Name == nameof(IDataFlowLinkSource<object>.LinkTo)
+                && m.IsGenericMethodDefinition
+                && m.GetParameters().Length == 2
             )
             .MakeGenericMethod(itemType);
-        linkToMethod.Invoke(null, new[] { sourceBlock, targetBlock });
+        linkToMethod.Invoke(null, [sourceBlock, targetBlock]);
 
-        var completion = (Task)
-            typeof(IDataflowBlock).GetProperty("Completion")!.GetValue(sourceBlock)!;
+        var completion = (sourceBlock as IDataflowBlock)!.Completion;
         linkTargetType
-            .GetMethod("AddPredecessorCompletion")!
-            .Invoke(target, new object[] { completion });
+            .GetMethod(nameof(IDataFlowLinkTarget<object>.AddPredecessorCompletion))!
+            .Invoke(target, [completion]);
     }
 }
 
