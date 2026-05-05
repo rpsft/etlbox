@@ -452,6 +452,8 @@ public class DataFlowPipelineTests
                 return keyed;
             return _byType.TryGetValue(typeName, out var typed) ? typed : null;
         }
+
+        public IDataFlowXmlContext WithoutGlobalActions() => this;
     }
 
     /// <summary>

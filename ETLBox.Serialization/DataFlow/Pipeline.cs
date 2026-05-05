@@ -155,7 +155,7 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
         var children = element.Elements().ToList();
         if (children.Count == 0)
             return;
-        ReadSteps(children, 0, context);
+        ReadSteps(children, 0, context.WithoutGlobalActions());
     }
 
     private static Type? GetLinkTargetInputType(object step) =>
@@ -341,12 +341,13 @@ public sealed class Pipeline
         if (children.Count == 0)
             return;
 
+        var innerContext = context.WithoutGlobalActions();
         var stepStart = 0;
-        var firstType = context.ResolveType(children[0].Name.LocalName);
+        var firstType = innerContext.ResolveType(children[0].Name.LocalName);
         if (firstType != null && typeof(IDataFlowSource<ExpandoObject>).IsAssignableFrom(firstType))
         {
             _source =
-                context.CreateObject(children[0].Name.LocalName, children[0])
+                innerContext.CreateObject(children[0].Name.LocalName, children[0])
                     as IDataFlowSource<ExpandoObject>
                 ?? throw new InvalidDataException(
                     $"'{children[0].Name.LocalName}' resolved as source type but could not be "
@@ -357,7 +358,7 @@ public sealed class Pipeline
         }
 
         if (stepStart < children.Count)
-            ReadSteps(children, stepStart, context);
+            ReadSteps(children, stepStart, innerContext);
 
         // Raw TPL link so _source's completion registers in Pipeline's PredecessorCompletions,
         // not in Head's — prevents Head from closing before an external upstream finishes.

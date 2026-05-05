@@ -34,9 +34,6 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
     // Check if the universal error destination was added to data flow
     private bool _allErrorsDestinationAdded;
 
-    // Suppresses per-step error linking inside a Pipeline (Pipeline.LinkErrorTo covers all steps)
-    private bool _suppressIndividualErrorLinking;
-
     // Activator used to create data flow component instances
     private readonly IDataFlowActivator _activator;
 
@@ -308,26 +305,25 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
 
     private object? CreateObject(Type type, XContainer node)
     {
+        var result = CreateObjectCore(type, node);
+        ApplyLinkAllErrorsTo(result);
+        return result;
+    }
+
+    // Creates an object using full type routing without applying global post-creation actions.
+    private object? CreateObjectCore(Type type, XContainer node)
+    {
         if (IsValueType(type))
-        {
             return CreateValueType(type, node, CurrentCulture);
-        }
-
         if (type.IsArray)
-        {
             return CreateArray(type, node);
-        }
-
         if (
             Array.Exists(
                 type.GetInterfaces(),
                 i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>)
             )
         )
-        {
             return CreateList(type, node);
-        }
-
         return IsDictionary(type) ? CreateDictionary(type, node) : CreateInstance(type, node);
     }
 
@@ -366,12 +362,7 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
 
         if (instance is IDataFlowXmlSerializable xmlSerializable)
         {
-            var wasSuppressed = _suppressIndividualErrorLinking;
-            if (IsPipelineType(instance.GetType()))
-                _suppressIndividualErrorLinking = true;
             xmlSerializable.ReadXml((XElement)node, this);
-            _suppressIndividualErrorLinking = wasSuppressed;
-            ApplyLinkAllErrorsTo(instance);
             return instance;
         }
 
@@ -381,25 +372,12 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             InitializeInstanceProperty(instance, type, propXml);
         }
 
-        ApplyLinkAllErrorsTo(instance);
         return instance;
     }
 
-    private static bool IsPipelineType(Type type)
+    private void ApplyLinkAllErrorsTo(object? instance)
     {
-        for (var t = type; t != null; t = t.BaseType)
-            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Pipeline<,>))
-                return true;
-        return false;
-    }
-
-    private void ApplyLinkAllErrorsTo(object instance)
-    {
-        if (
-            _linkAllErrorsTo == null
-            || _suppressIndividualErrorLinking
-            || instance is not ILinkErrorSource errorSource
-        )
+        if (_linkAllErrorsTo == null || instance is not ILinkErrorSource errorSource)
             return;
 
         errorSource.LinkErrorTo(_linkAllErrorsTo);
@@ -916,5 +894,53 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
         {
             return ex.Types.Where(t => t is not null).ToArray()!;
         }
+    }
+
+    /// <inheritdoc />
+    IDataFlowXmlContext IDataFlowXmlContext.WithoutGlobalActions() =>
+        new SuppressedActionsContext(this);
+
+    /// <summary>
+    /// A delegating context that forwards all calls to the parent reader except
+    /// <see cref="CreateObject"/>, where global post-creation actions are suppressed.
+    /// Returned by <see cref="IDataFlowXmlContext.WithoutGlobalActions"/>.
+    /// </summary>
+    private sealed class SuppressedActionsContext : IDataFlowXmlContext
+    {
+        private readonly DataFlowXmlReader _reader;
+
+        internal SuppressedActionsContext(DataFlowXmlReader reader) => _reader = reader;
+
+        public Type? ResolveType(string typeName) =>
+            ((IDataFlowXmlContext)_reader).ResolveType(typeName);
+
+        public object? CreateObject(string typeName, XElement element)
+        {
+            Type type;
+            try
+            {
+                type = GetTypeByName(_reader._types, typeName);
+            }
+            catch
+            {
+                return null;
+            }
+
+            // Use CreateObjectCore to skip global post-creation actions (ApplyLinkAllErrorsTo).
+            var result = _reader.CreateObjectCore(type, element);
+            if (
+                result is IDataFlowDestination<ExpandoObject> dest
+                && !_reader._dataFlow.Destinations.Contains(dest)
+            )
+                _reader._dataFlow.Destinations.Add(dest);
+            if (
+                result is IDataFlowDestination<ETLBoxError> errDest
+                && !_reader._dataFlow.ErrorDestinations.Contains(errDest)
+            )
+                _reader._dataFlow.ErrorDestinations.Add(errDest);
+            return result;
+        }
+
+        public IDataFlowXmlContext WithoutGlobalActions() => this;
     }
 }

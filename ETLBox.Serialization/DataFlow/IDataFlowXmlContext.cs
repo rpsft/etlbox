@@ -24,4 +24,12 @@ public interface IDataFlowXmlContext
     /// Always use this instead of <c>new</c> / <c>Activator.CreateInstance</c>.
     /// </summary>
     object? CreateObject(string typeName, XElement element);
+
+    /// <summary>
+    /// Returns a derived context in which global post-creation actions (such as universal
+    /// error-link wiring) are suppressed. Use this when a component takes ownership of those
+    /// actions for its children — for example, a <see cref="Pipeline"/> that propagates
+    /// <c>LinkErrorTo</c> to its internal steps itself.
+    /// </summary>
+    IDataFlowXmlContext WithoutGlobalActions();
 }
