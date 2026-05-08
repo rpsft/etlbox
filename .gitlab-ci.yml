@@ -41,10 +41,16 @@ build_job:
   needs:
     - get_unique_semversion
   variables:
-    PACKAGE_VERSION: ${GitVersion_FullSemVer}
+    ASSEMBLY_VERSION: "${GitVersion_MajorMinorPatch}.${CI_PIPELINE_IID}"
+  rules:
+    - if: $GitVersion_SemVer != $GitVersion_MajorMinorPatch
+      # add build number to prerelease versions
+      variables:
+        PACKAGE_VERSION: "${GitVersion_SemVer}.${CI_PIPELINE_IID}"
+    - when: on_success
   script:
     - echo "Building version $PACKAGE_VERSION"
-    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION -p:AssemblyVersion=$ASSEMBLY_VERSION
     - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
   artifacts:
     expire_in: 1 week # save gitlab server space, we copy the files we need to deploy folder later on
@@ -135,8 +141,6 @@ publish:internal:
     - get_unique_semversion
     - build_job
     - test_job
-  variables:
-    PACKAGE_VERSION: ${GitVersion_FullSemVer}
   script:
     - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
