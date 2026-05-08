@@ -22,7 +22,6 @@ branches:
     regex: ^hotfix(es)?[/-](?<BranchName>.+)
     source-branches:
     - main
-    - master
     - support
     is-source-branch-for: []
     is-main-branch: false
