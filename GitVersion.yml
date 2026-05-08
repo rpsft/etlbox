@@ -10,19 +10,17 @@
 #   support/*      — old-version support branch   → Patch  (built-in default)
 #   documentation/* — docs branch from develop/feature → Inherit (configured below)
 
-next-version: 1.18.0
-
 branches:
   hotfix:
-    mode: ContinuousDelivery
+    mode: ManualDeployment
     label: ''
     increment: Patch
     prevent-increment:
       when-current-commit-tagged: false
     regex: ^hotfix(es)?[/-](?<BranchName>.+)
     source-branches:
-    - main
-    - support
+      - main
+      - support
     is-source-branch-for: []
     is-main-branch: false
     pre-release-weight: 30000
@@ -35,24 +33,24 @@ branches:
       when-current-commit-tagged: false
     regex: ^bugfix(es)?[/-](?<BranchName>.+)
     source-branches:
-    - main
-    - develop
-    - release
-    - support
+      - main
+      - develop
+      - release
+      - support
     is-source-branch-for: []
     is-main-branch: false
     pre-release-weight: 30000
 
   dev:
-    mode: ManualDeployment
+    mode: ContinuousDelivery
     label: '{BranchName}'
     increment: Inherit
     prevent-increment:
       when-current-commit-tagged: false
     regex: ^dev[/-](?<BranchName>.+)
     source-branches:
-    - feature
-    - develop
+      - feature
+      - develop
     is-source-branch-for: []
     is-main-branch: false
     pre-release-weight: 30000
@@ -65,8 +63,8 @@ branches:
       when-current-commit-tagged: false
     regex: ^documentation[/-](?<BranchName>.+)
     source-branches:
-    - develop
-    - feature
+      - develop
+      - feature
     is-source-branch-for: []
     is-main-branch: false
     pre-release-weight: 30000

@@ -41,14 +41,9 @@ build_job:
   needs:
     - get_unique_semversion
   variables:
-    ASSEMBLY_VERSION: "${GitVersion_MajorMinorPatch}.${CI_PIPELINE_IID}"
+    ASSEMBLY_VERSION: '${GitVersion_MajorMinorPatch}.${CI_PIPELINE_IID}'
+    PACKAGE_VERSION: $GitVersion_SemVer
   script:
-    - |
-      if [ "$GitVersion_SemVer" != "$GitVersion_MajorMinorPatch" ]; then
-        PACKAGE_VERSION="${GitVersion_SemVer}.${CI_PIPELINE_IID}"
-      else
-        PACKAGE_VERSION="${GitVersion_SemVer}"
-      fi
     - echo "Building package version $PACKAGE_VERSION, assembly version $ASSEMBLY_VERSION"
     - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION -p:AssemblyVersion=$ASSEMBLY_VERSION
     - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
@@ -141,13 +136,9 @@ publish:internal:
     - get_unique_semversion
     - build_job
     - test_job
+  variables:
+    PACKAGE_VERSION: $GitVersion_SemVer
   script:
-    - |
-      if [ "$GitVersion_SemVer" != "$GitVersion_MajorMinorPatch" ]; then
-        PACKAGE_VERSION="${GitVersion_SemVer}.${CI_PIPELINE_IID}"
-      else
-        PACKAGE_VERSION="${GitVersion_SemVer}"
-      fi
     - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
 
