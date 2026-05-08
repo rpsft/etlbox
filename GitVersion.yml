@@ -10,7 +10,24 @@
 #   support/*      — old-version support branch   → Patch  (built-in default)
 #   documentation/* — docs branch from develop/feature → Inherit (configured below)
 
+next-version: 1.18.0
+
 branches:
+  hotfix:
+    mode: ContinuousDelivery
+    label: ''
+    increment: Patch
+    prevent-increment:
+      when-current-commit-tagged: false
+    regex: ^hotfix(es)?[/-](?<BranchName>.+)
+    source-branches:
+    - main
+    - master
+    - support
+    is-source-branch-for: []
+    is-main-branch: false
+    pre-release-weight: 30000
+
   bugfix:
     mode: ManualDeployment
     label: '{BranchName}'
