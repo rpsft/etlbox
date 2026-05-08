@@ -41,7 +41,7 @@ build_job:
   needs:
     - get_unique_semversion
   variables:
-    PACKAGE_VERSION: ${GitVersion_FullSemVer}
+    PACKAGE_VERSION: "${GitVersion_MajorMinorPatch}-${GitVersion_PreReleaseLabel}.${GitVersion_BuildMetaData}"
   script:
     - echo "Building version $PACKAGE_VERSION"
     - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
@@ -136,7 +136,7 @@ publish:internal:
     - build_job
     - test_job
   variables:
-    PACKAGE_VERSION: ${GitVersion_FullSemVer}
+    PACKAGE_VERSION: "${GitVersion_MajorMinorPatch}-${GitVersion_PreReleaseLabel}.${GitVersion_BuildMetaData}"
   script:
     - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
