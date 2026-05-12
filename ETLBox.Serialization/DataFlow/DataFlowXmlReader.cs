@@ -127,7 +127,11 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
         {
             type = GetTypeByName(_types, typeName);
         }
-        catch
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+        catch (InvalidDataException)
         {
             return null;
         }
@@ -921,7 +925,11 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             {
                 type = GetTypeByName(_reader._types, typeName);
             }
-            catch
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            catch (InvalidDataException)
             {
                 return null;
             }
