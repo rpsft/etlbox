@@ -53,7 +53,7 @@ public class KafkaTransformationDeliveryHandlerTests
 
         Assert.Single(capturedHandlers);
 
-        // Act: Kafka сообщает об ошибке доставки
+        // Act: Kafka reports an error
         capturedHandlers[0]
             (
                 new DeliveryReport<Null, string>
@@ -118,7 +118,7 @@ public class KafkaTransformationDeliveryHandlerTests
 
         Assert.Single(capturedHandlers);
 
-        // Act: Kafka подтверждает успешную доставку
+        // Act: Kafka reports success
         capturedHandlers[0]
             (
                 new DeliveryReport<Null, string>
