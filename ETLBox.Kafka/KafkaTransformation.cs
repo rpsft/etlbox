@@ -104,7 +104,21 @@ namespace ALE.ETLBox.DataFlow
             var message = new Message<Null, TKafkaValue> { Value = messageValue };
             if (_producer == null)
                 throw new InvalidOperationException("Producer is not initialized.");
-            _producer.Produce(TopicName, message);
+            _producer.Produce(
+                TopicName,
+                message,
+                deliveryReport =>
+                {
+                    if (deliveryReport.Error.IsError)
+                    {
+                        Logger.LogError(
+                            "Failed: {Message}, Error: {Reason}",
+                            deliveryReport.Message.Value,
+                            deliveryReport.Error.Reason
+                        );
+                    }
+                }
+            );
         }
     }
 
