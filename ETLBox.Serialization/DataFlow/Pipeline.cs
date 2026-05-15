@@ -17,11 +17,17 @@ namespace ALE.ETLBox.Serialization.DataFlow;
 /// Wraps a sequence of data-flow steps into a single transformation block.
 /// Each child step is linked to the next; <see cref="LinkErrorTo"/> is forwarded to all
 /// internal steps that support it.
+/// Implements <see cref="IDataFlowDestination{TIn}"/> so that any runner that tracks
+/// destinations by interface can await <see cref="Completion"/> without depending on the
+/// concrete subtype.
 /// </summary>
 /// <typeparam name="TIn">Input type of the first step.</typeparam>
 /// <typeparam name="TOut">Output type of the last step.</typeparam>
 [PublicAPI]
-public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowXmlSerializable
+public class Pipeline<TIn, TOut>
+    : DataFlowTransformation<TIn, TOut>,
+        IDataFlowXmlSerializable,
+        IDataFlowDestination<TIn>
 {
     /// <inheritdoc />
     public override string TaskName { get; set; } = "Pipeline";
@@ -45,6 +51,96 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
 
     /// <summary>Last step (source side of the encapsulated block).</summary>
     protected IDataFlowLinkSource<TOut>? Tail;
+
+    private int _drainLinked;
+
+    /// <summary>
+    /// A task that completes when the pipeline's internal processing is done.
+    /// Evaluates to <see cref="Task.CompletedTask"/> before any steps are added.
+    /// On first access, lazily wires a <see cref="DataflowBlock.NullTarget{TOutput}"/> as a
+    /// fallback drain so that <c>Tail.SourceBlock.Completion</c> can fire even when no external
+    /// consumer has been linked. Any external <c>LinkTo</c> target wired before this point takes
+    /// precedence because TPL Dataflow offers messages in link-registration order.
+    /// </summary>
+    public Task Completion
+    {
+        get
+        {
+            if (TransformBlock == null)
+                return Task.CompletedTask;
+            if (Interlocked.Exchange(ref _drainLinked, 1) == 0)
+                Tail?.SourceBlock.LinkTo(DataflowBlock.NullTarget<TOut>());
+            return TransformBlock.Completion;
+        }
+    }
+
+    /// <inheritdoc />
+    public void Wait() => Completion.GetAwaiter().GetResult();
+
+    private void GuardLinkTo()
+    {
+        if (_drainLinked != 0)
+            throw new InvalidOperationException(
+                "Cannot call LinkTo after Pipeline.Completion has been accessed. "
+                    + "Establish all output links before reading Completion."
+            );
+    }
+
+    /// <inheritdoc />
+    public override IDataFlowLinkSource<TOut> LinkTo(IDataFlowLinkTarget<TOut> target)
+    {
+        GuardLinkTo();
+        return base.LinkTo(target);
+    }
+
+    /// <inheritdoc />
+    public override IDataFlowLinkSource<TOut> LinkTo(
+        IDataFlowLinkTarget<TOut> target,
+        Predicate<TOut> predicate
+    )
+    {
+        GuardLinkTo();
+        return base.LinkTo(target, predicate);
+    }
+
+    /// <inheritdoc />
+    public override IDataFlowLinkSource<TOut> LinkTo(
+        IDataFlowLinkTarget<TOut> target,
+        Predicate<TOut> rowsToKeep,
+        Predicate<TOut> rowsIntoVoid
+    )
+    {
+        GuardLinkTo();
+        return base.LinkTo(target, rowsToKeep, rowsIntoVoid);
+    }
+
+    /// <inheritdoc />
+    public override IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOut> target)
+    {
+        GuardLinkTo();
+        return base.LinkTo<TConvert>(target);
+    }
+
+    /// <inheritdoc />
+    public override IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
+        IDataFlowLinkTarget<TOut> target,
+        Predicate<TOut> predicate
+    )
+    {
+        GuardLinkTo();
+        return base.LinkTo<TConvert>(target, predicate);
+    }
+
+    /// <inheritdoc />
+    public override IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
+        IDataFlowLinkTarget<TOut> target,
+        Predicate<TOut> rowsToKeep,
+        Predicate<TOut> rowsIntoVoid
+    )
+    {
+        GuardLinkTo();
+        return base.LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+    }
 
     /// <summary>
     /// Wires <paramref name="head"/> and <paramref name="tail"/> as the entry and exit
@@ -94,7 +190,7 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
             }
 
             var step = CreateAndValidateStep(child, lastOutputType, context);
-            _steps.Add(step);
+            AddStep(step);
 
             if (lastStep != null && lastOutputType != null)
                 LinkSteps(lastStep, lastOutputType, step);
@@ -260,8 +356,10 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
 }
 
 /// <summary>
-/// <see cref="ExpandoObject"/> pipeline that also acts as a data-flow source when an
-/// internal source is provided as its first child element.
+/// <see cref="ExpandoObject"/> pipeline that also acts as a data-flow source.
+/// Inherits <see cref="IDataFlowDestination{TIn}"/> from <see cref="Pipeline{TIn,TOut}"/>,
+/// so <see cref="DataFlowXmlReader"/> can register it in <c>IDataFlow.Destinations</c> and
+/// standard runners automatically await <see cref="Pipeline{TIn,TOut}.Completion"/>.
 /// </summary>
 [PublicAPI]
 public sealed class Pipeline
@@ -269,96 +367,16 @@ public sealed class Pipeline
         IDataFlowSource<ExpandoObject>
 {
     private IDataFlowSource<ExpandoObject>? _source;
-    private bool _outputBound;
 
     /// <inheritdoc />
-    public void Execute(CancellationToken cancellationToken)
-    {
-        EnsureOutputBound();
-        _source?.Execute(cancellationToken);
-    }
+    public void Execute(CancellationToken cancellationToken) => _source?.Execute(cancellationToken);
 
     /// <inheritdoc />
-    public Task ExecuteAsync(CancellationToken cancellationToken)
-    {
-        EnsureOutputBound();
-        return _source?.ExecuteAsync(cancellationToken)
-            ?? throw new InvalidOperationException(
-                "Pipeline has no internal source. Drive it by linking an external source."
-            );
-    }
-
-    /// <inheritdoc />
-    public override IDataFlowLinkSource<ExpandoObject> LinkTo(
-        IDataFlowLinkTarget<ExpandoObject> target
-    )
-    {
-        _outputBound = true;
-        return base.LinkTo(target);
-    }
-
-    /// <inheritdoc />
-    public override IDataFlowLinkSource<ExpandoObject> LinkTo(
-        IDataFlowLinkTarget<ExpandoObject> target,
-        Predicate<ExpandoObject> predicate
-    )
-    {
-        _outputBound = true;
-        return base.LinkTo(target, predicate);
-    }
-
-    /// <inheritdoc />
-    public override IDataFlowLinkSource<ExpandoObject> LinkTo(
-        IDataFlowLinkTarget<ExpandoObject> target,
-        Predicate<ExpandoObject> rowsToKeep,
-        Predicate<ExpandoObject> rowsIntoVoid
-    )
-    {
-        _outputBound = true;
-        return base.LinkTo(target, rowsToKeep, rowsIntoVoid);
-    }
-
-    /// <inheritdoc />
-    public override IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
-        IDataFlowLinkTarget<ExpandoObject> target
-    )
-    {
-        _outputBound = true;
-        return base.LinkTo<TConvert>(target);
-    }
-
-    /// <inheritdoc />
-    public override IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
-        IDataFlowLinkTarget<ExpandoObject> target,
-        Predicate<ExpandoObject> predicate
-    )
-    {
-        _outputBound = true;
-        return base.LinkTo<TConvert>(target, predicate);
-    }
-
-    /// <inheritdoc />
-    public override IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
-        IDataFlowLinkTarget<ExpandoObject> target,
-        Predicate<ExpandoObject> rowsToKeep,
-        Predicate<ExpandoObject> rowsIntoVoid
-    )
-    {
-        _outputBound = true;
-        return base.LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
-    }
-
-    private void EnsureOutputBound()
-    {
-        if (_outputBound || Tail is IDataFlowDestination<ExpandoObject>)
-            return;
-        if (Tail == null)
-            return;
-
-        var sink = new VoidDestination<ExpandoObject>();
-        Tail.LinkTo(sink);
-        _outputBound = true;
-    }
+    public Task ExecuteAsync(CancellationToken cancellationToken) =>
+        _source?.ExecuteAsync(cancellationToken)
+        ?? throw new InvalidOperationException(
+            "Pipeline has no internal source. Drive it by linking an external source."
+        );
 
     /// <inheritdoc />
     public override void ReadXml(XElement element, IDataFlowXmlContext context)

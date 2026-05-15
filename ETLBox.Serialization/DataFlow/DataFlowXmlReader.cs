@@ -135,7 +135,6 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
         {
             return null;
         }
-
         var result = CreateObject(type, element);
         if (
             result is IDataFlowDestination<ExpandoObject> dest
@@ -209,6 +208,15 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
                 ?? throw new InvalidOperationException(
                     $"Invalid configuration. Root source '{reader.Name}' must implement {nameof(IDataFlowSource<ExpandoObject>)}"
                 );
+            // When Pipeline is the root source with no external LinkTo, Destinations would be empty
+            // and EtlDataFlowStep.Invoke() would return without awaiting its completion.
+            // If an external destination exists it already waits via AddPredecessorCompletion,
+            // so this is redundant but harmless (children are not yet parsed here to check).
+            if (
+                _dataFlow.Source is IDataFlowDestination<ExpandoObject> sourceDest
+                && !_dataFlow.Destinations.Contains(sourceDest)
+            )
+                _dataFlow.Destinations.Add(sourceDest);
             return;
         }
 
@@ -896,7 +904,7 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
         }
         catch (ReflectionTypeLoadException ex)
         {
-            return ex.Types.Where(t => t is not null).ToArray()!;
+            return ex.Types.Where(t => t is not null).ToArray();
         }
     }
 
