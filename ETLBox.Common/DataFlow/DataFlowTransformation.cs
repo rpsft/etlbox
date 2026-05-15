@@ -54,7 +54,7 @@ namespace ALE.ETLBox.Common.DataFlow
         /// Link to error target block
         /// </summary>
         /// <param name="target"></param>
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
+        public virtual void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
             ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
         public void AddPredecessorCompletion(Task completion)
@@ -76,31 +76,31 @@ namespace ALE.ETLBox.Common.DataFlow
                 });
         }
 
-        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target) =>
+        public virtual IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target) =>
             new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo(target);
 
-        public IDataFlowLinkSource<TOutput> LinkTo(
+        public virtual IDataFlowLinkSource<TOutput> LinkTo(
             IDataFlowLinkTarget<TOutput> target,
             Predicate<TOutput> predicate
         ) => new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo(target, predicate);
 
-        public IDataFlowLinkSource<TOutput> LinkTo(
+        public virtual IDataFlowLinkSource<TOutput> LinkTo(
             IDataFlowLinkTarget<TOutput> target,
             Predicate<TOutput> rowsToKeep,
             Predicate<TOutput> rowsIntoVoid
         ) =>
             new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo(target, rowsToKeep, rowsIntoVoid);
 
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
+        public virtual IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
             IDataFlowLinkTarget<TOutput> target
         ) => new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo<TConvert>(target);
 
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
+        public virtual IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
             IDataFlowLinkTarget<TOutput> target,
             Predicate<TOutput> predicate
         ) => new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo<TConvert>(target, predicate);
 
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
+        public virtual IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
             IDataFlowLinkTarget<TOutput> target,
             Predicate<TOutput> rowsToKeep,
             Predicate<TOutput> rowsIntoVoid

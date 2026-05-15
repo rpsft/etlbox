@@ -11,6 +11,20 @@
 #   documentation/* — docs branch from develop/feature → Inherit (configured below)
 
 branches:
+  hotfix:
+    mode: ManualDeployment
+    label: ''
+    increment: Patch
+    prevent-increment:
+      when-current-commit-tagged: false
+    regex: ^hotfix(es)?[/-](?<BranchName>.+)
+    source-branches:
+      - main
+      - support
+    is-source-branch-for: []
+    is-main-branch: false
+    pre-release-weight: 30000
+
   bugfix:
     mode: ManualDeployment
     label: '{BranchName}'
@@ -19,24 +33,24 @@ branches:
       when-current-commit-tagged: false
     regex: ^bugfix(es)?[/-](?<BranchName>.+)
     source-branches:
-    - main
-    - develop
-    - release
-    - support
+      - main
+      - develop
+      - release
+      - support
     is-source-branch-for: []
     is-main-branch: false
     pre-release-weight: 30000
 
   dev:
-    mode: ManualDeployment
+    mode: ContinuousDelivery
     label: '{BranchName}'
     increment: Inherit
     prevent-increment:
       when-current-commit-tagged: false
     regex: ^dev[/-](?<BranchName>.+)
     source-branches:
-    - feature
-    - develop
+      - feature
+      - develop
     is-source-branch-for: []
     is-main-branch: false
     pre-release-weight: 30000
@@ -49,8 +63,8 @@ branches:
       when-current-commit-tagged: false
     regex: ^documentation[/-](?<BranchName>.+)
     source-branches:
-    - develop
-    - feature
+      - develop
+      - feature
     is-source-branch-for: []
     is-main-branch: false
     pre-release-weight: 30000

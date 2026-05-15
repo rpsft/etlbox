@@ -3,6 +3,7 @@ using System.Linq.Dynamic.Core;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.DynamicLinq;
 using ETLBox.Primitives;
+using JetBrains.Annotations;
 
 namespace ETLBox.DynamicLinq.Tests;
 
@@ -11,7 +12,7 @@ public class ExpressionRowFiltrationTests
     private static ExpandoObject MakeRow(params (string key, object value)[] fields)
     {
         var row = new ExpandoObject();
-        var dict = (IDictionary<string, object>)row;
+        IDictionary<string, object?> dict = row;
         foreach (var (key, value) in fields)
             dict[key] = value;
         return row;
@@ -56,7 +57,7 @@ public class ExpressionRowFiltrationTests
         var result = RunFiltration("Type == \"Day\"", row1, row2);
 
         Assert.Single(result);
-        Assert.Equal("Day", ((IDictionary<string, object>)result[0])["Type"]);
+        Assert.Equal("Day", ((IDictionary<string, object?>)result[0])["Type"]);
     }
 
     // --- Compare with constant ---
@@ -172,8 +173,8 @@ public class ExpressionRowFiltrationTests
     [Fact]
     public void NullCheck()
     {
-        var row1 = MakeRow(("AuthLimit", (object)1000m));
-        var row2 = MakeRow(("AuthLimit", (object)null!));
+        var row1 = MakeRow(("AuthLimit", 1000m));
+        var row2 = MakeRow(("AuthLimit", null!));
 
         var result = RunFiltration("AuthLimit != null", row1, row2);
 
@@ -238,11 +239,11 @@ public class ExpressionRowFiltrationTests
         // Verify typed properties
         var reserveProp = type.GetProperty("Reserve");
         Assert.NotNull(reserveProp);
-        Assert.Equal(typeof(decimal), reserveProp!.PropertyType);
+        Assert.Equal(typeof(decimal), reserveProp.PropertyType);
 
         var countProp = type.GetProperty("Count");
         Assert.NotNull(countProp);
-        Assert.Equal(typeof(int), countProp!.PropertyType);
+        Assert.Equal(typeof(int), countProp.PropertyType);
 
         // Create and populate instance
         var instance = Activator.CreateInstance(type)!;
@@ -315,7 +316,7 @@ public class ExpressionRowFiltrationTests
     public void NestedExpando_NullCheckOnMember()
     {
         var withDate = new ExpandoObject();
-        ((IDictionary<string, object>)withDate)["ReportDate"] = new DateTime(
+        ((IDictionary<string, object?>)withDate)["ReportDate"] = new DateTime(
             2026,
             4,
             25,
@@ -324,11 +325,11 @@ public class ExpressionRowFiltrationTests
             0,
             DateTimeKind.Unspecified
         );
-        var row1 = MakeRow(("Context", (object)withDate));
+        var row1 = MakeRow(("Context", withDate));
 
         var withoutDate = new ExpandoObject();
-        ((IDictionary<string, object>)withoutDate)["ReportDate"] = null!;
-        var row2 = MakeRow(("Context", (object)withoutDate));
+        ((IDictionary<string, object?>)withoutDate)["ReportDate"] = null!;
+        var row2 = MakeRow(("Context", withoutDate));
 
         var result = RunFiltration("Context.ReportDate != null", row1, row2);
 
@@ -341,12 +342,12 @@ public class ExpressionRowFiltrationTests
     public void NestedExpando_NumericComparisonOnMember()
     {
         var order1 = new ExpandoObject();
-        ((IDictionary<string, object>)order1)["Total"] = 150m;
-        var row1 = MakeRow(("Order", (object)order1));
+        ((IDictionary<string, object?>)order1)["Total"] = 150m;
+        var row1 = MakeRow(("Order", order1));
 
         var order2 = new ExpandoObject();
-        ((IDictionary<string, object>)order2)["Total"] = 50m;
-        var row2 = MakeRow(("Order", (object)order2));
+        ((IDictionary<string, object?>)order2)["Total"] = 50m;
+        var row2 = MakeRow(("Order", order2));
 
         var result = RunFiltration("Order.Total > 100", row1, row2);
 
@@ -361,16 +362,16 @@ public class ExpressionRowFiltrationTests
         ExpandoObject Build(string cityName)
         {
             var city = new ExpandoObject();
-            ((IDictionary<string, object>)city)["Name"] = cityName;
+            ((IDictionary<string, object?>)city)["Name"] = cityName;
             var address = new ExpandoObject();
-            ((IDictionary<string, object>)address)["City"] = city;
+            ((IDictionary<string, object?>)address)["City"] = city;
             var owner = new ExpandoObject();
-            ((IDictionary<string, object>)owner)["Address"] = address;
+            ((IDictionary<string, object?>)owner)["Address"] = address;
             return owner;
         }
 
-        var row1 = MakeRow(("Owner", (object)Build("Moscow")));
-        var row2 = MakeRow(("Owner", (object)Build("Tver")));
+        var row1 = MakeRow(("Owner", Build("Moscow")));
+        var row2 = MakeRow(("Owner", Build("Tver")));
 
         var result = RunFiltration("Owner.Address.City.Name == \"Moscow\"", row1, row2);
 
@@ -382,8 +383,8 @@ public class ExpressionRowFiltrationTests
     [Fact]
     public void CustomClass_PropertyAccess()
     {
-        var row1 = MakeRow(("Person", (object)new TestPerson { Name = "John", Age = 30 }));
-        var row2 = MakeRow(("Person", (object)new TestPerson { Name = "Jane", Age = 25 }));
+        var row1 = MakeRow(("Person", new TestPerson { Name = "John", Age = 30 }));
+        var row2 = MakeRow(("Person", new TestPerson { Name = "Jane", Age = 25 }));
 
         var result = RunFiltration("Person.Name == \"John\" && Person.Age > 18", row1, row2);
 
@@ -392,8 +393,18 @@ public class ExpressionRowFiltrationTests
 
     private sealed class TestPerson
     {
-        public string Name { get; set; } = "";
-        public int Age { get; set; }
+        public string Name
+        {
+            [UsedImplicitly]
+            get;
+            set;
+        } = "";
+        public int Age
+        {
+            [UsedImplicitly]
+            get;
+            set;
+        }
     }
 
     // --- Generic ExpressionRowFiltration<TInput> over typed POCO ---
@@ -470,12 +481,12 @@ public class ExpressionRowFiltrationTests
         ExpandoObject MakeItem(decimal sum)
         {
             var item = new ExpandoObject();
-            ((IDictionary<string, object>)item)["Sum"] = sum;
+            ((IDictionary<string, object?>)item)["Sum"] = sum;
             return item;
         }
 
-        var row1 = MakeRow(("Items", (object)new object[] { MakeItem(50m), MakeItem(150m) }));
-        var row2 = MakeRow(("Items", (object)new object[] { MakeItem(50m), MakeItem(70m) }));
+        var row1 = MakeRow(("Items", new object[] { MakeItem(50m), MakeItem(150m) }));
+        var row2 = MakeRow(("Items", new object[] { MakeItem(50m), MakeItem(70m) }));
 
         var result = RunFiltration("Items.Any(Sum > 100)", row1, row2);
 
@@ -490,14 +501,12 @@ public class ExpressionRowFiltrationTests
         ExpandoObject MakeItem(int id)
         {
             var item = new ExpandoObject();
-            ((IDictionary<string, object>)item)["Id"] = id;
+            ((IDictionary<string, object?>)item)["Id"] = id;
             return item;
         }
 
-        var rowMany = MakeRow(
-            ("Lines", (object)new object[] { MakeItem(1), MakeItem(2), MakeItem(3) })
-        );
-        var rowFew = MakeRow(("Lines", (object)new object[] { MakeItem(1) }));
+        var rowMany = MakeRow(("Lines", new object[] { MakeItem(1), MakeItem(2), MakeItem(3) }));
+        var rowFew = MakeRow(("Lines", new object[] { MakeItem(1) }));
 
         var result = RunFiltration("Lines.Count() > 2", rowMany, rowFew);
 
@@ -512,12 +521,12 @@ public class ExpressionRowFiltrationTests
         ExpandoObject MakeItem(decimal amount)
         {
             var item = new ExpandoObject();
-            ((IDictionary<string, object>)item)["Amount"] = amount;
+            ((IDictionary<string, object?>)item)["Amount"] = amount;
             return item;
         }
 
-        var rowOver = MakeRow(("Lines", (object)new object[] { MakeItem(60m), MakeItem(50m) }));
-        var rowUnder = MakeRow(("Lines", (object)new object[] { MakeItem(10m), MakeItem(20m) }));
+        var rowOver = MakeRow(("Lines", new object[] { MakeItem(60m), MakeItem(50m) }));
+        var rowUnder = MakeRow(("Lines", new object[] { MakeItem(10m), MakeItem(20m) }));
 
         var result = RunFiltration("Lines.Sum(Amount) > 100", rowOver, rowUnder);
 
@@ -529,8 +538,8 @@ public class ExpressionRowFiltrationTests
     [Fact]
     public void ScalarCollection_Contains()
     {
-        var rowPremium = MakeRow(("Tags", (object)new[] { "Basic", "Premium", "VIP" }));
-        var rowBasic = MakeRow(("Tags", (object)new[] { "Basic", "Standard" }));
+        var rowPremium = MakeRow(("Tags", new[] { "Basic", "Premium", "VIP" }));
+        var rowBasic = MakeRow(("Tags", new[] { "Basic", "Standard" }));
 
         var result = RunFiltration("Tags.Contains(\"Premium\")", rowPremium, rowBasic);
 
@@ -542,7 +551,7 @@ public class ExpressionRowFiltrationTests
     [Fact]
     public void EmptyCollection_CountReturnsZero()
     {
-        var row = MakeRow(("Items", (object)Array.Empty<object>()));
+        var row = MakeRow(("Items", Array.Empty<object>()));
 
         var result = RunFiltration("Items.Count() == 0", row);
 
@@ -559,12 +568,12 @@ public class ExpressionRowFiltrationTests
         // (Nullable<int>) rather than default(int)=0, so predicates do not see
         // a phantom 0 value for absent fields.
         var item1 = new ExpandoObject();
-        ((IDictionary<string, object>)item1)["A"] = 1; // B absent
+        ((IDictionary<string, object?>)item1)["A"] = 1; // B absent
         var item2 = new ExpandoObject();
-        ((IDictionary<string, object>)item2)["A"] = 2;
-        ((IDictionary<string, object>)item2)["B"] = 5;
+        ((IDictionary<string, object?>)item2)["A"] = 2;
+        ((IDictionary<string, object?>)item2)["B"] = 5;
 
-        var row = MakeRow(("Items", (object)new object[] { item1, item2 }));
+        var row = MakeRow(("Items", new object[] { item1, item2 }));
 
         // Both elements are mapped (no throw on heterogeneous shape).
         Assert.Single(RunFiltration("Items.Count() == 2", row));
@@ -585,11 +594,11 @@ public class ExpressionRowFiltrationTests
         // some items have null and others a concrete value. Field type widens to
         // Nullable<T> automatically.
         var item1 = new ExpandoObject();
-        ((IDictionary<string, object>)item1)["X"] = null!;
+        ((IDictionary<string, object?>)item1)["X"] = null!;
         var item2 = new ExpandoObject();
-        ((IDictionary<string, object>)item2)["X"] = 100m;
+        ((IDictionary<string, object?>)item2)["X"] = 100m;
 
-        var row = MakeRow(("Items", (object)new object[] { item1, item2 }));
+        var row = MakeRow(("Items", new object[] { item1, item2 }));
 
         var result = RunFiltration("Items.Any(X > 50)", row);
         Assert.Single(result);
@@ -601,11 +610,11 @@ public class ExpressionRowFiltrationTests
         // Genuine type conflict in the same field across items - no safe
         // unification, throws with a clear pointer to the conflicting field.
         var item1 = new ExpandoObject();
-        ((IDictionary<string, object>)item1)["A"] = 1;
+        ((IDictionary<string, object?>)item1)["A"] = 1;
         var item2 = new ExpandoObject();
-        ((IDictionary<string, object>)item2)["A"] = "string";
+        ((IDictionary<string, object?>)item2)["A"] = "string";
 
-        var row = MakeRow(("Items", (object)new object[] { item1, item2 }));
+        var row = MakeRow(("Items", new object[] { item1, item2 }));
 
         Assert.Throws<AggregateException>(() => RunFiltration("Items.Count() > 0", row));
     }
@@ -616,9 +625,9 @@ public class ExpressionRowFiltrationTests
         // Mix of dictionary item and a scalar item is a real shape mismatch -
         // no unified projection makes sense.
         var item1 = new ExpandoObject();
-        ((IDictionary<string, object>)item1)["A"] = 1;
+        ((IDictionary<string, object?>)item1)["A"] = 1;
 
-        var row = MakeRow(("Items", (object)new object[] { item1, "not-a-dict" }));
+        var row = MakeRow(("Items", new object[] { item1, "not-a-dict" }));
 
         Assert.Throws<AggregateException>(() => RunFiltration("Items.Count() > 0", row));
     }
@@ -749,8 +758,8 @@ public class ExpressionRowFiltrationTests
     [Fact]
     public void ByteArrayField_TreatedAsScalar_NotCollection()
     {
-        var row1 = MakeRow(("Data", (object)new byte[] { 1, 2, 3 }));
-        var row2 = MakeRow(("Data", (object)null!));
+        var row1 = MakeRow(("Data", new byte[] { 1, 2, 3 }));
+        var row2 = MakeRow(("Data", null!));
 
         var result = RunFiltration("Data != null", row1, row2);
 
@@ -786,6 +795,7 @@ public class ExpressionRowFiltrationTests
 
     private sealed class ProvenanceRow
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         public int Foo { get; set; }
     }
 
@@ -796,9 +806,7 @@ public class ExpressionRowFiltrationTests
         // RegisterCustomTypes / AdditionalAssemblyNames / AdditionalImports.
         // RebuildTypeProvider must leave the provider untouched.
         var filtration = new ExpressionRowFiltration<ProvenanceRow>("Foo > 0");
-        var manualProvider = new ALE.ETLBox.DynamicLinq.DynamicLinqTypeProvider(
-            new HashSet<Type> { typeof(string) }
-        );
+        var manualProvider = new DynamicLinqTypeProvider(new HashSet<Type> { typeof(string) });
         filtration.ParsingConfig.CustomTypeProvider = manualProvider;
 
         // Trigger compile path so RebuildTypeProvider would run if it was going to.
@@ -818,13 +826,11 @@ public class ExpressionRowFiltrationTests
         Assert.True(filtration.PredicateFunc!(new ProvenanceRow { Foo = 1 }));
 
         var providerAfterImport = filtration.ParsingConfig.CustomTypeProvider;
-        Assert.IsType<ALE.ETLBox.DynamicLinq.DynamicLinqTypeProvider>(providerAfterImport);
+        Assert.IsType<DynamicLinqTypeProvider>(providerAfterImport);
 
         filtration.AdditionalImports = Array.Empty<string>();
         Assert.True(filtration.PredicateFunc!(new ProvenanceRow { Foo = 1 }));
 
-        Assert.IsNotType<ALE.ETLBox.DynamicLinq.DynamicLinqTypeProvider>(
-            filtration.ParsingConfig.CustomTypeProvider
-        );
+        Assert.IsNotType<DynamicLinqTypeProvider>(filtration.ParsingConfig.CustomTypeProvider);
     }
 }

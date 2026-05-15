@@ -87,6 +87,32 @@ public class JsonTransformationTests
     }
 
     [Fact]
+    public void ParseNative_ShouldReturnNativeTypedExpandoObject()
+    {
+        const string json =
+            """{"Name":"Alice","Score":100,"Active":true,"Date":"2024-01-15T10:00:00","Ratio":1.5}""";
+
+        var result = (IDictionary<string, object?>)JsonTransformation.ParseNative(json);
+
+        Assert.Equal("Alice", result["Name"]);
+        Assert.Equal(100, result["Score"]);
+        Assert.True((bool)result["Active"]!);
+        Assert.Equal(new DateTime(2024, 1, 15, 10, 0, 0, DateTimeKind.Unspecified), result["Date"]);
+        Assert.Equal(1.5, result["Ratio"]);
+    }
+
+    [Fact]
+    public void ParseNative_ShouldHandleNestedObjects()
+    {
+        const string json = """{"Outer":{"Inner":"value"}}""";
+
+        var result = (IDictionary<string, object?>)JsonTransformation.ParseNative(json);
+
+        var nested = Assert.IsType<ExpandoObject>(result["Outer"]);
+        Assert.Equal("value", ((IDictionary<string, object?>)nested)["Inner"]);
+    }
+
+    [Fact]
     public async Task JsonTransformation_NonExistentPath_ReturnsNull()
     {
         //Arrange

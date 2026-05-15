@@ -1,0 +1,21 @@
+using System.Xml.Linq;
+using JetBrains.Annotations;
+
+namespace ALE.ETLBox.Serialization.DataFlow;
+
+/// <summary>
+/// Allows a data-flow component to take full control of its own XML deserialization.
+/// <see cref="DataFlowXmlReader"/> delegates to this interface instead of performing
+/// property-by-property reflection when the created instance implements it.
+/// </summary>
+[PublicAPI]
+#pragma warning disable SP3110
+public interface IDataFlowXmlSerializable
+#pragma warning restore SP3110
+{
+    /// <summary>
+    /// Reads configuration and wires sub-components from <paramref name="element"/>.
+    /// Use <paramref name="context"/> for all object creation to preserve DI.
+    /// </summary>
+    void ReadXml(XElement element, IDataFlowXmlContext context);
+}
