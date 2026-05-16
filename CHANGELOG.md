@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file.
 
+<a name="1.18.0"></a>
+
+# 1.18.0
+
+✨ Features
+
+- New: flat XML sequence syntax for `ETLBox.Serialization` via `Pipeline<TIn, TOut>` and the
+  non-generic `Pipeline`. A `<Pipeline>` can now list sources, transformations, and destinations in
+  execution order instead of requiring deeply nested `<LinkTo>` elements. Existing nested `<LinkTo>`
+  XML remains supported.
+
+  Example:
+  ```xml
+  <EtlDataFlowStep>
+    <MemorySource>
+      <LinkTo>
+        <Pipeline>
+          <JsonTransformation />
+          <ScriptedTransformation />
+          <MemoryDestination />
+        </Pipeline>
+      </LinkTo>
+    </MemorySource>
+  </EtlDataFlowStep>
+  ```
+
+- New: `IDataFlowXmlSerializable` and `IDataFlowXmlContext` extension points in
+  `ETLBox.Serialization`. Components can now take control of their XML deserialization while still
+  creating child objects through the reader's DI-aware factory.
+
+- New: `PassThrough` property on `JsonTransformation`. When `true`, all input fields are copied to
+  the output before `Mappings` are applied, allowing mappings to add new fields or override copied
+  ones. When `false` (default), only mapped fields are emitted.
+
+- New: `JsonTransformation.ParseNative(string)` and native JSON object conversion. Mappings with
+  `Path="$"` now return a native `ExpandoObject` instead of a JSON string, with nested objects,
+  arrays, numbers, booleans, dates, and nulls converted to .NET values.
+
+🐛 Bug Fixes
+
+- Fixed: `JsonTransformation` now returns `null` when a JSONPath does not match any token.
+
+- Fixed: `Pipeline` completion handling for XML flows without an external `LinkTo`. Pipeline output
+  is drained automatically when needed so execution can complete without hanging.
+
+- Fixed: root-level `<Pipeline>` execution tracking in `DataFlowXmlReader`. A pipeline used as the
+  root source is registered for completion tracking even when it contains no external destination.
+
+- Fixed: pipeline step type validation for components that implement more than one
+  `IDataFlowLinkTarget<T>` interface, such as batched destinations.
+
+- Fixed: `DataFlowXmlReader` context type resolution now catches expected lookup exceptions when a
+  custom XML-serializable component probes for optional child types.
+
+🔧 Internal
+
+- CI package versioning now uses `GitVersion_SemVer` for NuGet packages and a separate assembly
+  version with the GitLab pipeline IID.
+- Updated `GitVersion.yml` branch rules for `1.18.0` prerelease and hotfix flows.
+- Changed the shared C# language version setting from `12` to `latest`.
+
 <a name="1.17.0"></a>
 
 # 1.17.0
