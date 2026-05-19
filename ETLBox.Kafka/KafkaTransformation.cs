@@ -37,6 +37,11 @@ namespace ALE.ETLBox.DataFlow
         public Action<ProducerBuilder<Ignore, TKafkaValue>>? ConfigureProducerBuilder { get; set; }
 
         /// <summary>
+        /// Maximum time to wait for pending messages to be delivered on cleanup.
+        /// </summary>
+        public TimeSpan FlushTimeout { get; set; } = TimeSpan.FromSeconds(30);
+
+        /// <summary>
         /// Producer instance override for use in tests
         /// </summary>
         private IProducer<Null, TKafkaValue>? _producer;
@@ -74,7 +79,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void CleanUp(Task transformTask)
         {
-            _producer?.Flush();
+            _producer?.Flush(FlushTimeout);
             _producer?.Dispose();
             base.CleanUp(transformTask);
         }
@@ -89,11 +94,11 @@ namespace ALE.ETLBox.DataFlow
             }
             catch (Exception e)
             {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+
                 var errorData = ErrorHandler.ConvertErrorData(input);
-                if (ErrorHandler.HasErrorBuffer)
-                {
-                    ErrorHandler.Send(e, errorData);
-                }
+                ErrorHandler.Send(e, errorData);
             }
             return default;
         }
