@@ -1,6 +1,7 @@
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using Confluent.Kafka;
+using ETLBox.Primitives;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -140,5 +141,41 @@ public class KafkaTransformationDeliveryHandlerTests
                 ),
             Times.Never
         );
+    }
+
+    [Fact]
+    public void ShouldSendToErrorBuffer_WhenProduceThrows()
+    {
+        // Arrange
+        var mockProducer = new Mock<IProducer<Null, string>>();
+        mockProducer
+            .Setup(p =>
+                p.Produce(
+                    It.IsAny<string>(),
+                    It.IsAny<Message<Null, string>>(),
+                    It.IsAny<Action<DeliveryReport<Null, string>>>()
+                )
+            )
+            .Throws(new InvalidOperationException("Simulated produce failure"));
+
+        var transformation = new TestableKafkaTransformation(mockProducer.Object)
+        {
+            TopicName = "test-topic",
+        };
+        var errorDest = new MemoryDestination<ETLBoxError>();
+        var source = new MemorySource<string>(new[] { "test-value" });
+        var dest = new MemoryDestination<string?>();
+        source.LinkTo(transformation);
+        transformation.LinkTo(dest);
+        transformation.LinkErrorTo(errorDest);
+
+        // Act
+        source.Execute();
+        dest.Wait();
+        errorDest.Wait();
+
+        // Assert
+        Assert.Single(errorDest.Data);
+        Assert.Contains("Simulated produce failure", errorDest.Data.First().ErrorText);
     }
 }

@@ -79,7 +79,13 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void CleanUp(Task transformTask)
         {
-            _producer?.Flush(FlushTimeout);
+            var remaining = _producer?.Flush(FlushTimeout);
+            if (remaining > 0)
+            {
+                throw new InvalidOperationException(
+                    $"Kafka flush timed out: {remaining} message(s) were not delivered."
+                );
+            }
             _producer?.Dispose();
             base.CleanUp(transformTask);
         }
