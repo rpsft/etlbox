@@ -92,7 +92,7 @@ test_job:
         KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: '1'
         KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: '0'
         CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
-    - name: docker:24.0.5-dind
+    - name: docker:dind
       alias: docker
       command:
         [
