@@ -104,6 +104,15 @@ test_job:
   variables:
     DOCKER_HOST: tcp://docker:2375
     PACKAGE_VERSION: ${GitVersion_SemVer}
+    # Testcontainers Ryuk can't reach across the build-container ↔ DinD-service
+    # network boundary on the k8s Kubernetes-executor runner (random published
+    # port lives on DinD's internal bridge, unreachable from the build pod).
+    # Manifests as ResourceReaperException: Initialization has been cancelled.
+    # Per Testcontainers' documented exception, disabling Ryuk is correct for
+    # this topology — cluster cleanup happens via job-pod teardown. See
+    # SYSOPS-1667 for the architectural analysis.
+    TESTCONTAINERS_RYUK_DISABLED: 'true'
+    TESTCONTAINERS_CHECKS_DISABLE: 'true'
   before_script:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
