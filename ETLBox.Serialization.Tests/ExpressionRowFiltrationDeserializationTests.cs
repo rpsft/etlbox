@@ -59,7 +59,7 @@ public class ExpressionRowFiltrationDeserializationTests
 
         var dest = (MemoryDestination<ExpandoObject>)step.Destinations[0];
         var passed = Assert.Single(dest.Data);
-        Assert.Equal(100m, ((IDictionary<string, object>)passed)["Reserve"]);
+        Assert.Equal(100m, ((IDictionary<string, object?>)passed)["Reserve"]);
     }
 
     [Fact]
@@ -192,7 +192,7 @@ public class ExpressionRowFiltrationDeserializationTests
     private static ExpandoObject MakeRow(params (string key, object value)[] fields)
     {
         var row = new ExpandoObject();
-        var dict = (IDictionary<string, object>)row;
+        var dict = (IDictionary<string, object?>)row;
         foreach (var (key, value) in fields)
             dict[key] = value;
         return row;

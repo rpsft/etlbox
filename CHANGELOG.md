@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+<a name="unreleased"></a>
+
+# Unreleased
+
+✨ Features
+
+- New package `ETLBox.MongoDB`: `MongoChangeStreamSource<TOutput>` tails a MongoDB change stream
+  and emits one record per change event. Requires a replica set deployment. Accepts a caller-provided
+  `IMongoClient`, an optional aggregation `Pipeline` for server-side filtering, and an optional
+  `CheckpointStore` to resume from the last resume token after a restart.
+
+- New package `ETLBox.PostgresStreaming`: `PostgresXminTailSource<TOutput>` continuously polls a
+  PostgreSQL table using `xmin`-frontier polling
+  (`pg_snapshot_xmin(pg_current_snapshot())`). Rows inserted by in-flight transactions are excluded
+  from each batch and automatically picked up once their transaction commits. Supports tuple-cursor
+  pagination via `OrderByColumns`, server-side predicate filtering via `AdditionalWhere`, and
+  resumable processing via `CheckpointStore`.
+
+- New: `ICheckpointStore` interface in `ETLBox.Common.DataFlow.Streaming`. Implement it to persist
+  streaming cursors across restarts in any backend (Redis, database, file, etc.). Both
+  `MongoChangeStreamSource` and `PostgresXminTailSource` accept an optional `CheckpointStore`.
+
+- New: `DataFlowResources` helper class in `ETLBox.Serialization`. Provides a composable,
+  thread-safe implementation of `IDataFlow` resource ownership (connection manager pool and
+  disposable resource pool). Embed it as a field and delegate `GetOrAddConnectionManager` and
+  `GetOrAddResource` to it to avoid re-implementing the `ConcurrentDictionary` boilerplate in every
+  `IDataFlow` implementor.
+
 <a name="1.18.0"></a>
 
 # 1.18.0
