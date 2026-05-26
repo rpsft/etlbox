@@ -38,6 +38,25 @@ namespace ALE.ETLBox.Serialization
         );
 
         /// <summary>
+        /// Gets or adds a disposable resource to the flow's ownership pool.
+        /// </summary>
+        /// <remarks>
+        /// The data flow owns resources added via this method and disposes them when the data flow
+        /// itself is disposed. Resources with identical <paramref name="key"/> values are deduplicated —
+        /// subsequent calls with the same key return the existing instance without invoking
+        /// <paramref name="factory"/>. Use this for non-ADO.NET clients (e.g. <c>MongoClient</c>,
+        /// <c>HttpClient</c>) that have no natural <see cref="IConnectionManager"/> equivalent.
+        /// </remarks>
+        /// <param name="key">
+        /// Deduplication key. Resources that share a key share an instance. A typical key is the
+        /// type's full name combined with a serialized representation of its configuration.
+        /// </param>
+        /// <param name="factory">
+        /// Creates the resource when no entry for <paramref name="key"/> exists yet.
+        /// </param>
+        IDisposable GetOrAddResource(string key, Func<IDisposable> factory);
+
+        /// <summary>
         /// Single source of data transformations in the data flow.
         /// </summary>
         IDataFlowSource<ExpandoObject> Source { get; set; }
@@ -51,5 +70,21 @@ namespace ALE.ETLBox.Serialization
         /// All error destinations of data flow.
         /// </summary>
         IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; }
+    }
+
+    /// <summary>
+    /// Extension methods for <see cref="IDataFlow"/>.
+    /// </summary>
+    public static class DataFlowExtensions
+    {
+        /// <summary>
+        /// Gets or adds a typed disposable resource to the flow's ownership pool.
+        /// </summary>
+        /// <typeparam name="T">The concrete resource type.</typeparam>
+        /// <param name="dataFlow">The data flow that owns the resource.</param>
+        /// <param name="key">Deduplication key.</param>
+        /// <param name="factory">Creates the resource if no entry for <paramref name="key"/> exists yet.</param>
+        public static T GetOrAddResource<T>(this IDataFlow dataFlow, string key, Func<T> factory)
+            where T : IDisposable => (T)dataFlow.GetOrAddResource(key, () => factory());
     }
 }

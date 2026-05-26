@@ -254,14 +254,31 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             );
         }
 
-        var value = CreateObject(prop.PropertyType, element);
-
-        if (value is null)
+        if (typeof(IDisposable).IsAssignableFrom(prop.PropertyType))
         {
-            return;
+            var innerXml = string.Concat(
+                element.Nodes().Select(n => n.ToString(SaveOptions.DisableFormatting))
+            );
+            var key = prop.PropertyType.FullName + ":" + innerXml;
+            var value = _dataFlow.GetOrAddResource(
+                key,
+                () =>
+                    (IDisposable)(
+                        CreateObject(prop.PropertyType, element)
+                        ?? throw new InvalidDataException(
+                            $"Failed to create disposable resource of type {prop.PropertyType}"
+                        )
+                    )
+            );
+            prop.SetValue(instance, value);
         }
-
-        prop.SetValue(instance, value);
+        else
+        {
+            var value = CreateObject(prop.PropertyType, element);
+            if (value is null)
+                return;
+            prop.SetValue(instance, value);
+        }
     }
 
     private static void SetValueTypeProperty(
@@ -514,6 +531,21 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
                     CreateInstance(type, propXml) as IConnectionManager
                     ?? throw new InvalidDataException(
                         $"Failed to create connection manager instance of type {type}"
+                    )
+            );
+            prop.SetValue(instance, value);
+        }
+        else if (typeof(IDisposable).IsAssignableFrom(propType))
+        {
+            var key = propType.FullName + ":" + propXml.ToString(SaveOptions.DisableFormatting);
+            var value = _dataFlow.GetOrAddResource(
+                key,
+                () =>
+                    (IDisposable)(
+                        CreateObject(propType, propXml)
+                        ?? throw new InvalidDataException(
+                            $"Failed to create disposable resource of type {propType}"
+                        )
                     )
             );
             prop.SetValue(instance, value);

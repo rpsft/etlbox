@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Dynamic;
 using System.Xml;
 using System.Xml.Schema;
@@ -12,10 +11,7 @@ namespace ETLBox.Serialization.Tests
     [Serializable]
     public class EtlDataFlowStep : IDataFlow, IXmlSerializable
     {
-        private readonly ConcurrentDictionary<
-            (Type type, string? key),
-            IConnectionManager
-        > _connectionManagers = new();
+        private readonly DataFlowResources _resources = new();
 
         public Guid? ReferenceId { get; set; }
 
@@ -27,8 +23,7 @@ namespace ETLBox.Serialization.Tests
             Type connectionManagerType,
             string? key,
             Func<Type, string?, IConnectionManager> factory
-        ) =>
-            _connectionManagers.GetOrAdd((connectionManagerType, key), k => factory(k.type, k.key));
+        ) => _resources.GetOrAddConnectionManager(connectionManagerType, key, factory);
 
         public IDataFlowSource<ExpandoObject> Source { get; set; } = null!;
 
@@ -59,11 +54,18 @@ namespace ETLBox.Serialization.Tests
             Task.WaitAll(tasks, CancellationToken.None);
         }
 
+        public IDisposable GetOrAddResource(string key, Func<IDisposable> factory) =>
+            _resources.GetOrAddResource(key, factory);
+
         /// <summary>
-        /// Method for check a connectionManagers added for dispose
+        /// Method for checking connection managers added for disposal.
         /// </summary>
-        /// <returns></returns>
-        public int ConnectionManagerCount() => _connectionManagers.Count;
+        public int ConnectionManagerCount() => _resources.ConnectionManagerCount;
+
+        /// <summary>
+        /// Method for checking disposable resources added for disposal.
+        /// </summary>
+        public int ResourceCount() => _resources.ResourceCount;
 
         public void Dispose()
         {
@@ -74,14 +76,8 @@ namespace ETLBox.Serialization.Tests
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
-            {
                 return;
-            }
-
-            foreach (var value in _connectionManagers.Values)
-            {
-                value.Dispose();
-            }
+            _resources.Dispose();
         }
     }
 }

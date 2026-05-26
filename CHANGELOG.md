@@ -32,6 +32,14 @@ All notable changes to this project will be documented in this file.
   `ETLBox.Serialization`. Components can now take control of their XML deserialization while still
   creating child objects through the reader's DI-aware factory.
 
+- New: `IDataFlow.GetOrAddResource(string key, Func<IDisposable> factory)` and the generic
+  `DataFlowExtensions.GetOrAddResource<T>` extension. `DataFlowXmlReader` now automatically
+  registers any `IDisposable` component property with the owning `IDataFlow` for lifetime management.
+  Components with identical XML configuration share a single instance (deduplicated by type + content
+  key); all registered resources are disposed when the flow is disposed. This applies to both
+  concrete class properties (e.g., `MongoClient`) and abstract/interface properties that resolve to
+  an `IDisposable` implementation.
+
 - New: `PassThrough` property on `JsonTransformation`. When `true`, all input fields are copied to
   the output before `Mappings` are applied, allowing mappings to add new fields or override copied
   ones. When `false` (default), only mapped fields are emitted.
