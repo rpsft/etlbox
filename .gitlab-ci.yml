@@ -140,61 +140,26 @@ test_job:
         coverage_format: cobertura
         path: ./**/coverage.cobertura.xml
 
-# Pilot: runs the same test suite against KubeDock instead of docker:dind.
-# Routed to docker1 specifically via the fleet-branch:develop runner tag,
-# where the KubeDock service was deployed by SYSOPS-1668 / sysops!15.
+# Pilot: smoke-tests KubeDock with a single MongoDB Testcontainers test.
+# Routed to docker1 via the fleet-branch:develop runner tag (KubeDock is
+# only deployed there for now — SYSOPS-1668).
 #
-# allow_failure: true while piloting — if KubeDock has teething problems
-# (e.g. registry-mirror not wired up at containerd level, Pod quota, etc.),
-# the rest of the pipeline still proceeds via the DinD-based test_job.
+# Deliberately narrow while we iterate on KubeDock cluster-side config:
+#   - only ETLBox.MongoDB.Tests project is built (no full solution)
+#   - only one test method is executed (Execute_ReceivesInsertedDocuments_InOrder)
+#   - no GitLab service containers (mysql/postgres/mssql/clickhouse/kafka
+#     aren't touched by this single test)
+# This keeps the pilot feedback loop ~2-3 minutes. Once KubeDock proves out,
+# we'll widen the filter back to the full Testcontainers-using surface and
+# eventually retire the DinD-based test_job. See SYSOPS-1668 roadmap.
 #
-# Intentionally duplicates the test_job body rather than extending a hidden
-# template: GitLab !reference does not flatten array values when used inside
-# arrays (it nests them), so the services list can't be cleanly shared.
-# Once KubeDock proves stable across the full test surface, test_job will be
-# retired and this duplication collapses. See SYSOPS-1668 roadmap.
+# allow_failure: true so any KubeDock teething doesn't block the pipeline
+# (publish:internal etc. still depend only on test_job).
 test_job_kubedock:
   needs:
     - get_unique_semversion
   tags:
     - fleet-branch:develop
-  services:
-    - name: mysql/mysql-server
-      alias: localmysql
-      variables:
-        MYSQL_ROOT_HOST: '%'
-        MYSQL_ROOT_PASSWORD: 'etlboxpassword'
-    - name: postgres
-      alias: localpostgres
-      variables:
-        POSTGRES_PASSWORD: 'etlboxpassword'
-        LANG: en_US.utf8
-    - name: mcr.microsoft.com/azure-sql-edge
-      alias: localmssql
-      variables:
-        ACCEPT_EULA: 'Y'
-        SA_PASSWORD: 'YourStrong@Passw0rd'
-        MSSQL_PID: 'Developer'
-    - name: clickhouse/clickhouse-server
-      alias: localclickhouse
-      variables:
-        CLICKHOUSE_USER: clickhouse
-        CLICKHOUSE_PASSWORD: Qwe123456
-        CLICKHOUSE_MAX_CONNECTIONS: 100
-    - name: apache/kafka:latest
-      alias: kafka
-      variables:
-        KAFKA_NODE_ID: '1'
-        KAFKA_PROCESS_ROLES: 'broker,controller'
-        KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
-        KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093'
-        KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
-        KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
-        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
-        KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: '1'
-        KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: '1'
-        KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: '0'
-        CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
   variables:
     # KubeDock service deployed in the gitlab-runner namespace on docker1 by
     # SYSOPS-1668 / sysops!15. Replaces docker:dind for Testcontainers calls.
@@ -205,16 +170,13 @@ test_job_kubedock:
     TESTCONTAINERS_RYUK_DISABLED: 'true'
     TESTCONTAINERS_CHECKS_DISABLE: 'true'
   before_script:
-    - pushd test
-    - pwsh ./Set-Configuration.ps1 gitlab-ci
-    - popd
-    - dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools || true
-    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet build ETLBox.MongoDB.Tests/ETLBox.MongoDB.Tests.csproj --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
   script:
     - >
-      dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
+      dotnet test ETLBox.MongoDB.Tests/ETLBox.MongoDB.Tests.csproj --no-build --configuration=Release
+      --filter="FullyQualifiedName~ETLBox.MongoDB.Tests.MongoChangeStreamSourceTests.Execute_ReceivesInsertedDocuments_InOrder"
+      --logger="console;verbosity=detailed"
       --logger="junit;LogFilePath=../artifacts/{assembly}-test-result-kubedock.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
-      --collect="XPlat Code Coverage"
   after_script:
     - echo 'KubeDock pilot run complete'
   artifacts:
