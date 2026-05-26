@@ -79,6 +79,15 @@ All notable changes to this project will be documented in this file.
   Previously only file paths were supported, making it impossible to reference system assemblies
   already loaded in the process.
 
+- New: `NullableContextOptions` property on `ScriptedRowTransformation<TInput, TOutput>` (and the
+  non-generic alias `ScriptedTransformation`). Controls the nullable annotation context for
+  compiled `Mappings` expressions. Defaults to `NullableContextOptions.Disable` for backward
+  compatibility. Set to `NullableContextOptions.Enable` to use nullable annotations such as
+  `string?` and the null-conditional operator `?.` inside scripts.
+
+  `TypedScriptBuilder.WithNullableContextOptions(NullableContextOptions)` is also available for
+  direct users of the low-level scripting API.
+
 🐛 Bug Fixes
 
 - Fixed: `AdditionalAssemblyNames` was silently ignored when using typed `TInput`/`TOutput` (i.e.

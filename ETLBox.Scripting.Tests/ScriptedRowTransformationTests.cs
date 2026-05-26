@@ -4,6 +4,7 @@ using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Scripting;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
+using Microsoft.CodeAnalysis;
 
 namespace ETLBox.Scripting.Tests;
 
@@ -539,6 +540,115 @@ public class ScriptedRowTransformationTests
         // Assert
         Assert.Empty(diagnostics);
         Assert.Equal("1", result?.ToString());
+    }
+
+    [Fact]
+    public void NullableContextOptions_DefaultIsDisable()
+    {
+        // Arrange & Act
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>();
+
+        // Assert — default preserves backward compatibility.
+        Assert.Equal(NullableContextOptions.Disable, script.NullableContextOptions);
+    }
+
+    [Fact]
+    public void NullableContextOptions_Disable_RejectsNullableAnnotationSyntax()
+    {
+        // Arrange. A nullable annotation produces CS8632 when the script is compiled
+        // with nullable disabled; any diagnostic blocks the runner and routes to errors.
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>();
+        script.Mappings.Add("Result", "((string?)Name) ?? \"fallback\"");
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        var errorDestination = new MemoryDestination<ETLBoxError>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+        script.LinkErrorTo(errorDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+        errorDestination.Wait();
+
+        // Assert
+        Assert.Single(errorDestination.Data);
+    }
+
+    [Fact]
+    public void NullableContextOptions_Enable_AllowsNullableAnnotationSyntax_Dynamic()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            NullableContextOptions = NullableContextOptions.Enable,
+        };
+        script.Mappings.Add("Result", "((string?)Name) ?? \"fallback\"");
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var row = (IDictionary<string, object?>)memoryDestination.Data.First();
+        Assert.Equal("Test", row["Result"]);
+    }
+
+    [Fact]
+    public void NullableContextOptions_Enable_AllowsNullableAnnotationSyntax_Typed()
+    {
+        // Arrange
+        var memorySource = new MemorySource<MyRowType>();
+        memorySource.DataAsList.Add(new MyRowType { Id = 1, Name = "Test" });
+        var script = new ScriptedRowTransformation<MyRowType, MyRowType>
+        {
+            NullableContextOptions = NullableContextOptions.Enable,
+        };
+        script.Mappings.Add("Name", "((string?)Name) ?? \"fallback\"");
+        var memoryDestination = new MemoryDestination<MyRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Single(memoryDestination.Data, row => row.Name == "Test");
+    }
+
+    [Fact]
+    public void NullableContextOptions_Enable_AcceptsUserDefinedNullableDirective()
+    {
+        // Arrange — user already starts their script with `#nullable enable`.
+        // Our injection prepends another directive; Roslyn collapses consecutive
+        // same-state directives, so compilation must succeed.
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            NullableContextOptions = NullableContextOptions.Enable,
+        };
+        script.Mappings.Add("Result", "#nullable enable\n((string?)Name) ?? \"fallback\"");
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var row = (IDictionary<string, object?>)memoryDestination.Data.First();
+        Assert.Equal("Test", row["Result"]);
     }
 
     private static ExpandoObject CreateTestDataItem(int id, string name)

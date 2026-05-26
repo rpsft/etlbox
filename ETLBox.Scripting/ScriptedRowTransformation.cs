@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using ALE.ETLBox.Common.DataFlow;
 using JetBrains.Annotations;
+using Microsoft.CodeAnalysis;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.Logging;
 
@@ -58,6 +59,15 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     /// Each entry is a namespace string such as <c>"System.Text.Json"</c>.
     /// </summary>
     public IEnumerable<string> AdditionalImports { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Controls the nullable annotation context for compiled script expressions in <see cref="Mappings"/>.
+    /// Defaults to <see cref="NullableContextOptions.Disable"/> for backward compatibility.
+    /// Set to <see cref="NullableContextOptions.Enable"/> to allow nullable annotations
+    /// such as <c>string?</c> and null-conditional operators inside scripts.
+    /// </summary>
+    public NullableContextOptions NullableContextOptions { get; set; } =
+        NullableContextOptions.Disable;
 
     /// <summary>
     /// Indicates if transformation should fail when missing mapping field on source.
@@ -133,7 +143,8 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         var type = ScriptBuilder
             .Default.ForType(arg)
             .WithReferences(_additionalAssemblies)
-            .WithImports(AdditionalImports);
+            .WithImports(AdditionalImports)
+            .WithNullableContextOptions(NullableContextOptions);
 
         foreach (var key in Mappings.Keys)
         {
@@ -186,7 +197,8 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         var builder = ScriptBuilder
             .Default.ForType<TInput>()
             .WithReferences(_additionalAssemblies)
-            .WithImports(AdditionalImports);
+            .WithImports(AdditionalImports)
+            .WithNullableContextOptions(NullableContextOptions);
         foreach (var key in Mappings.Keys)
         {
             var runner = GetScriptRunner(key, builder);
