@@ -178,6 +178,27 @@ var source = new PostgresXminTailSource<MyRow>
 };
 ```
 
+> **Security:** `AdditionalWhere` is interpolated verbatim into the polling SQL.
+> Treat it like a hard-coded code fragment — never concatenate values that arrive
+> from external input (HTTP requests, configuration files, untrusted message
+> payloads), or you will introduce SQL injection. Use literal predicates only.
+
+### Caveat: xmin wraparound
+
+PostgreSQL's `xid`/`xmin` is a 32-bit transaction counter that wraps around every
+~2 billion transactions. The xmin **frontier** is correct in the steady state
+(it always reflects the current epoch), but a frontier-only resume across a
+wraparound boundary is unsafe — old rows from a previous epoch may compare as
+"newer than" the new frontier.
+
+The source mitigates this by using `OrderByColumns` + `CheckpointStore`: the
+checkpoint cursor is the durable progress marker, while the xmin frontier only
+serves to exclude rows from currently-open transactions. If you need long-term
+durability across potential wraparounds (e.g., very high-throughput databases
+running for years without `VACUUM FREEZE`), make sure your `OrderByColumns` are
+strictly monotonic application-level identifiers (BIGINT identity, timestamp,
+ULID) and not derived from xmin itself.
+
 ### Key properties
 
 | Property | Default | Description |

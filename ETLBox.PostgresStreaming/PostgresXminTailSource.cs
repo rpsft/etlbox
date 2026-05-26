@@ -86,7 +86,11 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
             {
                 ct.ThrowIfCancellationRequested();
                 var output = RowMapper(reader);
-                Buffer.SendAsync(output, CancellationToken.None).Wait(CancellationToken.None);
+                // Propagate the source's cancellation token into SendAsync so that
+                // backpressure from a bounded downstream buffer doesn't trap the
+                // polling loop after Cancel() — see RSSL-11703 regression test
+                // Execute_CancellationDuringBlockedSendAsync_ReturnsPromptly.
+                Buffer.SendAsync(output, ct).GetAwaiter().GetResult();
                 lastCursorValues = ReadCursorValues(reader);
                 rowsRead++;
                 LogProgress();

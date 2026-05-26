@@ -1,3 +1,6 @@
+using System.Data;
+using System.Reflection;
+using System.Threading.Tasks.Dataflow;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
@@ -204,6 +207,127 @@ public sealed class PostgresXminTailSourceTests : IClassFixture<PostgresContaine
 
         // Commit the slow transaction — subsequent poll should pick it up
         openTransaction.Commit();
+    }
+
+    [Fact]
+    public void Execute_ExecuteReaderThrows_DoesNotLeakConnection()
+    {
+        // Regression: ExecuteQuery() opens the connection but doesn't pair the Open()
+        // with CloseIfAllowed() on the exception path. If ExecuteReader throws (e.g.,
+        // unknown relation), the DisposableDataReader constructor never finishes, so
+        // its CommandBehavior.CloseConnection safety net never fires either, and the
+        // connection stays open on the manager until cm.Dispose() — a leak.
+
+        using var cm = new PostgresConnectionManager(_fixture.ConnectionString)
+        {
+            LeaveOpen = false,
+        };
+
+        var destination = new CustomDestination<(long Id, string Name)>(_ => { });
+        using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+        var source = new PostgresXminTailSource<(long Id, string Name)>
+        {
+            ConnectionManager = cm,
+            TableName = "table_that_does_not_exist__rssl11703",
+            Schema = "public",
+            OrderByColumns = new[] { "id" },
+            BatchSize = 100,
+            PollingInterval = TimeSpan.FromMilliseconds(50),
+            RowMapper = r => ((long)r["id"], (string)r["name"]),
+        };
+        source.LinkTo(destination);
+
+        // ExecuteReader on the unknown relation surfaces a PostgresException.
+        Assert.ThrowsAny<Exception>(() => source.Execute(tokenSource.Token));
+        destination.Wait();
+
+        // With LeaveOpen=false, after Execute returns the manager must not retain
+        // an open underlying connection — every Open() must be paired with a close.
+        Assert.True(
+            cm.State is null or ConnectionState.Closed,
+            $"Connection leaked after ExecuteReader threw — expected Closed/null, got {cm.State}."
+        );
+    }
+
+    [Fact]
+    public async Task Execute_CancellationDuringBlockedSendAsync_ReturnsPromptly()
+    {
+        // Regression: RunPollingLoop calls
+        //   Buffer.SendAsync(item, CancellationToken.None).Wait(CancellationToken.None)
+        // — neither the SendAsync nor the Wait observes the source's cancellation
+        // token. When the BufferBlock is bounded (e.g., a downstream pipeline applies
+        // backpressure via BoundedCapacity propagation), SendAsync blocks indefinitely
+        // on capacity, and cancelling the source has no effect.
+        //
+        // This test forces the bounded-buffer scenario by replacing the source's
+        // unbounded Buffer with a BoundedCapacity=1 BufferBlock and leaving it without
+        // a consumer. The source must still return after Cancel within a reasonable
+        // budget.
+        const string tableName = "events_sendasync_cancel_test";
+        SetupTableWithRows(tableName, 5);
+
+        using var cm = CreateConnectionManager();
+        var source = new PostgresXminTailSource<(long Id, string Name)>
+        {
+            ConnectionManager = cm,
+            TableName = tableName,
+            Schema = "public",
+            OrderByColumns = new[] { "id" },
+            BatchSize = 100,
+            PollingInterval = TimeSpan.FromMilliseconds(50),
+            RowMapper = r => ((long)r["id"], (string)r["name"]),
+        };
+        ReplaceBufferWithBounded(source, capacity: 1);
+
+        using var tokenSource = new CancellationTokenSource();
+        var task = Task.Run(() => source.Execute(tokenSource.Token), CancellationToken.None);
+
+        // Give the source enough time to enter the SendAsync-blocked state on the
+        // second row (capacity=1, no consumer means the second SendAsync blocks).
+        await Task.Delay(500, CancellationToken.None).ConfigureAwait(true);
+
+        await tokenSource.CancelAsync().ConfigureAwait(true);
+
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(true);
+        }
+        catch (TimeoutException)
+        {
+            Assert.Fail(
+                "Execute did not return within 5s after cancellation — Buffer.SendAsync.Wait(CancellationToken.None) ignored the token."
+            );
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected — source observed the token and faulted the task.
+        }
+    }
+
+    private void SetupTableWithRows(string tableName, int rowCount)
+    {
+        using var conn = new NpgsqlConnection(_fixture.ConnectionString);
+        conn.Open();
+        SetupTestTable(conn, tableName);
+        for (var i = 0; i < rowCount; i++)
+            InsertRow(conn, tableName, $"row{i}");
+    }
+
+    private static void ReplaceBufferWithBounded<TOutput>(
+        PostgresXminTailSource<TOutput> source,
+        int capacity
+    )
+    {
+        var bounded = new BufferBlock<TOutput>(
+            new DataflowBlockOptions { BoundedCapacity = capacity }
+        );
+        var prop = typeof(DataFlowSource<TOutput>).GetProperty(
+            "Buffer",
+            BindingFlags.NonPublic | BindingFlags.Instance
+        );
+        Assert.NotNull(prop);
+        prop!.SetValue(source, bounded);
     }
 
     [Fact]

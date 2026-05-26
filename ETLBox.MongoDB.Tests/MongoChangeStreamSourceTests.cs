@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Threading.Tasks.Dataflow;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using MongoDB.Bson;
@@ -154,6 +156,84 @@ public sealed class MongoChangeStreamSourceTests : IClassFixture<MongoContainerF
         destSecond.Wait();
 
         Assert.Equal(new[] { "third", "fourth" }, secondRun);
+    }
+
+    [Fact]
+    public async Task Execute_CancellationDuringBlockedSendAsync_ReturnsPromptly()
+    {
+        // Regression: RunChangeStreamLoop calls
+        //   Buffer.SendAsync(item, CancellationToken.None).Wait(CancellationToken.None)
+        // — neither the SendAsync nor the Wait observes the source's cancellation
+        // token. When the BufferBlock is bounded (e.g., a downstream pipeline applies
+        // backpressure via BoundedCapacity propagation), SendAsync blocks indefinitely
+        // on capacity, and cancelling the source has no effect.
+        //
+        // Force the bounded-buffer scenario by replacing the source's unbounded Buffer
+        // with a BoundedCapacity=1 BufferBlock and leaving it without a consumer. The
+        // source must still return after Cancel within a reasonable budget.
+        var client = CreateClient();
+        var collection = GetCollection(client, "change_stream_cancel_send");
+
+        using var tokenSource = new CancellationTokenSource();
+        var source = new MongoChangeStreamSource<string>
+        {
+            MongoClient = client,
+            Database = DatabaseName,
+            Collection = "change_stream_cancel_send",
+            MaxAwaitTime = TimeSpan.FromMilliseconds(200),
+            EventMapper = doc => doc.FullDocument["name"].AsString,
+        };
+        ReplaceBufferWithBounded(source, capacity: 1);
+
+        var task = Task.Run(() => source.Execute(tokenSource.Token), CancellationToken.None);
+
+        // Allow the change-stream cursor to open before inserting.
+        await Task.Delay(500, CancellationToken.None).ConfigureAwait(true);
+
+        // Push enough events to fill the bounded buffer (capacity 1) and block the
+        // source on its second SendAsync.
+        for (var i = 0; i < 5; i++)
+        {
+            await collection
+                .InsertOneAsync(new BsonDocument { { "name", $"row{i}" } })
+                .ConfigureAwait(true);
+        }
+
+        // Give the source time to enter the blocked SendAsync state.
+        await Task.Delay(500, CancellationToken.None).ConfigureAwait(true);
+
+        await tokenSource.CancelAsync().ConfigureAwait(true);
+
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(true);
+        }
+        catch (TimeoutException)
+        {
+            Assert.Fail(
+                "Execute did not return within 5s after cancellation — Buffer.SendAsync.Wait(CancellationToken.None) ignored the token."
+            );
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected — source observed the token and faulted the task.
+        }
+    }
+
+    private static void ReplaceBufferWithBounded<TOutput>(
+        MongoChangeStreamSource<TOutput> source,
+        int capacity
+    )
+    {
+        var bounded = new BufferBlock<TOutput>(
+            new DataflowBlockOptions { BoundedCapacity = capacity }
+        );
+        var prop = typeof(DataFlowSource<TOutput>).GetProperty(
+            "Buffer",
+            BindingFlags.NonPublic | BindingFlags.Instance
+        );
+        Assert.NotNull(prop);
+        prop!.SetValue(source, bounded);
     }
 
     [Fact]

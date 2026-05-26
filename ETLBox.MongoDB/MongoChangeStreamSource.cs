@@ -99,7 +99,11 @@ public class MongoChangeStreamSource<TOutput> : DataFlowSource<TOutput>
                 {
                     ct.ThrowIfCancellationRequested();
                     var output = EventMapper(doc);
-                    Buffer.SendAsync(output, CancellationToken.None).Wait(CancellationToken.None);
+                    // Propagate the source's cancellation token into SendAsync so that
+                    // backpressure from a bounded downstream buffer doesn't trap the
+                    // change-stream loop after Cancel() — see RSSL-11703 regression test
+                    // Execute_CancellationDuringBlockedSendAsync_ReturnsPromptly.
+                    Buffer.SendAsync(output, ct).GetAwaiter().GetResult();
                     resumeToken = doc.ResumeToken;
                     LogProgress();
                 }
