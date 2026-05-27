@@ -141,10 +141,12 @@ test_job:
         path: ./**/coverage.cobertura.xml
 
 # Pilot: smoke-tests KubeDock with a single MongoDB Testcontainers test.
-# Routed to docker1 via the fleet-branch:develop runner tag (KubeDock is
-# only deployed there for now — SYSOPS-1668).
+# KubeDock is now deployed on all clusters (SYSOPS-1668, released to master).
+# This pilot is pinned to a *production* runner via the fleet-branch:master
+# tag to verify KubeDock works on office-k3s / k3s-nvme — not just docker1
+# where it was first validated.
 #
-# Deliberately narrow while we iterate on KubeDock cluster-side config:
+# Deliberately narrow while we iterate on KubeDock:
 #   - only ETLBox.MongoDB.Tests project is built (no full solution)
 #   - only one test method is executed (Execute_ReceivesInsertedDocuments_InOrder)
 #   - no GitLab service containers (mysql/postgres/mssql/clickhouse/kafka
@@ -159,10 +161,11 @@ test_job_kubedock:
   needs:
     - get_unique_semversion
   tags:
-    - fleet-branch:develop
+    - fleet-branch:master
   variables:
-    # KubeDock service deployed in the gitlab-runner namespace on docker1 by
-    # SYSOPS-1668 / sysops!15. Replaces docker:dind for Testcontainers calls.
+    # KubeDock service in the gitlab-runner namespace (deployed on every
+    # cluster by SYSOPS-1668). Replaces docker:dind for Testcontainers calls.
+    # The hostname resolves to the local cluster's KubeDock pod.
     DOCKER_HOST: tcp://kubedock.gitlab-runner.svc.cluster.local:2475
     PACKAGE_VERSION: ${GitVersion_SemVer}
     # Required by KubeDock: it doesn't implement Ryuk; cleanup is handled by
