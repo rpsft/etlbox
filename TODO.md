@@ -51,6 +51,10 @@
   - New component alongside `LookupTransformation` with serializable `MatchColumns`/`RetrieveColumns` POCO lists
   - `DictionarySource: IDataFlowSource<T>` property deserialized via existing `DataFlowXmlReader` mechanism (no reader changes)
   - Optional `ScriptedFieldLookupTransformation` in `ETLBox.Scripting` with Roslyn enrichment script string
+- [PostgresLogicalReplicationSource — WAL/CDC streaming source](docs/tech-debt/TECH-DEBT-Postgres-Logical-Replication-Source.md)
+  - Net-new source in `ETLBox.PostgresStreaming` over `Npgsql.Replication` (built-in `pgoutput`, no extension)
+  - Complements (does not replace) `PostgresXminTailSource`: full ordered change log incl. DELETEs and every intermediate UPDATE, sub-second latency
+  - Resume token = LSN via existing `ICheckpointStore`; deferred to V3+ per MLRSSL-1509 §5.8
 
 ## Other
 
