@@ -1,16 +1,30 @@
+using System;
+using System.Collections.Concurrent;
 using ALE.ETLBox.Common.DataFlow.Streaming;
 
 namespace ETLBox.MongoDB.Tests;
 
-internal sealed class InMemoryCheckpointStore : ICheckpointStore
+internal sealed class InMemoryCheckpointStore<TPosition> : ICheckpointStore<TPosition>
+    where TPosition : IComparable<TPosition>
 {
-    private string? _payload;
+    private readonly ConcurrentDictionary<string, TPosition> _positions = new();
 
-    public Task<string?> LoadAsync(CancellationToken ct) => Task.FromResult(_payload);
+    public int CommitCount { get; private set; }
 
-    public Task SaveAsync(string payload, CancellationToken ct)
+    public Task<(bool Found, TPosition Position)> LoadAsync(
+        string checkpointId,
+        CancellationToken ct
+    ) =>
+        Task.FromResult(
+            _positions.TryGetValue(checkpointId, out var p)
+                ? (true, p)
+                : (false, default(TPosition)!)
+        );
+
+    public Task CommitAsync(string checkpointId, TPosition position, CancellationToken ct)
     {
-        _payload = payload;
+        _positions[checkpointId] = position;
+        CommitCount++;
         return Task.CompletedTask;
     }
 }

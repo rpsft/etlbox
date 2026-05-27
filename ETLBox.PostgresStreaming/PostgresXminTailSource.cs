@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -47,10 +46,19 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
     public TimeSpan PollingInterval { get; set; } = TimeSpan.FromSeconds(1);
 
     /// <summary>
-    /// Stores and retrieves the streaming cursor across restarts.
+    /// Loads the resume position across restarts (load-only — the source never commits).
     /// If <c>null</c>, the source always starts from the beginning of the table.
+    /// The durable position is advanced downstream by a <c>CheckpointWriter</c> after the
+    /// destination has persisted the records (at-least-once), never at emit time.
     /// </summary>
-    public ICheckpointStore? CheckpointStore { get; set; }
+    public ICheckpointStore<long>? CheckpointStore { get; set; }
+
+    /// <summary>
+    /// Identifies this consumer's checkpoint in <see cref="CheckpointStore"/>. The same stream
+    /// can be tailed by several consumers, each with its own id. Must match the
+    /// <c>CheckpointId</c> of the paired <c>CheckpointWriter</c>.
+    /// </summary>
+    public string CheckpointId { get; set; } = null!;
 
     /// <summary>Maps a data record row to the output type. Required.</summary>
     public Func<IDataRecord, TOutput> RowMapper { get; set; } = null!;
@@ -73,7 +81,7 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
 
     private void RunPollingLoop(CancellationToken ct)
     {
-        var checkpoint = LoadCheckpoint(ct);
+        var cursor = LoadCursor(ct);
 
         while (!ct.IsCancellationRequested)
         {
@@ -81,7 +89,7 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
             var rowsRead = 0;
             object?[]? lastCursorValues = null;
 
-            using var reader = ExecuteQuery(frontier, checkpoint);
+            using var reader = ExecuteQuery(frontier, cursor);
             while (reader.Read())
             {
                 ct.ThrowIfCancellationRequested();
@@ -98,8 +106,10 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
 
             if (rowsRead > 0 && lastCursorValues != null)
             {
-                checkpoint = new CheckpointPayload(lastCursorValues);
-                SaveCheckpoint(checkpoint, ct);
+                // Advance the ephemeral in-memory read cursor for the next batch. The durable
+                // checkpoint is NOT written here — a downstream CheckpointWriter commits it after
+                // the destination persists (at-least-once). See ICheckpointStore.
+                cursor = lastCursorValues;
             }
             else
             {
@@ -124,16 +134,16 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
         }
     }
 
-    private IDataReader ExecuteQuery(long frontier, CheckpointPayload? checkpoint)
+    private IDataReader ExecuteQuery(long frontier, object?[]? cursor)
     {
-        var sql = BuildQuery(frontier, checkpoint, out var parameters);
+        var sql = BuildQuery(frontier, cursor, out var parameters);
         ConnectionManager.Open();
         return ConnectionManager.ExecuteReader(sql, parameters);
     }
 
     private string BuildQuery(
         long frontier,
-        CheckpointPayload? checkpoint,
+        object?[]? cursor,
         out List<IQueryParameter> parameters
     )
     {
@@ -145,9 +155,9 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
         query.Append(" WHERE xmin::text::bigint < @_frontier");
         parameters.Add(new QueryParameter("_frontier", frontier));
 
-        if (checkpoint != null && OrderByColumns.Length > 0)
+        if (cursor != null && OrderByColumns.Length > 0)
         {
-            AppendTupleCursor(query, parameters, checkpoint.Values);
+            AppendTupleCursor(query, parameters, cursor);
         }
 
         if (!string.IsNullOrWhiteSpace(AdditionalWhere))
@@ -209,49 +219,17 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
         return values;
     }
 
-    private CheckpointPayload? LoadCheckpoint(CancellationToken ct)
-    {
-        var json = CheckpointStore?.LoadAsync(ct).GetAwaiter().GetResult();
-        if (json == null)
-            return null;
-        var payload = JsonSerializer.Deserialize<CheckpointPayload>(json);
-        if (payload == null)
-            return null;
-        for (var i = 0; i < payload.Values.Length; i++)
-        {
-            if (payload.Values[i] is JsonElement element)
-                payload.Values[i] = ConvertJsonElement(element);
-        }
-        return payload;
-    }
-
-    private static object? ConvertJsonElement(JsonElement element) =>
-        element.ValueKind switch
-        {
-            JsonValueKind.Number when element.TryGetInt64(out var l) => l,
-            JsonValueKind.Number => element.GetDouble(),
-            JsonValueKind.String when element.TryGetDateTimeOffset(out var dto) => dto,
-            JsonValueKind.String when element.TryGetGuid(out var g) => g,
-            JsonValueKind.String => element.GetString(),
-            JsonValueKind.True => true,
-            JsonValueKind.False => false,
-            _ => null,
-        };
-
-    private void SaveCheckpoint(CheckpointPayload payload, CancellationToken ct)
+    // Cold-start resume: load the durable StreamPosition committed by the CheckpointWriter and
+    // seed the single-column tuple cursor with it. The source itself never commits.
+    private object?[]? LoadCursor(CancellationToken ct)
     {
         if (CheckpointStore == null)
-            return;
-        var json = JsonSerializer.Serialize(payload);
-        CheckpointStore.SaveAsync(json, ct).GetAwaiter().GetResult();
-    }
-
-    private sealed class CheckpointPayload
-    {
-        public object?[] Values { get; set; }
-
-        [System.Text.Json.Serialization.JsonConstructor]
-        public CheckpointPayload(object?[] values) => Values = values;
+            return null;
+        var (found, position) = CheckpointStore
+            .LoadAsync(CheckpointId, ct)
+            .GetAwaiter()
+            .GetResult();
+        return found ? new object?[] { position } : null;
     }
 
     private sealed class QueryParameter : IQueryParameter

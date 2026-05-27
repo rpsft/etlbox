@@ -10,25 +10,48 @@ All notable changes to this project will be documented in this file.
 
 - New package `ETLBox.MongoDB`: `MongoChangeStreamSource<TOutput>` tails a MongoDB change stream
   and emits one record per change event. Requires a replica set deployment. Accepts a caller-provided
-  `IMongoClient`, an optional aggregation `Pipeline` for server-side filtering, and an optional
-  `CheckpointStore` to resume from the last resume token after a restart.
+  `IMongoClient`, an optional aggregation `Pipeline` for server-side filtering, and (for resumable
+  processing) a `CheckpointStore` + `CheckpointId`. To checkpoint, surface the change-stream resume
+  token on the mapped output so the `CheckpointWriter` can commit it (see below).
 
 - New package `ETLBox.PostgresStreaming`: `PostgresXminTailSource<TOutput>` continuously polls a
   PostgreSQL table using `xmin`-frontier polling
   (`pg_snapshot_xmin(pg_current_snapshot())`). Rows inserted by in-flight transactions are excluded
-  from each batch and automatically picked up once their transaction commits. Supports tuple-cursor
+  from each batch and automatically picked up once their transaction commits. Supports cursor
   pagination via `OrderByColumns`, server-side predicate filtering via `AdditionalWhere`, and
-  resumable processing via `CheckpointStore`.
+  resumable processing via `CheckpointStore` + `CheckpointId`. To stream UPDATEs (not just INSERTs)
+  the cursor column must be re-stamped on every write (e.g. a `bigint` filled by a server-side
+  sequence); use a server-side value, not an app-generated one, or concurrent writers can defeat the
+  frontier.
 
-- New: `ICheckpointStore` interface in `ETLBox.Common.DataFlow.Streaming`. Implement it to persist
-  streaming cursors across restarts in any backend (Redis, database, file, etc.). Both
-  `MongoChangeStreamSource` and `PostgresXminTailSource` accept an optional `CheckpointStore`.
+- New: at-least-once checkpointing in `ETLBox.Common.DataFlow.Streaming`.
+  - `ICheckpointStore<TPosition>` (`where TPosition : IComparable<TPosition>`) persists a typed,
+    monotone stream position keyed by `checkpointId` — one stream can be tailed by many independent
+    consumers, each with its own checkpoint (the Kafka consumer-group model).
+  - `CheckpointWriter<TInput, TPosition>` is a terminal destination placed after the real
+    destination; it commits the position (extracted from the record via a `Position` selector) only
+    once a record has been durably written downstream, advancing strictly forward. A crash between
+    the destination write and the commit replays the record (a duplicate) rather than dropping it —
+    at-least-once; consumers must be idempotent. For a co-located destination + checkpoint, call
+    `CommitAsync` inside the destination's transaction for effective exactly-once.
+  - `DbCheckpointStore<TPosition>` is a ready-made store over an ETLBox `IConnectionManager`
+    (configurable table/key/position columns; positions stored natively).
+  - The sources are load-only: they load the committed position on start and never commit it
+    themselves. Implement `ICheckpointStore<TPosition>` for any backend (Redis, database, file, …).
 
 - New: `DataFlowResources` helper class in `ETLBox.Serialization`. Provides a composable,
   thread-safe implementation of `IDataFlow` resource ownership (connection manager pool and
   disposable resource pool). Embed it as a field and delegate `GetOrAddConnectionManager` and
   `GetOrAddResource` to it to avoid re-implementing the `ConcurrentDictionary` boilerplate in every
   `IDataFlow` implementor.
+
+- New: `IDataFlow.GetOrAddResource(string key, Func<IDisposable> factory)` and the generic
+  `DataFlowExtensions.GetOrAddResource<T>` extension. `DataFlowXmlReader` now automatically
+  registers any `IDisposable` component property with the owning `IDataFlow` for lifetime management.
+  Components with identical XML configuration share a single instance (deduplicated by type + content
+  key); all registered resources are disposed when the flow is disposed. This applies to both
+  concrete class properties (e.g., `MongoClient`) and abstract/interface properties that resolve to
+  an `IDisposable` implementation.
 
 <a name="1.18.0"></a>
 
@@ -59,14 +82,6 @@ All notable changes to this project will be documented in this file.
 - New: `IDataFlowXmlSerializable` and `IDataFlowXmlContext` extension points in
   `ETLBox.Serialization`. Components can now take control of their XML deserialization while still
   creating child objects through the reader's DI-aware factory.
-
-- New: `IDataFlow.GetOrAddResource(string key, Func<IDisposable> factory)` and the generic
-  `DataFlowExtensions.GetOrAddResource<T>` extension. `DataFlowXmlReader` now automatically
-  registers any `IDisposable` component property with the owning `IDataFlow` for lifetime management.
-  Components with identical XML configuration share a single instance (deduplicated by type + content
-  key); all registered resources are disposed when the flow is disposed. This applies to both
-  concrete class properties (e.g., `MongoClient`) and abstract/interface properties that resolve to
-  an `IDisposable` implementation.
 
 - New: `PassThrough` property on `JsonTransformation`. When `true`, all input fields are copied to
   the output before `Mappings` are applied, allowing mappings to add new fields or override copied

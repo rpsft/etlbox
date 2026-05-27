@@ -2,6 +2,7 @@ using System.Data;
 using System.Reflection;
 using System.Threading.Tasks.Dataflow;
 using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.Common.DataFlow.Streaming;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
 using JetBrains.Annotations;
@@ -97,67 +98,121 @@ public sealed class PostgresXminTailSourceTests : IClassFixture<PostgresContaine
     [Fact]
     public void Execute_WithCheckpoint_ResumesFromLastPosition()
     {
+        // A CheckpointWriter commits the StreamPosition (here: id) AFTER the destination, so the
+        // second run resumes past everything the first run durably processed — no duplicates.
         const string tableName = "events_checkpoint_test";
+        const string checkpointId = "pg-resume-test";
         using var conn = new NpgsqlConnection(_fixture.ConnectionString);
         conn.Open();
         SetupTestTable(conn, tableName);
         InsertRow(conn, tableName, "first");
         InsertRow(conn, tableName, "second");
 
-        var checkpointStore = new InMemoryCheckpointStore();
+        var checkpointStore = new InMemoryCheckpointStore<long>();
 
-        // First run — read rows and checkpoint
         var firstRun = new List<string>();
-        var destFirst = new CustomDestination<(long Id, string Name)>(r => firstRun.Add(r.Name));
-        using var cm1 = CreateConnectionManager();
-        using var tokenSource1 = new CancellationTokenSource();
-
-        var source1 = new PostgresXminTailSource<(long Id, string Name)>
-        {
-            ConnectionManager = cm1,
-            TableName = tableName,
-            Schema = "public",
-            OrderByColumns = new[] { "id" },
-            BatchSize = 100,
-            PollingInterval = TimeSpan.FromMilliseconds(100),
-            CheckpointStore = checkpointStore,
-            RowMapper = r => ((long)r["id"], (string)r["name"]),
-        };
-        source1.LinkTo(destFirst);
-        tokenSource1.CancelAfter(TimeSpan.FromMilliseconds(500));
-        Assert.Throws<OperationCanceledException>(() => source1.Execute(tokenSource1.Token));
-        destFirst.Wait();
-
+        RunWithCheckpointWriter(tableName, checkpointId, checkpointStore, firstRun);
         Assert.Equal(new[] { "first", "second" }, firstRun);
+        Assert.True(checkpointStore.CommitCount > 0);
 
-        // Insert new rows after checkpoint
         InsertRow(conn, tableName, "third");
         InsertRow(conn, tableName, "fourth");
 
-        // Second run — should only return rows after the saved checkpoint
         var secondRun = new List<string>();
-        var destSecond = new CustomDestination<(long Id, string Name)>(r => secondRun.Add(r.Name));
-        using var cm2 = CreateConnectionManager();
-        using var tokenSource2 = new CancellationTokenSource();
+        RunWithCheckpointWriter(tableName, checkpointId, checkpointStore, secondRun);
+        Assert.Equal(new[] { "third", "fourth" }, secondRun);
+    }
 
-        var source2 = new PostgresXminTailSource<(long Id, string Name)>
+    [Fact]
+    public void Execute_WithoutCommit_ReDeliversOnRestart_AtLeastOnce()
+    {
+        // Simulates a crash between the destination write and the checkpoint commit: the rows are
+        // durably "written" (recorded) but no CheckpointWriter commits. On restart the rows are
+        // re-delivered (duplicates on the crash boundary), never lost — that is at-least-once.
+        const string tableName = "events_atleastonce_test";
+        const string checkpointId = "pg-alo-test";
+        using var conn = new NpgsqlConnection(_fixture.ConnectionString);
+        conn.Open();
+        SetupTestTable(conn, tableName);
+        InsertRow(conn, tableName, "a");
+        InsertRow(conn, tableName, "b");
+
+        var store = new InMemoryCheckpointStore<long>();
+        var delivered = new List<string>();
+
+        RunSourceOnly(tableName, checkpointId, store, delivered);
+        Assert.Equal(new[] { "a", "b" }, delivered);
+        Assert.Equal(0, store.CommitCount); // crashed before committing
+
+        RunSourceOnly(tableName, checkpointId, store, delivered);
+        Assert.Equal(new[] { "a", "b", "a", "b" }, delivered); // re-delivered, nothing lost
+    }
+
+    // source -> record (durable destination, re-emits) -> CheckpointWriter (commits id after write)
+    private void RunWithCheckpointWriter(
+        string tableName,
+        string checkpointId,
+        ICheckpointStore<long> store,
+        List<string> sink
+    )
+    {
+        using var cm = CreateConnectionManager();
+        using var tokenSource = new CancellationTokenSource();
+        var source = NewSource(cm, tableName, checkpointId, store);
+        var record = new RowTransformation<(long Id, string Name)>(r =>
         {
-            ConnectionManager = cm2,
+            sink.Add(r.Name);
+            return r;
+        });
+        var writer = new CheckpointWriter<(long Id, string Name), long>
+        {
+            CheckpointStore = store,
+            CheckpointId = checkpointId,
+            Position = r => r.Id,
+        };
+        source.LinkTo(record);
+        record.LinkTo(writer);
+        tokenSource.CancelAfter(TimeSpan.FromMilliseconds(500));
+        Assert.Throws<OperationCanceledException>(() => source.Execute(tokenSource.Token));
+        writer.Wait();
+    }
+
+    // source -> destination only; no CheckpointWriter, so nothing is committed.
+    private void RunSourceOnly(
+        string tableName,
+        string checkpointId,
+        ICheckpointStore<long> store,
+        List<string> sink
+    )
+    {
+        using var cm = CreateConnectionManager();
+        using var tokenSource = new CancellationTokenSource();
+        var source = NewSource(cm, tableName, checkpointId, store);
+        var destination = new CustomDestination<(long Id, string Name)>(r => sink.Add(r.Name));
+        source.LinkTo(destination);
+        tokenSource.CancelAfter(TimeSpan.FromMilliseconds(500));
+        Assert.Throws<OperationCanceledException>(() => source.Execute(tokenSource.Token));
+        destination.Wait();
+    }
+
+    private static PostgresXminTailSource<(long Id, string Name)> NewSource(
+        PostgresConnectionManager cm,
+        string tableName,
+        string checkpointId,
+        ICheckpointStore<long> store
+    ) =>
+        new()
+        {
+            ConnectionManager = cm,
             TableName = tableName,
             Schema = "public",
             OrderByColumns = new[] { "id" },
             BatchSize = 100,
             PollingInterval = TimeSpan.FromMilliseconds(100),
-            CheckpointStore = checkpointStore,
+            CheckpointStore = store,
+            CheckpointId = checkpointId,
             RowMapper = r => ((long)r["id"], (string)r["name"]),
         };
-        source2.LinkTo(destSecond);
-        tokenSource2.CancelAfter(TimeSpan.FromMilliseconds(500));
-        Assert.Throws<OperationCanceledException>(() => source2.Execute(tokenSource2.Token));
-        destSecond.Wait();
-
-        Assert.Equal(new[] { "third", "fourth" }, secondRun);
-    }
 
     [Fact]
     public void Execute_FrontierExcludesUncommittedRows()

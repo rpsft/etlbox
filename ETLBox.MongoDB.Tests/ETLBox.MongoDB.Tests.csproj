@@ -32,8 +32,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="JunitXml.TestLogger" Version="3.0.134" />
-  </ItemGroup>
-
 </Project>

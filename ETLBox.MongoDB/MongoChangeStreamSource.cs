@@ -46,10 +46,19 @@ public class MongoChangeStreamSource<TOutput> : DataFlowSource<TOutput>
         ChangeStreamFullDocumentOption.UpdateLookup;
 
     /// <summary>
-    /// Stores and retrieves the resume token across restarts.
+    /// Loads the resume token across restarts (load-only — the source never commits).
     /// If <c>null</c>, the source starts from the current oplog position.
+    /// The durable position is advanced downstream by a <c>CheckpointWriter</c> after the
+    /// destination has persisted the records (at-least-once), never at emit time.
     /// </summary>
-    public ICheckpointStore? CheckpointStore { get; set; }
+    public ICheckpointStore<string>? CheckpointStore { get; set; }
+
+    /// <summary>
+    /// Identifies this consumer's checkpoint in <see cref="CheckpointStore"/>. The same collection
+    /// can be tailed by several consumers, each with its own id. Must match the
+    /// <c>CheckpointId</c> of the paired <c>CheckpointWriter</c>.
+    /// </summary>
+    public string CheckpointId { get; set; } = null!;
 
     /// <summary>Maps a change stream document to the output type. Required.</summary>
     public Func<ChangeStreamDocument<BsonDocument>, TOutput> EventMapper { get; set; } = null!;
@@ -104,29 +113,20 @@ public class MongoChangeStreamSource<TOutput> : DataFlowSource<TOutput>
                     // change-stream loop after Cancel() — see RSSL-11703 regression test
                     // Execute_CancellationDuringBlockedSendAsync_ReturnsPromptly.
                     Buffer.SendAsync(output, ct).GetAwaiter().GetResult();
-                    resumeToken = doc.ResumeToken;
                     LogProgress();
                 }
-
-                if (resumeToken != null)
-                {
-                    SaveResumeToken(resumeToken, ct);
-                }
+                // The durable resume token is NOT written here. A downstream CheckpointWriter
+                // commits it after the destination persists (at-least-once); the source only
+                // advances the live change-stream cursor in-memory. See ICheckpointStore.
             }
         }
     }
 
     private BsonDocument? LoadResumeToken(CancellationToken ct)
     {
-        var json = CheckpointStore?.LoadAsync(ct).GetAwaiter().GetResult();
-        return json == null ? null : BsonDocument.Parse(json);
-    }
-
-    private void SaveResumeToken(BsonDocument token, CancellationToken ct)
-    {
         if (CheckpointStore == null)
-            return;
-        var json = token.ToJson();
-        CheckpointStore.SaveAsync(json, ct).GetAwaiter().GetResult();
+            return null;
+        var (found, json) = CheckpointStore.LoadAsync(CheckpointId, ct).GetAwaiter().GetResult();
+        return found ? BsonDocument.Parse(json) : null;
     }
 }

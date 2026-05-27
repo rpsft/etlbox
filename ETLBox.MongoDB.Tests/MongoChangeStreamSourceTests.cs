@@ -1,12 +1,13 @@
 using System.Reflection;
 using System.Threading.Tasks.Dataflow;
 using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.Common.DataFlow.Streaming;
 using ALE.ETLBox.DataFlow;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit;
 
-// ReSharper disable All
+// ReSharper disable AccessToDisposedClosure
 
 namespace ETLBox.MongoDB.Tests;
 
@@ -88,29 +89,35 @@ public sealed class MongoChangeStreamSourceTests : IClassFixture<MongoContainerF
         Assert.Equal(new[] { "alpha", "beta", "gamma" }, results);
     }
 
+    // Output carries the resume token alongside the payload — for change streams the checkpoint
+    // position is the resume token (not a domain field), so the EventMapper must surface it for the
+    // CheckpointWriter to commit. (Mongo wrinkle, see docs/dataflow/streaming-sources.md.)
+    private readonly record struct Event(string Name, string Token) : IComparable<Event>
+    {
+        public int CompareTo(Event other) => string.CompareOrdinal(Token, other.Token);
+    }
+
     [Fact]
     public async Task Execute_WithCheckpoint_ResumesAfterToken()
     {
+        const string checkpointId = "mongo-resume-test";
         var client = CreateClient();
         var collection = GetCollection(client, "change_stream_checkpoint");
+        var checkpointStore = new InMemoryCheckpointStore<string>();
 
-        var checkpointStore = new InMemoryCheckpointStore();
-
-        // First run — receive two inserts and checkpoint
+        // First run — receive two inserts; a CheckpointWriter commits the resume token after the
+        // destination.
         var firstRun = new List<string>();
-        var destFirst = new CustomDestination<string>(name => firstRun.Add(name));
-
         using var tokenSource1 = new CancellationTokenSource();
-        var source1 = new MongoChangeStreamSource<string>
+        var source1 = NewSource(client, checkpointId, checkpointStore);
+        var record1 = new RowTransformation<Event>(e =>
         {
-            MongoClient = client,
-            Database = DatabaseName,
-            Collection = "change_stream_checkpoint",
-            MaxAwaitTime = TimeSpan.FromMilliseconds(200),
-            CheckpointStore = checkpointStore,
-            EventMapper = doc => doc.FullDocument["name"].AsString,
-        };
-        source1.LinkTo(destFirst);
+            firstRun.Add(e.Name);
+            return e;
+        });
+        var writer1 = NewWriter(checkpointId, checkpointStore);
+        source1.LinkTo(record1);
+        record1.LinkTo(writer1);
 
         // ReSharper disable once AccessToDisposedClosure
         var task1 = Task.Run(() => source1.Execute(tokenSource1.Token));
@@ -123,40 +130,68 @@ public sealed class MongoChangeStreamSourceTests : IClassFixture<MongoContainerF
         await tokenSource1.CancelAsync();
 
         Assert.Throws<OperationCanceledException>(() => task1.GetAwaiter().GetResult());
-        destFirst.Wait();
+        writer1.Wait();
 
         Assert.Equal(new[] { "first", "second" }, firstRun);
+        Assert.True(checkpointStore.CommitCount > 0);
 
-        // Insert new documents after checkpoint was saved
+        // Insert new documents after the checkpoint was committed
         await collection.InsertOneAsync(new BsonDocument { { "name", "third" } });
         await collection.InsertOneAsync(new BsonDocument { { "name", "fourth" } });
 
-        // Second run — resume from checkpoint, should receive only new documents
+        // Second run — resume from the committed token, should receive only the new documents
         var secondRun = new List<string>();
-        var destSecond = new CustomDestination<string>(name => secondRun.Add(name));
-
         using var tokenSource2 = new CancellationTokenSource();
-        var source2 = new MongoChangeStreamSource<string>
+        var source2 = NewSource(client, checkpointId, checkpointStore);
+        var record2 = new RowTransformation<Event>(e =>
         {
-            MongoClient = client,
-            Database = DatabaseName,
-            Collection = "change_stream_checkpoint",
-            MaxAwaitTime = TimeSpan.FromMilliseconds(200),
-            CheckpointStore = checkpointStore,
-            EventMapper = doc => doc.FullDocument["name"].AsString,
-        };
-        source2.LinkTo(destSecond);
+            secondRun.Add(e.Name);
+            return e;
+        });
+        var writer2 = NewWriter(checkpointId, checkpointStore);
+        source2.LinkTo(record2);
+        record2.LinkTo(writer2);
 
-        var task2 = Task.Run(() => source2.Execute(tokenSource2.Token));
+        var task2 = Task.Run(() => source2.Execute(tokenSource2.Token), CancellationToken.None);
 
         WaitForResults(secondRun, 2, TimeSpan.FromSeconds(15));
         await tokenSource2.CancelAsync();
 
         Assert.Throws<OperationCanceledException>(() => task2.GetAwaiter().GetResult());
-        destSecond.Wait();
+        writer2.Wait();
 
         Assert.Equal(new[] { "third", "fourth" }, secondRun);
     }
+
+    private MongoChangeStreamSource<Event> NewSource(
+        IMongoClient client,
+        string checkpointId,
+        ICheckpointStore<string> store
+    ) =>
+        new()
+        {
+            MongoClient = client,
+            Database = DatabaseName,
+            Collection = "change_stream_checkpoint",
+            MaxAwaitTime = TimeSpan.FromMilliseconds(200),
+            CheckpointStore = store,
+            CheckpointId = checkpointId,
+            EventMapper = doc => new Event(
+                doc.FullDocument["name"].AsString,
+                doc.ResumeToken.ToJson()
+            ),
+        };
+
+    private static CheckpointWriter<Event, string> NewWriter(
+        string checkpointId,
+        ICheckpointStore<string> store
+    ) =>
+        new()
+        {
+            CheckpointStore = store,
+            CheckpointId = checkpointId,
+            Position = e => e.Token,
+        };
 
     [Fact]
     public async Task Execute_CancellationDuringBlockedSendAsync_ReturnsPromptly()
@@ -233,7 +268,7 @@ public sealed class MongoChangeStreamSourceTests : IClassFixture<MongoContainerF
             BindingFlags.NonPublic | BindingFlags.Instance
         );
         Assert.NotNull(prop);
-        prop!.SetValue(source, bounded);
+        prop.SetValue(source, bounded);
     }
 
     [Fact]
@@ -265,8 +300,8 @@ public sealed class MongoChangeStreamSourceTests : IClassFixture<MongoContainerF
         };
         source.LinkTo(destination);
 
-        var executeTask = Task.Run(() => source.Execute(tokenSource.Token));
-        await Task.Delay(500);
+        var executeTask = Task.Run(() => source.Execute(tokenSource.Token), CancellationToken.None);
+        await Task.Delay(500, CancellationToken.None).ConfigureAwait(true);
 
         await collection.InsertOneAsync(
             new BsonDocument { { "name", "keep_me" }, { "keep", true } }
