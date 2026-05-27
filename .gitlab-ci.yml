@@ -92,25 +92,18 @@ test_job:
         KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: '1'
         KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: '0'
         CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
-    - name: docker:dind
-      alias: docker
-      command:
-        [
-          'dockerd',
-          '--tls=false',
-          '--host=tcp://0.0.0.0:2375',
-          '--host=unix:///var/run/docker.sock',
-        ]
   variables:
-    DOCKER_HOST: tcp://docker:2375
+    # Testcontainers run via KubeDock — a Docker API shim that orchestrates
+    # containers as real Kubernetes Pods instead of nested DinD containers.
+    # Deployed in the gitlab-runner namespace on every cluster (SYSOPS-1668);
+    # the hostname resolves to the local cluster's KubeDock pod. This replaces
+    # the former docker:dind service.
+    DOCKER_HOST: tcp://kubedock.gitlab-runner.svc.cluster.local:2475
     PACKAGE_VERSION: ${GitVersion_SemVer}
-    # Testcontainers Ryuk can't reach across the build-container ↔ DinD-service
-    # network boundary on the k8s Kubernetes-executor runner (random published
-    # port lives on DinD's internal bridge, unreachable from the build pod).
-    # Manifests as ResourceReaperException: Initialization has been cancelled.
-    # Per Testcontainers' documented exception, disabling Ryuk is correct for
-    # this topology — cluster cleanup happens via job-pod teardown. See
-    # SYSOPS-1667 for the architectural analysis.
+    # Required by KubeDock: it doesn't implement Testcontainers' Ryuk reaper
+    # (which also can't work across the k8s-runner network boundary anyway —
+    # see SYSOPS-1667). Cleanup is handled by Kubernetes tearing down the
+    # job pod and everything KubeDock spawned for it.
     TESTCONTAINERS_RYUK_DISABLED: 'true'
     TESTCONTAINERS_CHECKS_DISABLE: 'true'
   before_script:
@@ -139,57 +132,6 @@ test_job:
       coverage_report:
         coverage_format: cobertura
         path: ./**/coverage.cobertura.xml
-
-# Pilot: smoke-tests KubeDock with a single MongoDB Testcontainers test.
-# KubeDock is now deployed on all clusters (SYSOPS-1668, released to master).
-# This pilot is pinned to a *production* runner via the fleet-branch:master
-# tag to verify KubeDock works on office-k3s / k3s-nvme — not just docker1
-# where it was first validated.
-#
-# Deliberately narrow while we iterate on KubeDock:
-#   - only ETLBox.MongoDB.Tests project is built (no full solution)
-#   - only one test method is executed (Execute_ReceivesInsertedDocuments_InOrder)
-#   - no GitLab service containers (mysql/postgres/mssql/clickhouse/kafka
-#     aren't touched by this single test)
-# This keeps the pilot feedback loop ~2-3 minutes. Once KubeDock proves out,
-# we'll widen the filter back to the full Testcontainers-using surface and
-# eventually retire the DinD-based test_job. See SYSOPS-1668 roadmap.
-#
-# allow_failure: true so any KubeDock teething doesn't block the pipeline
-# (publish:internal etc. still depend only on test_job).
-test_job_kubedock:
-  needs:
-    - get_unique_semversion
-  tags:
-    - fleet-branch:master
-  variables:
-    # KubeDock service in the gitlab-runner namespace (deployed on every
-    # cluster by SYSOPS-1668). Replaces docker:dind for Testcontainers calls.
-    # The hostname resolves to the local cluster's KubeDock pod.
-    DOCKER_HOST: tcp://kubedock.gitlab-runner.svc.cluster.local:2475
-    PACKAGE_VERSION: ${GitVersion_SemVer}
-    # Required by KubeDock: it doesn't implement Ryuk; cleanup is handled by
-    # Kubernetes (job-pod teardown removes the KubeDock-spawned pods).
-    TESTCONTAINERS_RYUK_DISABLED: 'true'
-    TESTCONTAINERS_CHECKS_DISABLE: 'true'
-  before_script:
-    - dotnet build ETLBox.MongoDB.Tests/ETLBox.MongoDB.Tests.csproj --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
-  script:
-    - >
-      dotnet test ETLBox.MongoDB.Tests/ETLBox.MongoDB.Tests.csproj --no-build --configuration=Release
-      --filter="FullyQualifiedName~ETLBox.MongoDB.Tests.MongoChangeStreamSourceTests.Execute_ReceivesInsertedDocuments_InOrder"
-      --logger="console;verbosity=detailed"
-      --logger="junit;LogFilePath=../artifacts/{assembly}-test-result-kubedock.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
-  after_script:
-    - echo 'KubeDock pilot run complete'
-  artifacts:
-    when: always
-    paths:
-      - ./**/*test-result-kubedock.xml
-    reports:
-      junit:
-        - ./**/*test-result-kubedock.xml
-  allow_failure: true
 
 publish:internal:
   needs:
