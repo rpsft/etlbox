@@ -74,8 +74,14 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void CleanUp(Task transformTask)
         {
-            _producer?.Flush();
-            _producer?.Dispose();
+            try
+            {
+                _producer?.Flush();
+            }
+            finally
+            {
+                _producer?.Dispose();
+            }
             base.CleanUp(transformTask);
         }
 
@@ -89,11 +95,11 @@ namespace ALE.ETLBox.DataFlow
             }
             catch (Exception e)
             {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+
                 var errorData = ErrorHandler.ConvertErrorData(input);
-                if (ErrorHandler.HasErrorBuffer)
-                {
-                    ErrorHandler.Send(e, errorData);
-                }
+                ErrorHandler.Send(e, errorData);
             }
             return default;
         }
@@ -104,7 +110,21 @@ namespace ALE.ETLBox.DataFlow
             var message = new Message<Null, TKafkaValue> { Value = messageValue };
             if (_producer == null)
                 throw new InvalidOperationException("Producer is not initialized.");
-            _producer.Produce(TopicName, message);
+            _producer.Produce(
+                TopicName,
+                message,
+                deliveryReport =>
+                {
+                    if (deliveryReport.Error.IsError)
+                    {
+                        Logger.LogError(
+                            "Failed: {Message}, Error: {Reason}",
+                            deliveryReport.Message.Value,
+                            deliveryReport.Error.Reason
+                        );
+                    }
+                }
+            );
         }
     }
 
