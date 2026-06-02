@@ -9,10 +9,11 @@ namespace ALE.ETLBox.Serialization
     /// </summary>
     /// <remarks>
     /// Compose this into any <see cref="IDataFlow"/> implementation and delegate
-    /// <see cref="IDataFlow.GetOrAddConnectionManager"/> and <see cref="IDataFlow.GetOrAddResource"/>
+    /// <see cref="IDataFlow.GetOrAddConnectionManager"/> and (optionally, by also implementing
+    /// <see cref="IDataFlowResourceOwner"/>) <see cref="IDataFlowResourceOwner.GetOrAddResource"/>
     /// to it. Call <see cref="Dispose"/> from the owning object's dispose method.
     /// </remarks>
-    public sealed class DataFlowResources : IDisposable
+    public sealed class DataFlowResources : IDataFlowResourceOwner, IDisposable
     {
         private readonly ConcurrentDictionary<
             (Type type, string? key),
@@ -20,6 +21,9 @@ namespace ALE.ETLBox.Serialization
         > _connectionManagers = new();
 
         private readonly ConcurrentDictionary<string, IDisposable> _resources = new();
+
+        /// <inheritdoc />
+        public int Version => DataFlowResourceOwnerExtensions.ResourceOwnerVersion;
 
         /// <summary>Number of connection managers currently in the pool.</summary>
         public int ConnectionManagerCount => _connectionManagers.Count;
@@ -35,7 +39,7 @@ namespace ALE.ETLBox.Serialization
         ) =>
             _connectionManagers.GetOrAdd((connectionManagerType, key), k => factory(k.type, k.key));
 
-        /// <inheritdoc cref="IDataFlow.GetOrAddResource"/>
+        /// <inheritdoc cref="IDataFlowResourceOwner.GetOrAddResource"/>
         public IDisposable GetOrAddResource(string key, Func<IDisposable> factory) =>
             _resources.GetOrAdd(key, _ => factory());
 

@@ -1,8 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Dynamic;
 using System.Text;
 using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using ALE.ETLBox.Serialization;
 using ALE.ETLBox.Serialization.DataFlow;
+using ETLBox.Primitives;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ETLBox.Serialization.Tests;
 
@@ -52,7 +57,7 @@ public sealed class DataFlowDisposableResourceTests
     {
         using var step = new EtlDataFlowStep();
 
-        var result = DataFlowExtensions.GetOrAddResource(
+        var result = DataFlowResourceOwnerExtensions.GetOrAddResource(
             step,
             "key1",
             () => new TrackableResource { Config = "y" }
@@ -251,6 +256,95 @@ public sealed class DataFlowDisposableResourceTests
         Assert.True(resource.IsDisposed);
     }
 
+    // ── Regression: legacy IDataFlow without IDataFlowResourceOwner (RSSL-11719) ──
+
+    [Fact]
+    public void XmlReader_LegacyDataFlowWithoutResourceOwner_FallsBackWithoutThrowing()
+    {
+        // RSSL-11719: an external IDataFlow implementation compiled against an earlier ETLBox version
+        // does NOT implement IDataFlowResourceOwner. The reader must gracefully fall back to plain
+        // creation (no dedup/ownership) instead of invoking the missing capability and throwing.
+        var xml =
+            @"<LegacyStepWithResource>
+                <Resource>
+                    <Config>legacy</Config>
+                </Resource>
+            </LegacyStepWithResource>";
+
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
+        using var xmlReader = XmlReader.Create(stream);
+        using var step = new LegacyStepWithResource();
+        var reader = new DataFlowXmlReader(step);
+
+        var exception = Record.Exception(() => reader.Read(xmlReader));
+
+        Assert.Null(exception);
+        Assert.NotNull(step.Resource);
+        Assert.Equal("legacy", step.Resource!.Config);
+    }
+
+    // ── Activator-based lifetime ownership (RSSL-11719, part b) ──────────────
+
+    [Fact]
+    public void XmlReader_DiOwnedDisposable_NotRegisteredOrDisposedByFlow()
+    {
+        // A disposable resolved from a DI container is owned by the container, not the data flow:
+        // the flow must neither register it for disposal nor dispose it.
+        using var externalResource = new TrackableResource();
+        var services = new ServiceCollection();
+        services.AddSingleton(externalResource);
+        using var provider = services.BuildServiceProvider();
+
+        var xml =
+            @"<StepWithConcreteResource>
+                <Resource>
+                    <Config>external</Config>
+                </Resource>
+            </StepWithConcreteResource>";
+
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
+        using var xmlReader = XmlReader.Create(stream);
+        var step = new StepWithConcreteResource();
+        var reader = new DataFlowXmlReader(step, new ServiceProviderActivator(provider));
+        reader.Read(xmlReader);
+
+        Assert.Same(externalResource, step.Resource);
+        Assert.Equal(0, step.ResourceCount());
+
+        step.Dispose();
+
+        Assert.False(externalResource.IsDisposed);
+    }
+
+    [Fact]
+    public void XmlReader_UnregisteredDisposableViaServiceProvider_FlowOwnedAndDisposed()
+    {
+        // A disposable NOT registered in the container is created fresh (ActivatorUtilities) and is
+        // owned by the data flow — registered for disposal and disposed with the flow.
+        var services = new ServiceCollection();
+        using var provider = services.BuildServiceProvider();
+
+        var xml =
+            @"<StepWithConcreteResource>
+                <Resource>
+                    <Config>new</Config>
+                </Resource>
+            </StepWithConcreteResource>";
+
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
+        using var xmlReader = XmlReader.Create(stream);
+        var step = new StepWithConcreteResource();
+        var reader = new DataFlowXmlReader(step, new ServiceProviderActivator(provider));
+        reader.Read(xmlReader);
+
+        Assert.Equal(1, step.ResourceCount());
+        var resource = step.Resource!;
+
+        step.Dispose();
+
+        Assert.True(resource.IsDisposed);
+    }
+
     // ── helpers ──────────────────────────────────────────────────────────────
 
     private static T DeserializeStep<T>(string xml)
@@ -319,5 +413,40 @@ public sealed class DataFlowDisposableResourceTests
     {
         public ComponentWithAbstractResource? First { get; set; }
         public ComponentWithAbstractResource? Second { get; set; }
+    }
+
+    // Legacy IDataFlow implementation WITHOUT IDataFlowResourceOwner — simulates an external
+    // implementer (e.g. RapidSoft.Etl EtlDataFlowStep) compiled against ETLBox < 1.19 (RSSL-11719).
+    [Serializable]
+    public class LegacyDataFlowStep : IDataFlow, IXmlSerializable
+    {
+        private readonly DataFlowResources _resources = new();
+
+        public IConnectionManager GetOrAddConnectionManager(
+            Type connectionManagerType,
+            string? key,
+            Func<Type, string?, IConnectionManager> factory
+        ) => _resources.GetOrAddConnectionManager(connectionManagerType, key, factory);
+
+        public IDataFlowSource<ExpandoObject> Source { get; set; } = null!;
+        public IList<IDataFlowDestination<ExpandoObject>> Destinations { get; set; } = null!;
+        public IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; } = null!;
+
+        public XmlSchema? GetSchema() => null;
+
+        public void ReadXml(XmlReader reader) => new DataFlowXmlReader(this).Read(reader);
+
+        public void WriteXml(XmlWriter writer) => throw new NotSupportedException();
+
+        public void Dispose()
+        {
+            _resources.Dispose();
+            GC.SuppressFinalize(this);
+        }
+    }
+
+    public sealed class LegacyStepWithResource : LegacyDataFlowStep
+    {
+        public TrackableResource? Resource { get; set; }
     }
 }
