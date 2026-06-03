@@ -7,6 +7,7 @@ using ALE.ETLBox.Common.DataFlow;
 using Confluent.Kafka;
 using DotLiquid;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -49,6 +50,13 @@ namespace ALE.ETLBox.DataFlow
         /// Default constructor
         /// </summary>
         protected KafkaTransformation()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        protected KafkaTransformation(ILogger<KafkaTransformation<TInput, TKafkaValue>>? logger)
+            : base(logger)
         {
             TransformationFunc = SendToKafka;
             InitAction = () =>
@@ -66,8 +74,14 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void CleanUp(Task transformTask)
         {
-            _producer?.Flush();
-            _producer?.Dispose();
+            try
+            {
+                _producer?.Flush();
+            }
+            finally
+            {
+                _producer?.Dispose();
+            }
             base.CleanUp(transformTask);
         }
 
@@ -81,11 +95,11 @@ namespace ALE.ETLBox.DataFlow
             }
             catch (Exception e)
             {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+
                 var errorData = ErrorHandler.ConvertErrorData(input);
-                if (ErrorHandler.HasErrorBuffer)
-                {
-                    ErrorHandler.Send(e, errorData);
-                }
+                ErrorHandler.Send(e, errorData);
             }
             return default;
         }
@@ -96,12 +110,37 @@ namespace ALE.ETLBox.DataFlow
             var message = new Message<Null, TKafkaValue> { Value = messageValue };
             if (_producer == null)
                 throw new InvalidOperationException("Producer is not initialized.");
-            _producer.Produce(TopicName, message);
+            _producer.Produce(
+                TopicName,
+                message,
+                deliveryReport =>
+                {
+                    if (deliveryReport.Error.IsError)
+                    {
+                        Logger.LogError(
+                            "Failed: {Message}, Error: {Reason}",
+                            deliveryReport.Message.Value,
+                            deliveryReport.Error.Reason
+                        );
+                    }
+                }
+            );
         }
     }
 
     public class KafkaStringTransformation<TInput> : KafkaTransformation<TInput, string>
     {
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public KafkaStringTransformation(ILogger<KafkaStringTransformation<TInput>> logger)
+            : base(logger) { }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public KafkaStringTransformation() { }
+
         /// <summary>
         /// Message template in <a href="https://shopify.github.io/liquid/">Liquid</a> syntax.
         /// </summary>
@@ -127,5 +166,17 @@ namespace ALE.ETLBox.DataFlow
         }
     }
 
-    public class KafkaTransformation : KafkaStringTransformation<ExpandoObject> { }
+    public class KafkaTransformation : KafkaStringTransformation<ExpandoObject>
+    {
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public KafkaTransformation() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public KafkaTransformation(ILogger<KafkaTransformation> logger)
+            : base(logger) { }
+    }
 }

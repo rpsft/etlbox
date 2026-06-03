@@ -91,10 +91,10 @@ public class ScriptBuilderTests
         context.Y = null;
         ScriptBuilder.Default.ForType(context);
 
-        dynamic сontext2 = new ExpandoObject();
-        сontext2.X = null;
-        сontext2.Y = "кадабра";
-        ScriptBuilder.Default.ForType(сontext2);
+        dynamic context2 = new ExpandoObject();
+        context2.X = null;
+        context2.Y = "кадабра";
+        ScriptBuilder.Default.ForType(context2);
 
         dynamic context3 = new ExpandoObject();
         context3.X = "абра";

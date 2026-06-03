@@ -1,4 +1,5 @@
 using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -41,6 +42,12 @@ namespace ALE.ETLBox.DataFlow
 
         public Sort() { }
 
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public Sort(ILogger<Sort<TInput>> logger)
+            : base(logger) { }
+
         public Sort(Comparison<TInput> sortFunction)
             : this()
         {
@@ -67,6 +74,12 @@ namespace ALE.ETLBox.DataFlow
     public class Sort : Sort<ExpandoObject>
     {
         public Sort() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public Sort(ILogger<Sort> logger)
+            : base(logger) { }
 
         public Sort(Comparison<ExpandoObject> sortFunction)
             : base(sortFunction) { }

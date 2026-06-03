@@ -6,6 +6,7 @@ using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.Common.TaskUtilities;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Common.DataFlow
 {
@@ -52,7 +53,7 @@ namespace ALE.ETLBox.Common.DataFlow
                     }
                 })
                 {
-                    OnComplete = CleanUp
+                    OnComplete = CleanUp,
                 };
             }
         }
@@ -66,6 +67,12 @@ namespace ALE.ETLBox.Common.DataFlow
         private Func<TInput, TOutput> _transformationFunc;
 
         public RowTransformation() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RowTransformation(ILogger<RowTransformation<TInput, TOutput>> logger)
+            : base(logger) { }
 
         public RowTransformation(Func<TInput, TOutput> rowTransformationFunc)
             : this()
@@ -149,6 +156,12 @@ namespace ALE.ETLBox.Common.DataFlow
     {
         public RowTransformation() { }
 
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RowTransformation(ILogger<RowTransformation<TInput>> logger)
+            : base(logger) { }
+
         public RowTransformation(Func<TInput, TInput> rowTransformationFunc)
             : base(rowTransformationFunc) { }
 
@@ -184,6 +197,12 @@ namespace ALE.ETLBox.Common.DataFlow
     public class RowTransformation : RowTransformation<ExpandoObject>
     {
         public RowTransformation() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RowTransformation(ILogger<RowTransformation> logger)
+            : base(logger) { }
 
         public RowTransformation(Func<ExpandoObject, ExpandoObject> rowTransformationFunc)
             : base(rowTransformationFunc) { }

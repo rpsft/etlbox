@@ -56,12 +56,12 @@ namespace TestTransformations.AggregationTests
             {
                 new() { Id = 1, DetailValue = 3.5 },
                 new() { Id = 2, DetailValue = 4.5 },
-                new() { Id = 3, DetailValue = 2.0 }
+                new() { Id = 3, DetailValue = 2.0 },
             };
             MemoryDestination<MySumRow> dest = CreateFlow<MySumRow>(sourceData);
 
             //Assert
-            Assert.Collection(dest.Data, ar => Assert.True(ar.AggValue == 10.0F));
+            Assert.Single(dest.Data, ar => Math.Abs(ar.AggValue - 10.0F) < double.Epsilon);
         }
 
         [Fact]
@@ -73,12 +73,13 @@ namespace TestTransformations.AggregationTests
                 new() { Id = 1, DetailValue = 3.5 },
                 new() { Id = 2, DetailValue = 4.5 },
                 new() { Id = 3, DetailValue = 2.0 },
-                new() { Id = 4, DetailValue = null }
+                new() { Id = 4, DetailValue = null },
             };
             MemoryDestination<MySumRowNullable> dest = CreateFlow<MySumRowNullable>(sourceData);
 
             //Assert
-            Assert.Collection(dest.Data, ar => Assert.True(ar.AggValue == 10.0F));
+            Assert.Single(dest.Data, ar => ar.AggValue.HasValue);
+            Assert.Single(dest.Data, ar => Math.Abs(ar.AggValue!.Value - 10.0F) < double.Epsilon);
         }
 
         [Fact]
@@ -89,12 +90,12 @@ namespace TestTransformations.AggregationTests
             {
                 new() { DetailValue = 3.5F },
                 new() { DetailValue = 4.5F },
-                new() { DetailValue = 2.0F }
+                new() { DetailValue = 2.0F },
             };
             MemoryDestination<MyMaxRow> dest = CreateFlow<MyMaxRow>(sourceData);
 
             //Assert
-            Assert.Collection(dest.Data, ar => Assert.True(ar.AggValue == 4.5F));
+            Assert.Single(dest.Data, ar => Math.Abs(ar.AggValue - 4.5F) < float.Epsilon);
         }
 
         [Fact]
@@ -105,7 +106,7 @@ namespace TestTransformations.AggregationTests
             {
                 new() { DetailValue = 3 },
                 new() { DetailValue = 4 },
-                new() { DetailValue = 2 }
+                new() { DetailValue = 2 },
             };
             MemoryDestination<MyMinRow> dest = CreateFlow<MyMinRow>(sourceData);
 
@@ -121,7 +122,7 @@ namespace TestTransformations.AggregationTests
             {
                 new() { DetailValue = 5 },
                 new() { DetailValue = 7 },
-                new() { DetailValue = 8 }
+                new() { DetailValue = 8 },
             };
             MemoryDestination<MyCountRow> dest = CreateFlow<MyCountRow>(sourceData);
 
@@ -131,10 +132,7 @@ namespace TestTransformations.AggregationTests
 
         private static MemoryDestination<T> CreateFlow<T>(List<MyInputRow> sourceData)
         {
-            var source = new MemorySource<MyInputRow>
-            {
-                DataAsList = sourceData
-            };
+            var source = new MemorySource<MyInputRow> { DataAsList = sourceData };
 
             var agg = new Aggregation<MyInputRow, T>();
 

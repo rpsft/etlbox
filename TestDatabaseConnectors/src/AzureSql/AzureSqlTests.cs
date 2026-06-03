@@ -5,6 +5,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.AzureSql
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public sealed class IgnoreOnNonAzureEnvironmentFactAttribute : FactAttribute
     {
         public IgnoreOnNonAzureEnvironmentFactAttribute()
@@ -123,14 +124,14 @@ namespace TestDatabaseConnectors.AzureSql
             Assert.True(dest.DeltaTable.Count == 7);
             Assert.True(dest.DeltaTable.Count(row => row.ChangeAction == ChangeAction.Update) == 2);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Delete && row.Col1 == 10
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Delete && row.Col1 == 10
                 ) == 1
             );
             Assert.True(dest.DeltaTable.Count(row => row.ChangeAction == ChangeAction.Insert) == 3);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Exists && row.Col1 == 1
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Exists && row.Col1 == 1
                 ) == 1
             );
         }

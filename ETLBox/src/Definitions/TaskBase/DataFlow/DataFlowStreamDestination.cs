@@ -4,12 +4,24 @@ using System.Text;
 using System.Threading;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.Helper;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowStreamDestination<TInput> : DataFlowDestination<TInput>
     {
+        /// <summary>
+        /// Creates a new instance with no logger.
+        /// </summary>
+        protected DataFlowStreamDestination() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        protected DataFlowStreamDestination(ILogger logger)
+            : base(logger) { }
+
         /* Public properties */
         /// <summary>
         ///   The Url of the webservice (e.g. https://test.com/foo) or the file name (relative or absolute)

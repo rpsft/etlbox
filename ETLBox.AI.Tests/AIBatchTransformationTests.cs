@@ -1,3 +1,4 @@
+#nullable enable
 using System.Dynamic;
 using System.Text.Json;
 using ALE.ETLBox.Common;
@@ -53,7 +54,7 @@ public class AIBatchTransformationTests
             Prompt = "{\"items\": {{ input | json_array }} }",
             ResultSettings = RS(ResultsSchemaRidOnly()),
             BatchSize = 2,
-            FailOnError = true, // ключевая проверка ветки
+            FailOnError = true, // key branch assertion
         };
 
         // Act + Assert: expect pipeline to fail
@@ -85,7 +86,7 @@ public class AIBatchTransformationTests
         // Act: use constructor that accepts ApiSettings
         var trans = new AIBatchTransformation(settings)
         {
-            // Минимальные обязательные поля (не запускаем конвейер)
+            // Minimal required fields (conveyor is not started)
             Prompt = "{\"items\": {{ input | json_array }} }",
             ResultSettings = RS(ResultsSchemaRidOnly()),
         };
@@ -358,7 +359,7 @@ public class AIBatchTransformationTests
         Assert.Equal(2, dest.Data.Count);
         foreach (var row in dest.Data)
         {
-            var d = (IDictionary<string, object>)row;
+            var d = (IDictionary<string, object?>)row;
             Assert.False(d.ContainsKey("result"));
             Assert.IsType<string>(d["ex"], exactMatch: false);
             Assert.NotNull(d["raw"]);
@@ -393,7 +394,7 @@ public class AIBatchTransformationTests
         Assert.Equal(2, dest.Data.Count);
         foreach (var row in dest.Data)
         {
-            IDictionary<string, object> d = row;
+            IDictionary<string, object?> d = row;
             Assert.False(d.ContainsKey("result"));
             Assert.IsType<string>(d["ex"], exactMatch: false);
         }
@@ -459,7 +460,7 @@ public class AIBatchTransformationTests
         Assert.Equal(2, dest.Data.Count);
         foreach (var row in dest.Data)
         {
-            var d = (IDictionary<string, object>)row;
+            var d = (IDictionary<string, object?>)row;
             Assert.IsType<string>(d["ex"], exactMatch: false);
             Assert.Equal("BadRequest", d["code"]);
             Assert.Equal(errorContent, d["raw"]);
@@ -478,7 +479,7 @@ public class AIBatchTransformationTests
         var source = new MemorySource<ExpandoObject>(input);
         var dest = new MemoryDestination<ExpandoObject>();
 
-        var errorContent = "<html><body>bad request</body></html>"; // не JSON
+        var errorContent = "<html><body>bad request</body></html>"; // non-JSON
         var mock = new Mock<IChatClient>();
         mock.Setup(c =>
                 c.GetResponseAsync(
@@ -530,7 +531,7 @@ public class AIBatchTransformationTests
         Assert.Equal(2, dest.Data.Count);
         foreach (var row in dest.Data)
         {
-            var d = (IDictionary<string, object>)row;
+            var d = (IDictionary<string, object?>)row;
             Assert.IsType<string>(d["ex"], exactMatch: false);
             Assert.Equal("BadRequest", d["code"]);
             Assert.Equal(errorContent, d["raw"]);
@@ -547,7 +548,7 @@ public class AIBatchTransformationTests
         var source = new MemorySource<ExpandoObject>(input);
         var dest = new MemoryDestination<ExpandoObject>();
 
-        var errorContent = string.Empty; // пустая строка
+        var errorContent = string.Empty;
         var mock = new Mock<IChatClient>();
         mock.Setup(c =>
                 c.GetResponseAsync(
@@ -597,10 +598,10 @@ public class AIBatchTransformationTests
 
         // Assert: row marked, HTTP fields set, ResultField = null, raw is empty
         Assert.Single(dest.Data);
-        var d = (IDictionary<string, object>)dest.Data.ElementAt(0);
+        var d = (IDictionary<string, object?>)dest.Data.ElementAt(0);
         Assert.IsType<string>(d["ex"]);
         Assert.Equal("BadRequest", d["code"]);
-        Assert.Empty((string)d["raw"]);
+        Assert.Empty((string)d["raw"]!);
         Assert.True(d.ContainsKey("result"));
         Assert.Null(d["result"]);
     }
@@ -636,7 +637,7 @@ public class AIBatchTransformationTests
         var mock = new Mock<IChatClient>();
 
         // Capture the actual prompt sent to the AI client
-        string capturedPrompt = null;
+        string? capturedPrompt = null;
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
@@ -678,7 +679,7 @@ public class AIBatchTransformationTests
               ""items"": {{ input | json_array }}
             }",
             // PromptParameters as dictionary
-            PromptParameters = new Dictionary<string, object>
+            PromptParameters = new Dictionary<string, object?>
             {
                 ["config"] = new Dictionary<string, object>
                 {
@@ -732,7 +733,7 @@ public class AIBatchTransformationTests
         var response = "{\"results\":[{\"rid\":\"42\"}]}";
         var mock = new Mock<IChatClient>();
 
-        string capturedPrompt = null;
+        string? capturedPrompt = null;
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
@@ -828,7 +829,7 @@ public class AIBatchTransformationTests
         // Assert: first row enriched, second row has Exception set
         Assert.Equal(2, dest.Data.Count);
         Assert.Equal("1", ((dynamic)dest.Data.ElementAt(0)).result.rid);
-        IDictionary<string, object> second = dest.Data.ElementAt(1);
+        IDictionary<string, object> second = dest.Data.ElementAt(1)!;
         Assert.False(second.ContainsKey("result"));
         Assert.IsType<string>(second["ex"], exactMatch: false);
     }
@@ -887,9 +888,9 @@ public class AIBatchTransformationTests
 
         // Assert
         Assert.Equal(2, dest.Data.Count);
-        IDictionary<string, object> first = dest.Data.ElementAt(0);
+        IDictionary<string, object> first = dest.Data.ElementAt(0)!;
         Assert.True(first.ContainsKey("result"));
-        IDictionary<string, object> second = dest.Data.ElementAt(1);
+        IDictionary<string, object> second = dest.Data.ElementAt(1)!;
         Assert.False(second.ContainsKey("result"));
         Assert.IsType<string>(second["ex"], exactMatch: false);
     }
@@ -1086,7 +1087,7 @@ public class AIBatchTransformationTests
         // Assert: first enriched, second with Exception (no result for id=2)
         Assert.Equal(2, dest.Data.Count);
         Assert.Equal("1", (object)((dynamic)dest.Data.ElementAt(0)).result.rid);
-        var second = (IDictionary<string, object>)dest.Data.ElementAt(1);
+        var second = (IDictionary<string, object?>)dest.Data.ElementAt(1);
         Assert.False(second.ContainsKey("result"));
         Assert.IsType<string>(second["ex"], exactMatch: false);
     }
@@ -1142,7 +1143,7 @@ public class AIBatchTransformationTests
 
         // Assert: row marked with Exception due to enum violation
         Assert.Single(dest.Data);
-        IDictionary<string, object> row = dest.Data.ElementAt(0);
+        IDictionary<string, object> row = dest.Data.ElementAt(0)!;
         Assert.True(row.ContainsKey("result")); // result exists with validation error
         Assert.IsType<string>(row["ex"], exactMatch: false);
     }
@@ -1198,7 +1199,7 @@ public class AIBatchTransformationTests
 
         // Assert
         Assert.Single(dest.Data);
-        IDictionary<string, object> row = dest.Data.ElementAt(0);
+        IDictionary<string, object> row = dest.Data.ElementAt(0)!;
         Assert.IsType<string>(row["ex"], exactMatch: false);
     }
 
@@ -1258,7 +1259,7 @@ public class AIBatchTransformationTests
 
         // Assert
         Assert.Single(dest.Data);
-        IDictionary<string, object> row = dest.Data.ElementAt(0);
+        IDictionary<string, object> row = dest.Data.ElementAt(0)!;
         Assert.True(row.ContainsKey("result"));
         Assert.IsType<string>(row["ex"], exactMatch: false);
         if (verifyRaw)
@@ -1313,7 +1314,7 @@ public class AIBatchTransformationTests
         Assert.Equal(inputCount, dest.Data.Count);
         foreach (var row in dest.Data)
         {
-            IDictionary<string, object> d = row;
+            IDictionary<string, object?> d = row;
             Assert.False(d.ContainsKey("result"));
             Assert.IsType<string>(d["ex"], exactMatch: false);
         }
@@ -1395,7 +1396,7 @@ public class AIBatchTransformationTests
         // Assert: first enriched, second has Exception
         Assert.Equal(2, dest.Data.Count);
         Assert.Equal("1", (object)((dynamic)dest.Data.ElementAt(0)).result.rid);
-        var second = (IDictionary<string, object>)dest.Data.ElementAt(1);
+        var second = (IDictionary<string, object?>)dest.Data.ElementAt(1);
         Assert.False(second.ContainsKey("result"));
         Assert.IsType<string>(second["ex"], exactMatch: false);
     }
@@ -1441,7 +1442,7 @@ public class AIBatchTransformationTests
         dynamic a = new ExpandoObject();
         a.id = 1;
         dynamic b = new ExpandoObject();
-        b.other = 2; // нет id
+        b.other = 2; // non-existent id
         var input = new[] { (ExpandoObject)a, (ExpandoObject)b };
 
         var source = new MemorySource<ExpandoObject>(input);
@@ -1472,7 +1473,7 @@ public class AIBatchTransformationTests
         // Assert: output contains both rows, error buffer has one error (for the second row)
         Assert.Equal(2, dest.Data.Count);
         Assert.Single(errorDest.Data);
-        IDictionary<string, object> second = dest.Data.ElementAt(1);
+        IDictionary<string, object> second = dest.Data.ElementAt(1)!;
         Assert.False(second.ContainsKey("result"));
         Assert.IsType<string>(second["ex"], exactMatch: false);
     }
@@ -1507,7 +1508,7 @@ public class AIBatchTransformationTests
         // Assert: id=1 enriched, id=2 Exception, id=3 enriched
         Assert.Equal(3, dest.Data.Count);
         Assert.Equal(1.0, ((dynamic)dest.Data.ElementAt(0)).result.rid);
-        IDictionary<string, object> second = dest.Data.ElementAt(1);
+        IDictionary<string, object> second = dest.Data.ElementAt(1)!;
         Assert.False(second.ContainsKey("result"));
         Assert.IsType<string>(second["ex"], exactMatch: false);
         Assert.Equal(3.0, ((dynamic)dest.Data.ElementAt(2)).result.rid);
@@ -1580,7 +1581,7 @@ public class AIBatchTransformationTests
         Assert.Equal(expectedDisposes, created);
     }
 
-    private static ExpandoObject CreateExpando(object id, string sentiment = null)
+    private static ExpandoObject CreateExpando(object id, string? sentiment = null)
     {
         dynamic o = new ExpandoObject();
         o.id = id;
@@ -1596,7 +1597,7 @@ public class AIBatchTransformationTests
         string schema,
         int batchSize,
         bool failOnError,
-        string rawField = null
+        string? rawField = null
     )
     {
         var settings = new ApiSettings();
@@ -1628,23 +1629,25 @@ public class AIBatchTransformationTests
     private sealed class FailingChatClient : IChatClient
     {
         public Task<ChatResponse> GetResponseAsync(
-            IEnumerable<ChatMessage> prompt,
-            Microsoft.Extensions.AI.ChatOptions options = null,
+            IEnumerable<ChatMessage> messages,
+            Microsoft.Extensions.AI.ChatOptions? options = null,
             CancellationToken cancellationToken = default
         ) => Task.FromException<ChatResponse>(new InvalidOperationException("AI error"));
 
         public IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(
-            IEnumerable<ChatMessage> prompt,
-            Microsoft.Extensions.AI.ChatOptions options = null,
+            IEnumerable<ChatMessage> messages,
+            Microsoft.Extensions.AI.ChatOptions? options = null,
             CancellationToken cancellationToken = default
         ) => GetEmptyAsync();
 
-        public object GetService(Type serviceType, object serviceKey = null) => null;
+        public object? GetService(Type serviceType, object? serviceKey = null) => null;
 
+#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously
         private static async IAsyncEnumerable<ChatResponseUpdate> GetEmptyAsync()
         {
             yield break;
         }
+#pragma warning restore CS1998
 
         public void Dispose() { }
     }

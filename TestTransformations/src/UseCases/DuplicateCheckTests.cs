@@ -32,13 +32,13 @@ namespace TestTransformations.UseCases
                 {
                     Delimiter = ";",
                     TrimOptions = TrimOptions.Trim,
-                    MissingFieldFound = null
-                }
+                    MissingFieldFound = null,
+                },
             };
             return source;
         }
 
-        private DbDestination<Poco> CreateDestinationTable(string tableName)
+        private static DbDestination<Poco> CreateDestinationTable(string tableName)
         {
             DropTableTask.DropIfExists(SqlConnection, tableName);
             var dest = new DbDestination<Poco>(SqlConnection, tableName);
@@ -49,14 +49,14 @@ namespace TestTransformations.UseCases
                     new("PKey", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                     new("ID", "INT", allowNulls: false),
                     new("Value", "NVARCHAR(100)", allowNulls: false),
-                    new("Name", "NVARCHAR(100)", allowNulls: false)
+                    new("Name", "NVARCHAR(100)", allowNulls: false),
                 }
             );
             stagingTable.CreateTable(SqlConnection);
             return dest;
         }
 
-        private void AssertDataWithoutDuplicates()
+        private static void AssertDataWithoutDuplicates()
         {
             Assert.Equal(3, RowCountTask.Count(SqlConnection, "dbo.DuplicateCheck"));
             Assert.Equal(

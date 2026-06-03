@@ -10,7 +10,11 @@ namespace ALE.ETLBox.ControlFlow
     {
         internal override string GetSql()
         {
-            return $@"DROP VIEW {ON.QuotedFullName}";
+            return ConnectionType switch
+            {
+                ConnectionManagerType.Access => $"DROP TABLE {ON.QuotedFullName}",
+                _ => $"DROP VIEW {ON.QuotedFullName}",
+            };
         }
 
         public DropViewTask() { }

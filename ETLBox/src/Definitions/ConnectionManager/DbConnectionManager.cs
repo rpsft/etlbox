@@ -23,7 +23,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public bool IsInBulkInsert
         {
-            get => throw new NotSupportedException();
+            get => false;
             set => throw new NotSupportedException();
         }
 

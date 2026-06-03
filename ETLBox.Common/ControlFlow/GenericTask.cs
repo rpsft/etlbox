@@ -16,9 +16,28 @@ namespace ALE.ETLBox.Common.ControlFlow
         }
         public virtual string TaskName { get; set; } = "N/A";
 
+        [CanBeNull]
         private ILogger _logger;
+
+        /// <summary>
+        /// Logger instance. When injected via constructor, the injected logger is used.
+        /// Otherwise falls back to <see cref="ControlFlow.LoggerFactory"/>.
+        /// </summary>
         public ILogger Logger => _logger ??= ControlFlow.LoggerFactory.CreateLogger<GenericTask>();
 
+        /// <summary>
+        /// Creates a new instance with no logger (uses static LoggerFactory fallback).
+        /// </summary>
+        protected GenericTask() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        /// <param name="logger">Optional logger instance. If null, falls back to static LoggerFactory.</param>
+        protected GenericTask([CanBeNull] ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public IConnectionManager ConnectionManager
         {

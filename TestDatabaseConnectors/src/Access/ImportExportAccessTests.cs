@@ -128,7 +128,7 @@ namespace TestDatabaseConnectors.Access
             destTable.AssertTestData();
         }
 
-        private async Task InsertTestData(TableDefinition table)
+        private static async Task InsertTestData(TableDefinition table)
         {
             SqlTask.ExecuteNonQueryFormatted(
                 AccessOdbcConnection,

@@ -1,6 +1,5 @@
 using System.Globalization;
 using ALE.ETLBox.Serialization.DataFlow;
-using FluentAssertions;
 
 namespace ETLBox.Serialization.Tests
 {
@@ -24,8 +23,8 @@ namespace ETLBox.Serialization.Tests
         public void GetValue_ObjectValueShouldBeReturned(Type type, object? value)
         {
             var result = "1".TryParse(type, CultureInfo.InvariantCulture, out var obj);
-            result.Should().BeTrue();
-            obj.Should().Be(value);
+            Assert.True(result);
+            Assert.Equal(value, obj);
         }
 
         [Theory]
@@ -41,8 +40,8 @@ namespace ETLBox.Serialization.Tests
                 out var obj
             );
 
-            result.Should().BeTrue();
-            obj.Should().Be(id);
+            Assert.True(result);
+            Assert.Equal(id, obj);
         }
 
         [Theory]
@@ -55,8 +54,8 @@ namespace ETLBox.Serialization.Tests
 
             var result = date.TryParse(type, CultureInfo.InvariantCulture, out var obj);
 
-            result.Should().BeTrue();
-            obj.Should().Be(now);
+            Assert.True(result);
+            Assert.Equal(now, obj);
         }
 
         [Fact]
@@ -68,8 +67,8 @@ namespace ETLBox.Serialization.Tests
                 out var obj
             );
 
-            result.Should().BeFalse();
-            obj.Should().BeNull();
+            Assert.False(result);
+            Assert.Null(obj);
         }
 
         public struct UnsupportedType

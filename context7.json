@@ -1,0 +1,35 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "ETLBox.Classic",
+  "description": "Lightweight open-source .NET ETL library for building data integration pipelines with sources, transformations, and destinations",
+  "folders": ["docs", "ETLBox/src", "ETLBox.Common", "ETLBox.Primitives"],
+  "excludeFolders": [
+    "bin",
+    "obj",
+    "TestShared",
+    "TestTransformations",
+    "TestControlFlowTasks",
+    "TestDatabaseConnectors",
+    "TestFlatFileConnectors",
+    "TestNonParallel",
+    "TestOtherConnectors",
+    "TestConnectionManager",
+    "TestPerformance",
+    "TestHelper",
+    "_site",
+    ".husky",
+    ".nuget",
+    "node_modules"
+  ],
+  "excludeFiles": [
+    "CHANGELOG.md",
+    ".gitignore"
+  ],
+  "rules": [
+    "Use LinkTo() pattern to connect dataflow components",
+    "Call Execute() on sources and Wait() on destinations to run a dataflow",
+    "Use IConnectionManager implementations for database access",
+    "Prefer generic typed components (e.g. DbSource<T>) over non-generic variants",
+    "All dataflow components support async execution via TPL Dataflow"
+  ]
+}

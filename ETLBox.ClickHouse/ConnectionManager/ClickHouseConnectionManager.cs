@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 
 namespace ETLBox.ClickHouse.ConnectionManager
 {
+    [PublicAPI]
     public class ClickHouseConnectionManager : DbConnectionManager<ClickHouseConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } =

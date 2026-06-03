@@ -27,7 +27,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
-        private void RunProcess1()
+        private static void RunProcess1()
         {
             StartLoadProcessTask.Start(SqlConnection, "Process 1", "Start");
             SqlTask.ExecuteNonQuery(SqlConnection, "Just some sql", "Select 1 as test");

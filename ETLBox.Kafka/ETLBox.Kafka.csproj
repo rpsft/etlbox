@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ALE.ETLBox.DataFlow</RootNamespace>
-    <LangVersion>default</LangVersion>
     <PackageId>EtlBox.Classic.Kafka</PackageId>
     <Nullable>enable</Nullable>
     <Description>

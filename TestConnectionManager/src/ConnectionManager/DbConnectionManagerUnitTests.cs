@@ -59,10 +59,10 @@ namespace TestConnectionManager.ConnectionManager
                 return Connection!.Object.BeginTransaction();
             }
 
-            public IDbTransaction BeginTransaction(IsolationLevel l)
+            public IDbTransaction BeginTransaction(IsolationLevel il)
             {
-                Transaction?.SetupGet(t => t.IsolationLevel).Returns(l);
-                return Connection!.Object.BeginTransaction(l);
+                Transaction?.SetupGet(t => t.IsolationLevel).Returns(il);
+                return Connection!.Object.BeginTransaction(il);
             }
 
             public void ChangeDatabase(string databaseName) { }
@@ -288,11 +288,13 @@ namespace TestConnectionManager.ConnectionManager
 
             commandMock.SetupGet(c => c.Transaction).Returns((IDbTransaction)null);
             commandMock
-                .SetupSet(c => c.Transaction)
-                .Callback(t => commandMock.SetupGet(c => c.Transaction).Returns(t));
+                .SetupSet(c => c.Transaction = It.IsAny<IDbTransaction>())
+                .Callback(
+                    (IDbTransaction t) => commandMock.SetupGet(c => c.Transaction).Returns(t)
+                );
             commandMock
-                .SetupSet(c => c.CommandText)
-                .Callback(t => commandMock.SetupGet(c => c.CommandText).Returns(t));
+                .SetupSet(c => c.CommandText = It.IsAny<string>())
+                .Callback((string t) => commandMock.SetupGet(c => c.CommandText).Returns(t));
 
             // Act
             var command = connectionManager.CreateCommand(commandText, null);

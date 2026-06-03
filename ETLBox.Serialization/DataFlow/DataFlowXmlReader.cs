@@ -12,13 +12,15 @@ using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
 
+#pragma warning disable CS0618 // Type or member is obsolete - DataFlowActivator backward compat
+
 namespace ALE.ETLBox.Serialization.DataFlow;
 
 /// <summary>
 /// Read data flow configuration from XML
 /// </summary>
 [PublicAPI]
-public sealed class DataFlowXmlReader
+public sealed class DataFlowXmlReader : IDataFlowXmlContext
 {
     // Type cache for all serializable Dataflow types
     private readonly Type[] _types;
@@ -32,13 +34,17 @@ public sealed class DataFlowXmlReader
     // Check if the universal error destination was added to data flow
     private bool _allErrorsDestinationAdded;
 
+    // Activator used to create data flow component instances
+    private readonly IDataFlowActivator _activator;
+
     // Culture settings for deserialization
     public CultureInfo CurrentCulture { get; set; }
 
     public DataFlowXmlReader(
         IDataFlow dataFlow,
         CultureInfo? currentCulture = null,
-        IDataFlowDestination<ETLBoxError>? linkAllErrorsTo = null
+        IDataFlowDestination<ETLBoxError>? linkAllErrorsTo = null,
+        IServiceProvider? serviceProvider = null
     )
     {
         _linkAllErrorsTo = linkAllErrorsTo;
@@ -46,6 +52,10 @@ public sealed class DataFlowXmlReader
         _dataFlow.Destinations = new List<IDataFlowDestination<ExpandoObject>>();
         _dataFlow.ErrorDestinations = new List<IDataFlowDestination<ETLBoxError>>();
         CurrentCulture = currentCulture ?? CultureInfo.CurrentCulture;
+        _activator =
+            serviceProvider != null
+                ? new ServiceProviderActivator(serviceProvider)
+                : new DefaultDataFlowActivator();
 
         var types = new List<Type>();
         var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
@@ -78,6 +88,67 @@ public sealed class DataFlowXmlReader
         _types = types.ToArray();
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="DataFlowXmlReader"/> with a custom activator.
+    /// </summary>
+    public DataFlowXmlReader(
+        IDataFlow dataFlow,
+        IDataFlowActivator activator,
+        CultureInfo? currentCulture = null,
+        IDataFlowDestination<ETLBoxError>? linkAllErrorsTo = null
+    )
+        : this(dataFlow, currentCulture, linkAllErrorsTo)
+    {
+        _activator = activator ?? throw new ArgumentNullException(nameof(activator));
+    }
+
+    /// <inheritdoc />
+    Type? IDataFlowXmlContext.ResolveType(string typeName)
+    {
+        try
+        {
+            return GetTypeByName(_types, typeName);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+        catch (InvalidDataException)
+        {
+            return null;
+        }
+    }
+
+    /// <inheritdoc />
+    object? IDataFlowXmlContext.CreateObject(string typeName, XElement element)
+    {
+        Type type;
+        try
+        {
+            type = GetTypeByName(_types, typeName);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+        catch (InvalidDataException)
+        {
+            return null;
+        }
+        var result = CreateObject(type, element);
+        if (
+            result is IDataFlowDestination<ExpandoObject> dest
+            && !_dataFlow.Destinations.Contains(dest)
+        )
+            _dataFlow.Destinations.Add(dest);
+        if (
+            result is IDataFlowDestination<ETLBoxError> errDest
+            && !_dataFlow.ErrorDestinations.Contains(errDest)
+        )
+            _dataFlow.ErrorDestinations.Add(errDest);
+        return result;
+    }
+
     public void Read(XmlReader reader)
     {
         reader.MoveToContent();
@@ -104,13 +175,22 @@ public sealed class DataFlowXmlReader
         }
     }
 
-    public static T Deserialize<T>(string xml, ErrorLogDestination errorLogDestination)
+    public static T Deserialize<T>(
+        string xml,
+        ErrorLogDestination errorLogDestination,
+        IServiceProvider? serviceProvider = null
+    )
         where T : IDataFlow, new()
     {
         using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
         using var xmlReader = XmlReader.Create(stream);
         var step = Activator.CreateInstance<T>();
-        var reader = new DataFlowXmlReader(step, CultureInfo.InvariantCulture, errorLogDestination);
+        var reader = new DataFlowXmlReader(
+            step,
+            CultureInfo.InvariantCulture,
+            errorLogDestination,
+            serviceProvider
+        );
         reader.Read(xmlReader);
         return step;
     }
@@ -128,6 +208,15 @@ public sealed class DataFlowXmlReader
                 ?? throw new InvalidOperationException(
                     $"Invalid configuration. Root source '{reader.Name}' must implement {nameof(IDataFlowSource<ExpandoObject>)}"
                 );
+            // When Pipeline is the root source with no external LinkTo, Destinations would be empty
+            // and EtlDataFlowStep.Invoke() would return without awaiting its completion.
+            // If an external destination exists it already waits via AddPredecessorCompletion,
+            // so this is redundant but harmless (children are not yet parsed here to check).
+            if (
+                _dataFlow.Source is IDataFlowDestination<ExpandoObject> sourceDest
+                && !_dataFlow.Destinations.Contains(sourceDest)
+            )
+                _dataFlow.Destinations.Add(sourceDest);
             return;
         }
 
@@ -228,26 +317,25 @@ public sealed class DataFlowXmlReader
 
     private object? CreateObject(Type type, XContainer node)
     {
+        var result = CreateObjectCore(type, node);
+        ApplyLinkAllErrorsTo(result);
+        return result;
+    }
+
+    // Creates an object using full type routing without applying global post-creation actions.
+    private object? CreateObjectCore(Type type, XContainer node)
+    {
         if (IsValueType(type))
-        {
             return CreateValueType(type, node, CurrentCulture);
-        }
-
         if (type.IsArray)
-        {
             return CreateArray(type, node);
-        }
-
         if (
             Array.Exists(
                 type.GetInterfaces(),
                 i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>)
             )
         )
-        {
             return CreateList(type, node);
-        }
-
         return IsDictionary(type) ? CreateDictionary(type, node) : CreateInstance(type, node);
     }
 
@@ -259,7 +347,7 @@ public sealed class DataFlowXmlReader
                 $"Invalid configuration. Implementation for element type of array '{type}' not found"
             );
 
-        var list = DataFlowActivator.CreateInstance(type);
+        var list = _activator.CreateInstance(type);
         var set = type.GetMethod("Add");
         if (set == null)
             return list;
@@ -277,11 +365,17 @@ public sealed class DataFlowXmlReader
 
     private object? CreateInstance(Type type, XContainer node)
     {
-        var instance = DataFlowActivator.CreateInstance(type);
+        var instance = _activator.CreateInstance(type);
 
         if (instance is null)
         {
             return null;
+        }
+
+        if (instance is IDataFlowXmlSerializable xmlSerializable)
+        {
+            xmlSerializable.ReadXml((XElement)node, this);
+            return instance;
         }
 
         // Standard property-by-property deserialization
@@ -290,21 +384,20 @@ public sealed class DataFlowXmlReader
             InitializeInstanceProperty(instance, type, propXml);
         }
 
+        return instance;
+    }
+
+    private void ApplyLinkAllErrorsTo(object? instance)
+    {
         if (_linkAllErrorsTo == null || instance is not ILinkErrorSource errorSource)
-        {
-            return instance;
-        }
+            return;
 
         errorSource.LinkErrorTo(_linkAllErrorsTo);
         if (_allErrorsDestinationAdded)
-        {
-            return instance;
-        }
+            return;
 
         _dataFlow.ErrorDestinations.Add(_linkAllErrorsTo);
         _allErrorsDestinationAdded = true;
-
-        return instance;
     }
 
     private void InitializeInstanceProperty(object instance, MemberInfo type, XElement? propXml)
@@ -607,6 +700,7 @@ public sealed class DataFlowXmlReader
         if (
             method.GetParameters().Length != 1
             || !method.GetParameters()[0].ParameterType.IsInterface
+            || !method.GetParameters()[0].ParameterType.IsGenericType
             || !typeof(IDataFlowLinkTarget<>).IsAssignableFrom(
                 method.GetParameters()[0].ParameterType.GetGenericTypeDefinition()
             )
@@ -661,7 +755,7 @@ public sealed class DataFlowXmlReader
         Type? type = null;
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
-            var types = assembly.GetTypes().Where(t => t.Name == typeName);
+            var types = SafeGetTypes(assembly).Where(t => t.Name == typeName);
             if (baseType is { IsInterface: true })
             {
                 types = types.Where(t => Array.Exists(t.GetInterfaces(), i => i == baseType));
@@ -779,31 +873,90 @@ public sealed class DataFlowXmlReader
 
     private static IEnumerable<Type> GetDataFlowTypes(Assembly assembly)
     {
+        return SafeGetTypes(assembly)
+            .Where(t =>
+                t.IsClass
+                && Array.Exists(
+                    t.GetInterfaces(),
+                    i =>
+                        i.IsGenericType
+                        && (
+                            i.GetGenericTypeDefinition().FullName
+                                == typeof(IDataFlowLinkSource<>).FullName
+                            || i.GetGenericTypeDefinition().FullName
+                                == typeof(IDataFlowLinkTarget<>).FullName
+                            || i.GetGenericTypeDefinition().FullName
+                                == typeof(IDataFlowTransformation<,>).FullName
+                        )
+                )
+            );
+    }
+
+    /// <summary>
+    /// Safely retrieves types from an assembly, handling <see cref="ReflectionTypeLoadException"/>
+    /// that occurs when the assembly references types from unavailable dependencies.
+    /// </summary>
+    private static Type[] SafeGetTypes(Assembly assembly)
+    {
         try
         {
-            return assembly
-                .GetTypes()
-                .Where(t =>
-                    t.IsClass
-                    && Array.Exists(
-                        t.GetInterfaces(),
-                        i =>
-                            i.IsGenericType
-                            && (
-                                i.GetGenericTypeDefinition().FullName
-                                    == typeof(IDataFlowLinkSource<>).FullName
-                                || i.GetGenericTypeDefinition().FullName
-                                    == typeof(IDataFlowLinkTarget<>).FullName
-                                || i.GetGenericTypeDefinition().FullName
-                                    == typeof(IDataFlowTransformation<,>).FullName
-                            )
-                    )
-                );
+            return assembly.GetTypes();
         }
-        catch
+        catch (ReflectionTypeLoadException ex)
         {
-            // Could not read types - continue with next assembly
-            return Enumerable.Empty<Type>();
+            return ex.Types.Where(t => t is not null).ToArray();
         }
+    }
+
+    /// <inheritdoc />
+    IDataFlowXmlContext IDataFlowXmlContext.WithoutGlobalActions() =>
+        new SuppressedActionsContext(this);
+
+    /// <summary>
+    /// A delegating context that forwards all calls to the parent reader except
+    /// <see cref="CreateObject"/>, where global post-creation actions are suppressed.
+    /// Returned by <see cref="IDataFlowXmlContext.WithoutGlobalActions"/>.
+    /// </summary>
+    private sealed class SuppressedActionsContext : IDataFlowXmlContext
+    {
+        private readonly DataFlowXmlReader _reader;
+
+        internal SuppressedActionsContext(DataFlowXmlReader reader) => _reader = reader;
+
+        public Type? ResolveType(string typeName) =>
+            ((IDataFlowXmlContext)_reader).ResolveType(typeName);
+
+        public object? CreateObject(string typeName, XElement element)
+        {
+            Type type;
+            try
+            {
+                type = GetTypeByName(_reader._types, typeName);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            catch (InvalidDataException)
+            {
+                return null;
+            }
+
+            // Use CreateObjectCore to skip global post-creation actions (ApplyLinkAllErrorsTo).
+            var result = _reader.CreateObjectCore(type, element);
+            if (
+                result is IDataFlowDestination<ExpandoObject> dest
+                && !_reader._dataFlow.Destinations.Contains(dest)
+            )
+                _reader._dataFlow.Destinations.Add(dest);
+            if (
+                result is IDataFlowDestination<ETLBoxError> errDest
+                && !_reader._dataFlow.ErrorDestinations.Contains(errDest)
+            )
+                _reader._dataFlow.ErrorDestinations.Add(errDest);
+            return result;
+        }
+
+        public IDataFlowXmlContext WithoutGlobalActions() => this;
     }
 }

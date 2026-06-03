@@ -3,6 +3,7 @@ using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.Helper;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -50,6 +51,15 @@ namespace ALE.ETLBox.DataFlow
         private LookupTypeInfo TypeInfo { get; set; }
 
         public LookupTransformation()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public LookupTransformation(
+            [CanBeNull] ILogger<LookupTransformation<TInput, TSourceOutput>> logger
+        )
+            : base(logger)
         {
             LookupBuffer = new CustomDestination<TSourceOutput>(this, FillBuffer);
             DefaultInitWithMatchRetrieveAttributes();
@@ -169,6 +179,12 @@ namespace ALE.ETLBox.DataFlow
     public class LookupTransformation : LookupTransformation<ExpandoObject, ExpandoObject>
     {
         public LookupTransformation() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public LookupTransformation(ILogger<LookupTransformation> logger)
+            : base(logger) { }
 
         public LookupTransformation(IDataFlowSource<ExpandoObject> lookupSource)
             : base(lookupSource) { }

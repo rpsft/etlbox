@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ALE.ETLBox.Serialization</RootNamespace>
-    <LangVersion>10</LangVersion>
     <PackageId>ETLBox.Classic.Serialization</PackageId>
     <Nullable>enable</Nullable>
     <Description>
@@ -14,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
   </ItemGroup>
 
   <ItemGroup>

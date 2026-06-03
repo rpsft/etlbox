@@ -1,6 +1,7 @@
 using System.Threading;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -21,6 +22,12 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
 
         public CustomSource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CustomSource(ILogger<CustomSource<TOutput>> logger)
+            : base(logger) { }
 
         public CustomSource(Func<TOutput> readFunc, Func<bool> readCompletedFunc)
             : this()
@@ -64,6 +71,12 @@ namespace ALE.ETLBox.DataFlow
     public class CustomSource : CustomSource<ExpandoObject>
     {
         public CustomSource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CustomSource(ILogger<CustomSource> logger)
+            : base(logger) { }
 
         public CustomSource(Func<ExpandoObject> readFunc, Func<bool> readCompletedFunc)
             : base(readFunc, readCompletedFunc) { }

@@ -2,6 +2,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
@@ -37,6 +38,13 @@ namespace ALE.ETLBox.DataFlow
         private XmlTypeInfo TypeInfo { get; set; }
 
         public XmlSource()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public XmlSource([CanBeNull] ILogger<XmlSource<TOutput>> logger)
+            : base(logger)
         {
             TypeInfo = new XmlTypeInfo(typeof(TOutput));
             if (!TypeInfo.IsDynamic)
@@ -128,6 +136,12 @@ namespace ALE.ETLBox.DataFlow
     public class XmlSource : XmlSource<ExpandoObject>
     {
         public XmlSource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public XmlSource(ILogger<XmlSource> logger)
+            : base(logger) { }
 
         public XmlSource(string uri)
             : base(uri) { }

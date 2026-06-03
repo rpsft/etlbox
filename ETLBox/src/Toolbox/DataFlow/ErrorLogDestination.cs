@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
-using Microsoft.Extensions.Logging;
-using ETLBox.Primitives;
 using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -13,6 +13,13 @@ namespace ALE.ETLBox.DataFlow
         public BlockingCollection<ETLBoxError> Errors { get; set; } = new();
 
         public ErrorLogDestination()
+            : this(null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public ErrorLogDestination([CanBeNull] ILogger<ErrorLogDestination> logger)
+            : base(logger)
         {
             TargetAction = new ActionBlock<ETLBoxError>(WriteRecord);
             SetCompletionTask();
