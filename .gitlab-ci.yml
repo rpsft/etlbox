@@ -1,3 +1,4 @@
+#file: noinspection CIAidGitLabYamlNeedsJobUnavailable
 #file: noinspection CIAidGitLabYamlNeedsJobUnavailable - This is needed for an external job `get_unique_semversion`
 include:
   # GitVersion component
@@ -117,6 +118,7 @@ test_job:
       dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
       --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
       --collect="XPlat Code Coverage"
+      --blame-hang --blame-hang-timeout 10m --blame-hang-dump-type full
   after_script:
     - .tools/reportgenerator "-reports:./**/*.cobertura.xml" "-targetdir:.coverage" -reportTypes:TextSummary
     - cat .coverage/Summary.txt

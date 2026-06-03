@@ -243,7 +243,7 @@ namespace ETLBox.Rest.Tests
         }
 
         [Serializable]
-        public class EtlDataFlowStep : IDataFlow, IXmlSerializable
+        public class EtlDataFlowStep : IDataFlow, IDataFlowResourceOwner, IXmlSerializable
         {
             private readonly DataFlowResources _resources = new();
 

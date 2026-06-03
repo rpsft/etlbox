@@ -25,33 +25,50 @@ All notable changes to this project will be documented in this file.
   frontier.
 
 - New: at-least-once checkpointing in `ETLBox.Common.DataFlow.Streaming`.
-  - `ICheckpointStore<TPosition>` (`where TPosition : IComparable<TPosition>`) persists a typed,
-    monotone stream position keyed by `checkpointId` — one stream can be tailed by many independent
-    consumers, each with its own checkpoint (the Kafka consumer-group model).
-  - `CheckpointWriter<TInput, TPosition>` is a terminal destination placed after the real
-    destination; it commits the position (extracted from the record via a `Position` selector) only
-    once a record has been durably written downstream, advancing strictly forward. A crash between
-    the destination write and the commit replays the record (a duplicate) rather than dropping it —
-    at-least-once; consumers must be idempotent. For a co-located destination + checkpoint, call
-    `CommitAsync` inside the destination's transaction for effective exactly-once.
-  - `DbCheckpointStore<TPosition>` is a ready-made store over an ETLBox `IConnectionManager`
-    (configurable table/key/position columns; positions stored natively).
-  - The sources are load-only: they load the committed position on start and never commit it
-    themselves. Implement `ICheckpointStore<TPosition>` for any backend (Redis, database, file, …).
+    - `ICheckpointStore<TPosition>` (`where TPosition : IComparable<TPosition>`) persists a typed,
+      monotone stream position keyed by `checkpointId` — one stream can be tailed by many independent
+      consumers, each with its own checkpoint (the Kafka consumer-group model).
+    - `CheckpointWriter<TInput, TPosition>` is a terminal destination placed after the real
+      destination; it commits the position (extracted from the record via a `Position` selector) only
+      once a record has been durably written downstream, advancing strictly forward. A crash between
+      the destination write and the commit replays the record (a duplicate) rather than dropping it —
+      at-least-once; consumers must be idempotent. For a co-located destination + checkpoint, call
+      `CommitAsync` inside the destination's transaction for effective exactly-once.
+    - `DbCheckpointStore<TPosition>` is a ready-made store over an ETLBox `IConnectionManager`
+      (configurable table/key/position columns; positions stored natively).
+    - The sources are load-only: they load the committed position on start and never commit it
+      themselves. Implement `ICheckpointStore<TPosition>` for any backend (Redis, database, file, …).
 
 - New: `DataFlowResources` helper class in `ETLBox.Serialization`. Provides a composable,
-  thread-safe implementation of `IDataFlow` resource ownership (connection manager pool and
-  disposable resource pool). Embed it as a field and delegate `GetOrAddConnectionManager` and
-  `GetOrAddResource` to it to avoid re-implementing the `ConcurrentDictionary` boilerplate in every
-  `IDataFlow` implementor.
+  thread-safe implementation of dataflow resource ownership — the `IDataFlow` connection manager
+  pool and the `IDataFlowResourceOwner` disposable resource pool. Embed it as a field and delegate
+  `GetOrAddConnectionManager` / `GetOrAddResource` to it to avoid re-implementing the
+  `ConcurrentDictionary` boilerplate in every `IDataFlow` implementor.
 
-- New: `IDataFlow.GetOrAddResource(string key, Func<IDisposable> factory)` and the generic
-  `DataFlowExtensions.GetOrAddResource<T>` extension. `DataFlowXmlReader` now automatically
-  registers any `IDisposable` component property with the owning `IDataFlow` for lifetime management.
-  Components with identical XML configuration share a single instance (deduplicated by type + content
-  key); all registered resources are disposed when the flow is disposed. This applies to both
-  concrete class properties (e.g., `MongoClient`) and abstract/interface properties that resolve to
-  an `IDisposable` implementation.
+- New: `IDataFlowResourceOwner` — an **optional** capability interface (with a `Version` for forward
+  compatibility) that declares the full resource-ownership contract: `GetOrAddConnectionManager(...)`
+  and `GetOrAddResource(string key, Func<IDisposable> factory)` (plus the generic
+  `DataFlowResourceOwnerExtensions.GetOrAddResource<T>` extension). `GetOrAddConnectionManager` also
+  stays on `IDataFlow` for backward compatibility, so a data flow implementing both interfaces
+  satisfies them with one method — and the composable `DataFlowResources` helper now implements every
+  resource method through this single interface rather than exposing a contract-less public method.
+  Exposing `GetOrAddResource` here rather than directly on `IDataFlow` is what keeps disposable-resource
+  ownership from binary-breaking existing external `IDataFlow` implementations compiled against earlier
+  versions. `DataFlowXmlReader`
+  probes for the capability (`is IDataFlowResourceOwner`) and, when present, automatically registers
+  `IDisposable` component properties with the owning flow — components with identical XML
+  configuration share a single instance (deduplicated by type + content key) and are disposed with
+  the flow. When the flow does **not** implement `IDataFlowResourceOwner`, the reader falls back to
+  plain instance creation (no dedup, no flow-owned disposal), preserving pre-existing behavior. This
+  applies to both concrete class properties (e.g., `MongoClient`) and abstract/interface properties
+  that resolve to an `IDisposable` implementation.
+
+- New: `ILifetimeAwareActivator` — an optional `IDataFlowActivator` capability that reports whether
+  instances of a type are owned by an external scope (e.g. a DI container). When a disposable
+  property resolves to a container-managed service (`ServiceProviderActivator` over a registered
+  type), the data flow no longer takes ownership of it — the container's lifetime applies and the
+  flow does not dispose it. Instances created fresh by the activator (e.g. `DefaultDataFlowActivator`)
+  remain flow-owned and are disposed with the flow.
 
 <a name="1.18.0"></a>
 
