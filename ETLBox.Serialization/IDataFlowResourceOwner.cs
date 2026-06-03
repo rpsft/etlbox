@@ -1,19 +1,29 @@
 using System;
+using ETLBox.Primitives;
 using JetBrains.Annotations;
 
 namespace ALE.ETLBox.Serialization
 {
     /// <summary>
     /// Optional capability that an <see cref="IDataFlow"/> implementation may provide to own and
-    /// deduplicate arbitrary <see cref="IDisposable"/> resources (e.g. non-ADO.NET clients such as
-    /// <c>MongoClient</c> or <c>HttpClient</c> that have no natural <see cref="ETLBox.Primitives.IConnectionManager"/>).
+    /// deduplicate the flow's disposable resources: both <see cref="IConnectionManager"/>s (via
+    /// <see cref="GetOrAddConnectionManager"/>) and arbitrary <see cref="IDisposable"/> resources such
+    /// as non-ADO.NET clients — <c>MongoClient</c>, <c>HttpClient</c> — that have no natural connection
+    /// manager (via <see cref="GetOrAddResource"/>). It is the contract implemented by the reusable
+    /// <see cref="DataFlowResources"/> helper.
     /// </summary>
     /// <remarks>
-    /// This is a <b>separate, optional</b> interface — intentionally NOT part of <see cref="IDataFlow"/> —
-    /// so that adding resource ownership does not binary-break existing external <see cref="IDataFlow"/>
-    /// implementations compiled against earlier ETLBox versions. The XML reader probes for this
-    /// capability via a type check and falls back to plain instance creation (without dedup/ownership)
-    /// when the data flow does not implement it.
+    /// This is a <b>separate, optional</b> capability interface — exposing <see cref="GetOrAddResource"/>
+    /// here rather than directly on <see cref="IDataFlow"/> avoids binary-breaking existing external
+    /// <see cref="IDataFlow"/> implementations compiled against earlier ETLBox versions. The XML reader
+    /// probes for this capability via a type check and falls back to plain instance creation (without
+    /// dedup/ownership) when the data flow does not implement it.
+    /// <para>
+    /// <see cref="GetOrAddConnectionManager"/> is declared here too, so the resource-ownership contract
+    /// is complete — one place owns every kind of flow resource. The same method also lives on
+    /// <see cref="IDataFlow"/> (where it always has, for backward compatibility); a data flow that
+    /// implements both interfaces satisfies them with a single method.
+    /// </para>
     /// </remarks>
     [PublicAPI]
     public interface IDataFlowResourceOwner
@@ -23,6 +33,21 @@ namespace ALE.ETLBox.Serialization
         /// version so the contract can evolve without breaking older implementations.
         /// </summary>
         int Version { get; }
+
+        /// <summary>
+        /// Gets or adds a connection manager to the flow's ownership pool. Mirrors
+        /// <see cref="IDataFlow.GetOrAddConnectionManager"/>: connection managers sharing the same
+        /// <paramref name="connectionManagerType"/> and <paramref name="key"/> are deduplicated and
+        /// disposed together with the flow.
+        /// </summary>
+        /// <param name="connectionManagerType">Connection manager type. Must implement <see cref="IConnectionManager"/>.</param>
+        /// <param name="key">Deduplication key within the pool, such as the connection string.</param>
+        /// <param name="factory">Creates the connection manager when no entry for the key exists yet.</param>
+        IConnectionManager GetOrAddConnectionManager(
+            Type connectionManagerType,
+            string? key,
+            Func<Type, string?, IConnectionManager> factory
+        );
 
         /// <summary>
         /// Gets or adds a disposable resource to the flow's ownership pool.

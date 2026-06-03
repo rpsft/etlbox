@@ -46,10 +46,15 @@ All notable changes to this project will be documented in this file.
   `ConcurrentDictionary` boilerplate in every `IDataFlow` implementor.
 
 - New: `IDataFlowResourceOwner` — an **optional** capability interface (with a `Version` for forward
-  compatibility) exposing `GetOrAddResource(string key, Func<IDisposable> factory)` plus the generic
-  `DataFlowResourceOwnerExtensions.GetOrAddResource<T>` extension. It is intentionally **separate
-  from `IDataFlow`** so that adding disposable-resource ownership does not binary-break existing
-  external `IDataFlow` implementations compiled against earlier versions. `DataFlowXmlReader`
+  compatibility) that declares the full resource-ownership contract: `GetOrAddConnectionManager(...)`
+  and `GetOrAddResource(string key, Func<IDisposable> factory)` (plus the generic
+  `DataFlowResourceOwnerExtensions.GetOrAddResource<T>` extension). `GetOrAddConnectionManager` also
+  stays on `IDataFlow` for backward compatibility, so a data flow implementing both interfaces
+  satisfies them with one method — and the composable `DataFlowResources` helper now implements every
+  resource method through this single interface rather than exposing a contract-less public method.
+  Exposing `GetOrAddResource` here rather than directly on `IDataFlow` is what keeps disposable-resource
+  ownership from binary-breaking existing external `IDataFlow` implementations compiled against earlier
+  versions. `DataFlowXmlReader`
   probes for the capability (`is IDataFlowResourceOwner`) and, when present, automatically registers
   `IDisposable` component properties with the owning flow — components with identical XML
   configuration share a single instance (deduplicated by type + content key) and are disposed with
