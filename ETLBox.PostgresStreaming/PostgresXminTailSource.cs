@@ -170,7 +170,7 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
         if (OrderByColumns.Length > 0)
         {
             query.Append(" ORDER BY ");
-            query.Append(string.Join(", ", OrderByColumns));
+            AppendQuotedColumnList(query, OrderByColumns);
         }
 
         query.Append(" LIMIT @_batchSize");
@@ -186,7 +186,7 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
     )
     {
         query.Append(" AND (");
-        query.Append(string.Join(", ", OrderByColumns));
+        AppendQuotedColumnList(query, OrderByColumns);
         query.Append(") > (");
 
         for (var i = 0; i < OrderByColumns.Length; i++)
@@ -200,6 +200,22 @@ public class PostgresXminTailSource<TOutput> : DataFlowSource<TOutput>
         }
 
         query.Append(")");
+    }
+
+    // Quotes each ORDER BY / tuple-cursor identifier so mixed-case columns created as "MyCol"
+    // are matched exactly. Unquoted identifiers are folded to lower case by PostgreSQL and would
+    // not match a quoted mixed-case column. Bare column names are still used for IDataRecord
+    // lookups (GetOrdinal is case-insensitive), so only the generated SQL is quoted here.
+    private static void AppendQuotedColumnList(StringBuilder query, string[] columns)
+    {
+        for (var i = 0; i < columns.Length; i++)
+        {
+            if (i > 0)
+                query.Append(", ");
+            query.Append('"');
+            query.Append(columns[i].Replace("\"", "\"\""));
+            query.Append('"');
+        }
     }
 
     private string QuotedTableRef()

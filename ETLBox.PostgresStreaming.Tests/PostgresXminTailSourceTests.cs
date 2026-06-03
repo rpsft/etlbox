@@ -420,4 +420,53 @@ public sealed class PostgresXminTailSourceTests : IClassFixture<PostgresContaine
 
         Assert.Equal(new[] { "keep_me", "keep_me_too" }, results);
     }
+
+    [Fact]
+    public void Execute_OrderByMixedCaseQuotedColumn_ReadsInOrder()
+    {
+        // Regression (RSSL-11704): a column created with a quoted mixed-case name ("StreamPosition")
+        // must be usable in ORDER BY and the tuple cursor. Unquoted identifiers are folded to lower
+        // case by PostgreSQL and fail with "column does not exist"; the source must quote the
+        // OrderByColumns identifiers in the generated SQL (while GetOrdinal stays case-insensitive).
+        const string tableName = "events_mixedcase_orderby_test";
+        using var conn = new NpgsqlConnection(_fixture.ConnectionString);
+        conn.Open();
+        ExecuteSql(
+            conn,
+            $"""
+            DROP TABLE IF EXISTS {tableName};
+            CREATE TABLE {tableName} (
+                "StreamPosition" BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                name            TEXT NOT NULL
+            )
+            """
+        );
+        InsertRow(conn, tableName, "one");
+        InsertRow(conn, tableName, "two");
+        InsertRow(conn, tableName, "three");
+
+        var results = new List<string>();
+        var destination = new CustomDestination<(long Pos, string Name)>(r => results.Add(r.Name));
+        using var cm = CreateConnectionManager();
+        using var tokenSource = new CancellationTokenSource();
+
+        var source = new PostgresXminTailSource<(long Pos, string Name)>
+        {
+            ConnectionManager = cm,
+            TableName = tableName,
+            Schema = "public",
+            OrderByColumns = new[] { "StreamPosition" },
+            BatchSize = 100,
+            PollingInterval = TimeSpan.FromMilliseconds(100),
+            RowMapper = r => ((long)r["StreamPosition"], (string)r["name"]),
+        };
+        source.LinkTo(destination);
+
+        // A second poll runs the tuple-cursor WHERE clause — also over the quoted column.
+        tokenSource.CancelAfter(TimeSpan.FromMilliseconds(500));
+        Assert.Throws<OperationCanceledException>(() => source.Execute(tokenSource.Token));
+        destination.Wait();
+
+        Assert.Equal(new[] { "one", "two", "three" }, results);
+    }
 }

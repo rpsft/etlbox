@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- net6.0: MongoDB.Driver 3.x dropped netstandard2.0; net6.0 keeps the package consumable by
+         net6.0+ consumers (e.g. Journeys.Engine targets net6.0;net10.0). -->
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>ALE.ETLBox.DataFlow</RootNamespace>
     <PackageId>EtlBox.Classic.MongoDB</PackageId>
     <Nullable>enable</Nullable>
@@ -18,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.8.0" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="7.0.0" />
   </ItemGroup>
 
