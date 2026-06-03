@@ -247,8 +247,6 @@ namespace ETLBox.Rest.Tests
         {
             private readonly DataFlowResources _resources = new();
 
-            public int Version => _resources.Version;
-
             public Guid? ReferenceId { get; set; }
 
             public string Name { get; set; } = null!;

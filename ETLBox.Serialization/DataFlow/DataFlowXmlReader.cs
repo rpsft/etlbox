@@ -256,7 +256,7 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
 
         if (
             typeof(IDisposable).IsAssignableFrom(prop.PropertyType)
-            && TryGetResourceOwner(out var owner)
+            && _dataFlow is IDataFlowResourceOwner owner
         )
         {
             var innerXml = string.Concat(
@@ -272,29 +272,6 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
                 return;
             prop.SetValue(instance, value);
         }
-    }
-
-    /// <summary>
-    /// Probes the data flow for the optional <see cref="IDataFlowResourceOwner"/> capability.
-    /// Returns <c>false</c> for data flows that do not support resource ownership (e.g. external
-    /// implementations compiled against earlier ETLBox versions), in which case the caller must fall
-    /// back to plain instance creation without deduplication or flow-owned disposal.
-    /// </summary>
-    private bool TryGetResourceOwner(out IDataFlowResourceOwner owner)
-    {
-        if (
-            _dataFlow is IDataFlowResourceOwner
-            {
-                Version: >= DataFlowResourceOwnerExtensions.ResourceOwnerVersion
-            } candidate
-        )
-        {
-            owner = candidate;
-            return true;
-        }
-
-        owner = null!;
-        return false;
     }
 
     /// <summary>
@@ -599,7 +576,8 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             prop.SetValue(instance, value);
         }
         else if (
-            typeof(IDisposable).IsAssignableFrom(propType) && TryGetResourceOwner(out var owner)
+            typeof(IDisposable).IsAssignableFrom(propType)
+            && _dataFlow is IDataFlowResourceOwner owner
         )
         {
             var key = propType.FullName + ":" + propXml.ToString(SaveOptions.DisableFormatting);

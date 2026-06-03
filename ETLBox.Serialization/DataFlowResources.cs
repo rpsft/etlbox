@@ -22,9 +22,6 @@ namespace ALE.ETLBox.Serialization
 
         private readonly ConcurrentDictionary<string, IDisposable> _resources = new();
 
-        /// <inheritdoc />
-        public int Version => DataFlowResourceOwnerExtensions.ResourceOwnerVersion;
-
         /// <summary>Number of connection managers currently in the pool.</summary>
         public int ConnectionManagerCount => _connectionManagers.Count;
 

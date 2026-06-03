@@ -9,6 +9,12 @@ using ALE.ETLBox.Serialization.DataFlow;
 using ETLBox.Primitives;
 using Microsoft.Extensions.DependencyInjection;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AccessToDisposedClosure
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ClassNeverInstantiated.Global
+
 namespace ETLBox.Serialization.Tests;
 
 /// <summary>
@@ -438,9 +444,15 @@ public sealed class DataFlowDisposableResourceTests
 
         public void WriteXml(XmlWriter writer) => throw new NotSupportedException();
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+                _resources.Dispose();
+        }
+
         public void Dispose()
         {
-            _resources.Dispose();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
     }

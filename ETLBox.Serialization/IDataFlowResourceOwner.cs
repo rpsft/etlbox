@@ -29,12 +29,6 @@ namespace ALE.ETLBox.Serialization
     public interface IDataFlowResourceOwner
     {
         /// <summary>
-        /// Capability version of the resource-ownership contract. Consumers gate calls on a minimum
-        /// version so the contract can evolve without breaking older implementations.
-        /// </summary>
-        int Version { get; }
-
-        /// <summary>
         /// Gets or adds a connection manager to the flow's ownership pool. Mirrors
         /// <see cref="IDataFlow.GetOrAddConnectionManager"/>: connection managers sharing the same
         /// <paramref name="connectionManagerType"/> and <paramref name="key"/> are deduplicated and
@@ -74,11 +68,6 @@ namespace ALE.ETLBox.Serialization
     /// </summary>
     public static class DataFlowResourceOwnerExtensions
     {
-        /// <summary>
-        /// Current capability version of the resource-ownership contract.
-        /// </summary>
-        public const int ResourceOwnerVersion = 1;
-
         /// <summary>
         /// Gets or adds a typed disposable resource to the flow's ownership pool.
         /// </summary>
