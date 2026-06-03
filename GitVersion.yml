@@ -12,15 +12,22 @@
 
 branches:
   hotfix:
-    mode: ManualDeployment
-    label: ''
-    increment: Patch
+    # increment Inherit + label {BranchName}: a hotfix takes its base version from the
+    # NEAREST source branch. A hotfix off main/support inherits the master line (Patch -> 1.18.x);
+    # a hotfix off the develop/feature line (e.g. branched from a dev/* subtask) inherits that
+    # minor line (1.19.x). This keeps the published version consistent with the branch content
+    # instead of always forcing a master-relative patch.
+    mode: ContinuousDelivery
+    label: '{BranchName}'
+    increment: Inherit
     prevent-increment:
       when-current-commit-tagged: false
     regex: ^hotfix(es)?[/-](?<BranchName>.+)
     source-branches:
       - main
       - support
+      - develop
+      - feature
     is-source-branch-for: []
     is-main-branch: false
     pre-release-weight: 30000
