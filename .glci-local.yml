@@ -1,0 +1,63 @@
+# Local-only glci wrapper for offline runs.
+#
+# The real pipeline pulls `get_unique_semversion` (and the GitVersion_* vars)
+# from the `ultimate-auto-semversioning` CI component on git.rapidsoft.ru.
+# glci can't fetch that component without a GitLab token + network to the
+# internal server, so this wrapper stubs the job to make the pipeline valid.
+#
+# It also retargets test_job so its Testcontainers-based tests reach the local
+# Docker daemon (the real CI uses KubeDock at tcp://kubedock...:2475, which is
+# unreachable on a laptop). Requires Docker Desktop's "Expose daemon on
+# tcp://localhost:2375 without TLS" to be enabled.
+#
+# This file is NOT committed. Run with:  glci -f .glci-local.yml run <job> \
+#   --context branch=<branch>
+# Delete it (and .glciconfig.toml) when done.
+include:
+  - local: .gitlab-ci.yml
+
+# glci skips .pre (see .glciconfig.toml [skip] default), so this stub's dotenv
+# never flows; the GitVersion_* vars are injected as job vars instead.
+get_unique_semversion:
+  stage: .pre
+  image: alpine:latest
+  script:
+    - echo "stub: real version comes from the ultimate-auto-semversioning component"
+
+# Version comes from the skipped component — inject it so builds work.
+build_job:
+  variables:
+    PACKAGE_VERSION: 1.0.0-development
+    GitVersion_SemVer: 1.0.0-development
+    GitVersion_MajorMinorPatch: 1.0.0
+
+# Override only what's needed to run locally. services/script/after_script/
+# artifacts are inherited from the included .gitlab-ci.yml; before_script is
+# replaced (YAML arrays don't merge) to add the Kafka broker fix below.
+test_job:
+  before_script:
+    - pushd test
+    - pwsh ./Set-Configuration.ps1 gitlab-ci
+    - popd
+    # glci uses the Docker executor, where services are reachable by alias
+    # (kafka:9092). The Kafka config template hardcodes localhost:9092, which
+    # only works on real CI's Kubernetes executor (services share the pod's
+    # network namespace). Repoint it at the kafka service alias. Must run AFTER
+    # Set-Configuration regenerates the file and BEFORE dotnet build copies it
+    # into bin/ (the suite runs with `dotnet test --no-build`).
+    - "echo '{\"Kafka\":{\"BootstrapAddress\":\"kafka:9092\"}}' > ETLBox.Kafka.Tests/default.config.json"
+    - dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools || true
+    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+  variables:
+    # Retarget Testcontainers from KubeDock to the host Docker daemon.
+    DOCKER_HOST: tcp://host.docker.internal:2375
+    # Spawned containers publish ports on the host; reach them via the gateway.
+    TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+    # Keep the reaper + startup checks disabled (re-specified in case glci
+    # replaces rather than merges the variables block).
+    TESTCONTAINERS_RYUK_DISABLED: 'true'
+    TESTCONTAINERS_CHECKS_DISABLE: 'true'
+    # Version normally comes from the skipped component.
+    PACKAGE_VERSION: 1.0.0-development
+    GitVersion_SemVer: 1.0.0-development
+    GitVersion_MajorMinorPatch: 1.0.0
