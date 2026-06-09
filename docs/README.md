@@ -17,6 +17,7 @@ For API reference documentation, see the [hosted API docs](https://rpsft.github.
 - [Linking and execution](dataflow/linking-execution.md)
 - [Working with data types](dataflow/data-types.md)
 - [Syncing tables with Merge](dataflow/db-merge.md)
+- [Streaming sources](dataflow/streaming-sources.md)
 - [Other sources and destinations](dataflow/other-sources-destinations.md)
 
 ## ControlFlow and Logging
