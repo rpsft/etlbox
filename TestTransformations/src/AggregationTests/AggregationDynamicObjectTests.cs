@@ -1,5 +1,4 @@
 using ALE.ETLBox.DataFlow;
-using ClickHouse.Ado;
 
 namespace TestTransformations.AggregationTests
 {
@@ -8,13 +7,6 @@ namespace TestTransformations.AggregationTests
         [Fact]
         public void GroupingUsingDynamicObject()
         {
-            using var con = new ClickHouseConnection(
-                "Host=localhost;Port=9000;Database=default;User=clickhouse;Password=Qwe123456;"
-            );
-            con.Open();
-            using var cmd = con.CreateCommand("select 1");
-            cmd.ExecuteScalar();
-
             //Arrange
             var source = new MemorySource<ExpandoObject>();
             dynamic row1 = new ExpandoObject();

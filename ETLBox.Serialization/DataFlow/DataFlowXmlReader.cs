@@ -254,15 +254,72 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             );
         }
 
-        var value = CreateObject(prop.PropertyType, element);
-
-        if (value is null)
+        if (
+            typeof(IDisposable).IsAssignableFrom(prop.PropertyType)
+            && _dataFlow is IDataFlowResourceOwner owner
+        )
         {
+            var innerXml = string.Concat(
+                element.Nodes().Select(n => n.ToString(SaveOptions.DisableFormatting))
+            );
+            var key = prop.PropertyType.FullName + ":" + innerXml;
+            AssignDisposableResource(instance, prop, prop.PropertyType, element, key, owner);
+        }
+        else
+        {
+            var value = CreateObject(prop.PropertyType, element);
+            if (value is null)
+                return;
+            prop.SetValue(instance, value);
+        }
+    }
+
+    /// <summary>
+    /// Assigns an <see cref="IDisposable"/> property. When the activator reports the type as
+    /// externally owned (e.g. a service resolved from a DI container), the instance is created and
+    /// assigned without taking flow ownership or deduplicating — its lifetime is managed by that
+    /// external scope. Otherwise, the instance is added to the flow's resource pool (deduplicated by
+    /// <paramref name="key"/> and disposed with the flow).
+    /// </summary>
+    private void AssignDisposableResource(
+        object instance,
+        PropertyInfo prop,
+        Type propType,
+        XContainer element,
+        string key,
+        IDataFlowResourceOwner owner
+    )
+    {
+        if (IsExternallyOwned(propType))
+        {
+            var external = CreateObject(propType, element);
+            if (external is not null)
+                prop.SetValue(instance, external);
             return;
         }
 
+        var value = owner.GetOrAddResource(
+            key,
+            () =>
+                (IDisposable)(
+                    CreateObject(propType, element)
+                    ?? throw new InvalidDataException(
+                        $"Failed to create disposable resource of type {propType}"
+                    )
+                )
+        );
         prop.SetValue(instance, value);
     }
+
+    /// <summary>
+    /// Whether instances of <paramref name="type"/> are owned by an external lifetime scope
+    /// (e.g. a DI container) per the activator, and therefore must not be flow-owned/disposed.
+    /// Activators that do not implement <see cref="ILifetimeAwareActivator"/> are treated as always
+    /// creating flow-owned instances.
+    /// </summary>
+    private bool IsExternallyOwned(Type type) =>
+        _activator is ILifetimeAwareActivator lifetimeAware
+        && lifetimeAware.IsExternallyOwned(type);
 
     private static void SetValueTypeProperty(
         object instance,
@@ -356,7 +413,7 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             var item = CreateObject(elementType, t);
             if (item != null)
             {
-                set.Invoke(list, new[] { item });
+                set.Invoke(list, [item]);
             }
         }
 
@@ -518,6 +575,14 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             );
             prop.SetValue(instance, value);
         }
+        else if (
+            typeof(IDisposable).IsAssignableFrom(propType)
+            && _dataFlow is IDataFlowResourceOwner owner
+        )
+        {
+            var key = propType.FullName + ":" + propXml.ToString(SaveOptions.DisableFormatting);
+            AssignDisposableResource(instance, prop, propType, propXml, key, owner);
+        }
         else
         {
             var value = CreateObject(propType, propXml);
@@ -560,13 +625,13 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
 
         var elements = node.Elements().ToArray();
         var array = Array.CreateInstance(elementType, elements.Length);
-        var set = type.GetMethod("SetValue", new[] { typeof(object), typeof(int) });
+        var set = type.GetMethod("SetValue", [typeof(object), typeof(int)]);
         for (var i = 0; i < elements.Length; i++)
         {
             var item = CreateObject(elementType, elements[i]);
             if (item != null)
             {
-                set?.Invoke(array, new[] { item, i });
+                set?.Invoke(array, [item, i]);
             }
         }
 
@@ -620,7 +685,7 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             );
 
         var elements = node.Elements().ToArray();
-        var add = type.GetMethod("Add", new[] { keyType, valueType });
+        var add = type.GetMethod("Add", [keyType, valueType]);
 
         // Special handling for IDictionary<string, object?> - parse nested structures
         // Note: For object? values, all leaf values are deserialized as strings (XML has no type info)
@@ -629,20 +694,15 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
 
         foreach (var element in elements)
         {
-            object? item;
-            if (isObjectValueType)
-            {
+            var item =
                 // For object? values, parse recursively to handle nested structures
-                item = ParseXmlElementToDictionary(element);
-            }
-            else
-            {
-                item = CreateObject(valueType, element);
-            }
+                isObjectValueType
+                    ? ParseXmlElementToDictionary(element)
+                    : CreateObject(valueType, element);
 
             if (item != null)
             {
-                add?.Invoke(dict, new[] { element.Name.LocalName, item });
+                add?.Invoke(dict, [element.Name.LocalName, item]);
             }
         }
 
@@ -730,7 +790,7 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
         }
 
         // Call LinkTo or LinkErrorTo method
-        method.Invoke(source, new[] { obj });
+        method.Invoke(source, [obj]);
     }
 
     private static MethodInfo? GetMethod(object instance, XElement propXml)
@@ -809,13 +869,12 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
     private static bool IsDictionaryWithObjectValue(Type type)
     {
         // Handle both IDictionary<string, object> and IDictionary<string, object?>
-        var dictInterface =
-            type.IsInterface && type.IsGenericType
-                ? type
-                : Array.Find(
-                    type.GetInterfaces(),
-                    i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)
-                );
+        var dictInterface = type is { IsInterface: true, IsGenericType: true }
+            ? type
+            : Array.Find(
+                type.GetInterfaces(),
+                i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)
+            );
 
         if (
             dictInterface == null
@@ -831,7 +890,7 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
             return false;
         }
 
-        // Check for both object and object? (Nullable<object> doesn't exist, but the generic arg could still be object)
+        // Check for both object and object? (Nullable<object> doesn't exist, but the generic arg could still be an object)
         var valueType = genericArgs[1];
         return valueType == typeof(object);
     }

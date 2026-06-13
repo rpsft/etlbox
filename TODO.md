@@ -33,24 +33,22 @@
 
 ## Tech Debt
 
-- [Pipeline component — flat XML sequence sugar for DataFlowXmlReader](docs/tech-debt/TECH-DEBT-Pipeline-XmlSequence.md)
-  - New `Pipeline<TIn, TOut>` (transformation) and `Pipeline` (ExpandoObject source) classes
-  - `IDataFlowXmlSerializable` extension point so any component can self-describe its XML format
-  - Eliminates deep `<LinkTo>` nesting in XML pipeline configs
 - [XML Documentation Coverage — 59% → 95%](docs/tech-debt/TECH-DEBT-XML-Documentation-Coverage.md)
   - Phase 1: Core interfaces in ETLBox.Primitives (14 types)
   - Phase 2: Abstract base classes in ETLBox.Common + main library (13 types)
   - Phase 3: Fully undocumented projects — ClickHouse, Logging.Database (5 types)
   - Phase 4: Remaining main library gaps — enums, attributes, models, transforms (42 types)
-- [DI-based Activator Mode for DataFlowXmlReader](docs/tech-debt/TECH-DEBT-DI-ServiceProvider-Activator.md)
-  - Implement alternative activation mode using MS DI `IServiceProvider` instead of `Activator.CreateInstance()`
-  - Create `IServiceCollection` registration extensions for each library (e.g., `AddEtlBoxCore()`, `AddEtlBoxCsv()`)
-  - Add `ILogger` constructor overloads to all data flow steps for structured logging support
-  - Enables extensibility: custom steps and services can be provided via DI container
 - [FieldLookupTransformation — declarative field-name-based lookup with XML serialization support](docs/tech-debt/field-lookup-transformation-roadmap.md)
   - New component alongside `LookupTransformation` with serializable `MatchColumns`/`RetrieveColumns` POCO lists
   - `DictionarySource: IDataFlowSource<T>` property deserialized via existing `DataFlowXmlReader` mechanism (no reader changes)
   - Optional `ScriptedFieldLookupTransformation` in `ETLBox.Scripting` with Roslyn enrichment script string
+- [PostgresLogicalReplicationSource — WAL/CDC streaming source](docs/tech-debt/TECH-DEBT-Postgres-Logical-Replication-Source.md)
+  - Net-new source in `ETLBox.PostgresStreaming` over `Npgsql.Replication` (built-in `pgoutput`, no extension)
+  - Complements (does not replace) `PostgresXminTailSource`: full ordered change log incl. DELETEs and every intermediate UPDATE, sub-second latency
+  - Resume token = LSN via existing `ICheckpointStore`; deferred to V3+ per MLRSSL-1509 §5.8
+- [Split `DataTypeConverter` driver conventions before moving type-mapping to Common](docs/tech-debt/TECH-DEBT-DataTypeConverter-Driver-Split.md)
+  - Pure type-mapping → Common/Primitives; per-driver SQL-type conventions → driver packages behind a DI abstraction (drop the central `switch (ConnectionManagerType)`)
+  - Unblocks moving `QueryParameter` to Common (and `ITableColumn` to Primitives); ride along with broader driver-package/DI modularization
 
 ## Other
 
