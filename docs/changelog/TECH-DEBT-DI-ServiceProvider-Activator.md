@@ -1,5 +1,13 @@
 # Tech Debt: DI-based Activator Mode for DataFlowXmlReader
 
+> **Status: COMPLETED** (2026-04-07) — shipped in 1.16.0. `IDataFlowActivator` plus
+> `DefaultDataFlowActivator` and `ServiceProviderActivator` are in
+> `ETLBox.Serialization/DataFlow/`. `IServiceCollection` registration extensions
+> (`AddEtlBoxCore`, `AddEtlBoxJson`, `AddEtlBoxKafka`, `AddEtlBoxRabbitMq`,
+> `AddEtlBoxRest`, `AddEtlBoxScripting`, `AddEtlBoxAI`, `AddEtlBoxSerialization`) are
+> registered per library, and `ILogger<T>` constructor overloads were added to every
+> data flow step. See [CHANGELOG.md](../../CHANGELOG.md) entry for 1.16.0.
+
 ## Summary
 
 Implement an alternative activation mode for `DataFlowXmlReader` that uses Microsoft Dependency Injection (`IServiceProvider`) instead of the current `DataFlowActivator` approach.
