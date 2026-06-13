@@ -1,5 +1,11 @@
 # Tech Debt: `<Pipeline>` Flat-Sequence Sugar for DataFlowXmlReader
 
+> **Status: COMPLETED** (2026-05-15) — shipped in 1.18.0 (`feature/MLRSSL-1510-pipeline-xml-sequence`).
+> `Pipeline<TIn, TOut>` and the non-generic `Pipeline` live in `ETLBox.Serialization`, and the
+> `IDataFlowXmlSerializable` / `IDataFlowXmlContext` extension points let any component own its XML
+> deserialization while still creating child objects through the reader's DI-aware factory. See
+> [CHANGELOG.md](../../CHANGELOG.md) entry for 1.18.0.
+
 ## Context
 
 The current XML structure for sequential DataFlow pipelines requires nested `<LinkTo>` elements —

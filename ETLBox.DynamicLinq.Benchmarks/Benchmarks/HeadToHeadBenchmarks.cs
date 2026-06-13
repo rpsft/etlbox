@@ -1,10 +1,8 @@
 using System.Dynamic;
-using System.Linq;
 using System.Linq.Dynamic.Core;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.DynamicLinq;
 using BenchmarkDotNet.Attributes;
-using ETLBox.DynamicLinq.Benchmarks.TestData;
 
 namespace ETLBox.DynamicLinq.Benchmarks.Benchmarks;
 

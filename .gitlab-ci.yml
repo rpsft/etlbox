@@ -1,3 +1,4 @@
+#file: noinspection CIAidGitLabYamlNeedsJobUnavailable
 #file: noinspection CIAidGitLabYamlNeedsJobUnavailable - This is needed for an external job `get_unique_semversion`
 include:
   # GitVersion component
@@ -92,18 +93,20 @@ test_job:
         KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: '1'
         KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: '0'
         CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
-    - name: docker:24.0.5-dind
-      alias: docker
-      command:
-        [
-          'dockerd',
-          '--tls=false',
-          '--host=tcp://0.0.0.0:2375',
-          '--host=unix:///var/run/docker.sock',
-        ]
   variables:
-    DOCKER_HOST: tcp://docker:2375
+    # Testcontainers run via KubeDock — a Docker API shim that orchestrates
+    # containers as real Kubernetes Pods instead of nested DinD containers.
+    # Deployed in the gitlab-runner namespace on every cluster (SYSOPS-1668);
+    # the hostname resolves to the local cluster's KubeDock pod. This replaces
+    # the former docker:dind service.
+    DOCKER_HOST: tcp://kubedock.gitlab-runner.svc.cluster.local:2475
     PACKAGE_VERSION: ${GitVersion_SemVer}
+    # Required by KubeDock: it doesn't implement Testcontainers' Ryuk reaper
+    # (which also can't work across the k8s-runner network boundary anyway —
+    # see SYSOPS-1667). Cleanup is handled by Kubernetes tearing down the
+    # job pod and everything KubeDock spawned for it.
+    TESTCONTAINERS_RYUK_DISABLED: 'true'
+    TESTCONTAINERS_CHECKS_DISABLE: 'true'
   before_script:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
@@ -115,6 +118,7 @@ test_job:
       dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
       --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
       --collect="XPlat Code Coverage"
+      --blame-hang --blame-hang-timeout 10m --blame-hang-dump-type full
   after_script:
     - .tools/reportgenerator "-reports:./**/*.cobertura.xml" "-targetdir:.coverage" -reportTypes:TextSummary
     - cat .coverage/Summary.txt

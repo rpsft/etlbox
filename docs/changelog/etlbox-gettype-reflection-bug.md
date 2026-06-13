@@ -1,20 +1,28 @@
-# Баг в DataFlowXmlReader.GetType: отсутствует обработка ReflectionTypeLoadException
+# Bug: DataFlowXmlReader.GetType missing ReflectionTypeLoadException handling
 
 > **Status: COMPLETED** (2026-04-12) — fixed in commit `5c3314e3 fix(RSSL-11572): DataFlowXmlReader reflection robustness`
 
-## Описание проблемы
+## Problem
 
-В `ALE.ETLBox.Serialization.DataFlow.DataFlowXmlReader` метод `GetType` (статический) вызывал `Assembly.GetTypes()` для всех загруженных сборок без обработки `ReflectionTypeLoadException`. При этом аналогичный метод `GetDataFlowTypes` в том же классе корректно обрабатывал исключения через `SafeGetTypes`.
+In `ALE.ETLBox.Serialization.DataFlow.DataFlowXmlReader` the static `GetType` method
+called `Assembly.GetTypes()` against every loaded assembly without handling
+`ReflectionTypeLoadException`. The neighbouring `GetDataFlowTypes` method in the same
+class already handled the same failure mode through `SafeGetTypes`.
 
-Когда тестовый хост загружал сборки, ссылающиеся на `Microsoft.Testing.Platform` (транзитивная зависимость `Microsoft.NET.Test.Sdk`), десериализация DataFlow-пакетов из XML падала с `ReflectionTypeLoadException`.
+When the test host loaded assemblies that referenced `Microsoft.Testing.Platform` (a
+transitive dependency of `Microsoft.NET.Test.Sdk`), XML deserialization of DataFlow
+packages failed with `ReflectionTypeLoadException`.
 
-## Обходной путь (устранён)
+## Workaround (now removed)
 
-В `EtlDataFlowStep.RecreateDataFlow` был добавлен временный обработчик `AppDomain.CurrentDomain.AssemblyResolve`, который при неудачной загрузке сборки пытался найти уже загруженную сборку с совместимым именем (без учёта версии).
+`EtlDataFlowStep.RecreateDataFlow` carried a temporary `AppDomain.CurrentDomain.AssemblyResolve`
+handler that, on a failed load, searched for an already-loaded assembly with a
+compatible name (version-agnostic).
 
-## Применённое исправление
+## Fix
 
-В методе `DataFlowXmlReader.GetType` вызов `assembly.GetTypes()` заменён на `SafeGetTypes(assembly)`:
+In `DataFlowXmlReader.GetType` the call to `assembly.GetTypes()` was replaced with
+`SafeGetTypes(assembly)`:
 
 ```csharp
 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -24,7 +32,8 @@ foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 }
 ```
 
-`SafeGetTypes` обрабатывает `ReflectionTypeLoadException` и возвращает типы, которые удалось загрузить:
+`SafeGetTypes` swallows `ReflectionTypeLoadException` and returns the types that did
+load:
 
 ```csharp
 private static Type[] SafeGetTypes(Assembly assembly)
@@ -37,6 +46,6 @@ private static Type[] SafeGetTypes(Assembly assembly)
 }
 ```
 
-## Затронутый пакет
+## Affected package
 
 `ETLBox.Classic.Serialization`
