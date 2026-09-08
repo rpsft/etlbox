@@ -120,6 +120,11 @@
   - Interim rule: anything the compiler bakes into the ns2.0 binary must be reachable through
     declared dependencies on every consumer TFM
 
+- [Public API Snapshot and Review](docs/tech-debt/TECH-DEBT-Public-API-Snapshot.md)
+  - Generate `ref/PublicApi.g.cs` per packable project with `Meziantou.Framework.PublicApiGenerator.MSBuild`
+  - Commit snapshots; CI fails when the committed snapshot is stale (`VerifyNoChangeOnBuild`)
+  - Audit generated surface for accidentally public types; optional package validation (ApiCompat)
+
 ## Other
 
 - PrimaryKeyConstrainName now is part of TableDefinition, but not read from `GetTableDefinitionFrom`
